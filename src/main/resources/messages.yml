@@ -47,6 +47,7 @@ upgrade:
   insufficient-funds: "<red>Voce precisa de <white><cost></white> (<currency>) para upar para <vip>."
   success-private: "<green>Voce upou para o VIP <vip>!"
   success-broadcast: "<gray>{player}<green> upou para o VIP <vip>!"
+  extended: "<green>Voce estendeu seu VIP <vip> em <white><time></white>!"
 
 market:
   not-owner: "<red>Essa key nao e sua."

@@ -10,8 +10,11 @@ import com.alkacode.vips.util.TimeUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public final class MainVipMenu extends BaseGui {
 
@@ -25,8 +28,16 @@ public final class MainVipMenu extends BaseGui {
 
     @Override
     public void render() {
-        Optional<PlayerVip> selected = services.playerVipManager.getSelectedVip(player.getUniqueId());
-        setItem(10, profileHead(selected));
+        UUID uuid = player.getUniqueId();
+        List<PlayerVip> activeVips = services.playerVipManager.getActiveVips(uuid);
+
+        if (!activeVips.isEmpty() && services.playerVipManager.dataOf(uuid).selectedVipId() == null) {
+            services.playerVipManager.getSelectedVip(uuid)
+                    .ifPresent(v -> services.playerVipManager.selectVip(uuid, v.id()));
+        }
+        Optional<PlayerVip> selected = services.playerVipManager.getSelectedVip(uuid);
+
+        setItem(10, profileHead(activeVips, selected));
         setItem(12, new ItemBuilder(Material.BOOK).name("<white>Historico de VIPs").build(),
                 e -> new HistoryMenu(player, services).open());
         setItem(13, new ItemBuilder(Material.TRIPWIRE_HOOK).name("<white>Minhas Keys").build(),
@@ -40,12 +51,25 @@ public final class MainVipMenu extends BaseGui {
         setItem(21, new ItemBuilder(Material.ENDER_CHEST).name("<white>Ativacoes Pendentes").build(),
                 e -> new PendingActivationsMenu(player, services).open());
 
+        if (activeVips.size() >= 2) {
+            setItem(23, new ItemBuilder(Material.COMPASS).name("<yellow>Trocar VIP Selecionado").build(),
+                    e -> {
+                        services.playerVipManager.cycleSelectedVip(uuid);
+                        refresh();
+                    });
+        }
+
         if (selected.isPresent()) {
-            VipType current = services.vipTypeManager.get(selected.get().vipTypeId());
-            if (current != null && current.hasUpgrade() && services.vipTypeManager.exists(current.upgradeTo())) {
-                setItem(22, new ItemBuilder(Material.NETHER_STAR).name("<yellow>Upar VIP").build(),
-                        e -> new UpgradeMenu(player, services, selected.get(), current).open());
-            }
+            PlayerVip selectedVip = selected.get();
+            VipType current = services.vipTypeManager.get(selectedVip.vipTypeId());
+            setItem(22, new ItemBuilder(Material.NETHER_STAR).name("<yellow>Upar VIP").build(),
+                    e -> {
+                        if (current == null || !current.hasUpgrade() || !services.vipTypeManager.exists(current.upgradeTo())) {
+                            services.sendMessage(player, "upgrade.no-upgrade-available", Map.of());
+                            return;
+                        }
+                        new UpgradeMenu(player, services, selectedVip, current, UpgradeMenu.Mode.UPGRADE).open();
+                    });
         }
 
         setItem(30, new ItemBuilder(Material.CHEST).name("<white>Kits VIP").build(),
@@ -55,20 +79,25 @@ public final class MainVipMenu extends BaseGui {
         fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
     }
 
-    private org.bukkit.inventory.ItemStack profileHead(Optional<PlayerVip> selected) {
+    private org.bukkit.inventory.ItemStack profileHead(List<PlayerVip> activeVips, Optional<PlayerVip> selected) {
         ItemBuilder builder = new ItemBuilder(Material.PLAYER_HEAD).name("<white>" + player.getName());
-        if (selected.isEmpty()) {
+        if (activeVips.isEmpty()) {
             return builder.lore(services.configManager.messageList("info.no-vips")).build();
         }
-        PlayerVip vip = selected.get();
-        VipType type = services.vipTypeManager.get(vip.vipTypeId());
-        String display = type != null ? TextUtil.plain(type.display()) : vip.vipTypeId();
-        String remaining = vip.isPermanent() ? "Permanente" : TimeUtil.formatRemaining(vip.remainingMillis());
-        return builder.lore(List.of(
-                "<gray>VIP: <white>" + display,
-                "<gray>Creditos: <white>" + services.creditManager.getCredits(player.getUniqueId()),
-                "<gray>Expira em: <white>" + remaining
-        )).build();
+        Long selectedId = selected.map(PlayerVip::id).orElse(null);
+        List<String> lore = new ArrayList<>();
+        lore.add("<gray>Creditos: <white>" + services.creditManager.getCredits(player.getUniqueId()));
+        lore.add("");
+        for (PlayerVip vip : activeVips) {
+            VipType type = services.vipTypeManager.get(vip.vipTypeId());
+            String display = type != null ? TextUtil.plain(type.display()) : vip.vipTypeId();
+            String status = vip.isPermanent()
+                    ? "Ativo (Permanente)"
+                    : "Ativo, expira em " + TimeUtil.formatRemaining(vip.remainingMillis());
+            String star = selectedId != null && vip.id() == selectedId ? "<yellow>⭐</yellow> " : "";
+            lore.add(star + "<white>[" + display + "] <gray>" + status);
+        }
+        return builder.lore(lore).build();
     }
 
     private org.bukkit.inventory.ItemStack partyItem() {

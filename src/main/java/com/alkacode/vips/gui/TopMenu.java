@@ -24,20 +24,32 @@ public final class TopMenu extends BaseGui {
     public void render() {
         List<EconomyRepository.TopBalanceEntry> top = services.creditManager.getTop(7);
 
-        int slot = 0;
-        for (EconomyRepository.TopBalanceEntry entry : top) {
-            if (slot >= 7) break;
-            setItem(11 + slot, medal(entry));
-            slot++;
+        if (top.isEmpty()) {
+            setItem(13, new ItemBuilder(Material.BARRIER).name("<red>Nenhum dado disponivel").build());
+        } else {
+            int slot = 0;
+            for (EconomyRepository.TopBalanceEntry entry : top) {
+                if (slot >= 7) break;
+                setItem(11 + slot, medal(entry));
+                slot++;
+            }
         }
+        setItem(22, new ItemBuilder(Material.BARRIER).name("<red>Voltar").build(),
+                e -> new MainVipMenu(player, services).open());
         fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
     }
 
     private org.bukkit.inventory.ItemStack medal(EconomyRepository.TopBalanceEntry entry) {
-        String name = Bukkit.getOfflinePlayer(entry.uuid()).getName();
-        int activations = services.playerVipManager.dataOf(entry.uuid()).totalActivations();
+        String name = "Desconhecido";
+        if (entry.uuid() != null) {
+            org.bukkit.OfflinePlayer offline = Bukkit.getOfflinePlayer(entry.uuid());
+            if (offline != null && offline.getName() != null) {
+                name = offline.getName();
+            }
+        }
+        int activations = entry.uuid() != null ? services.playerVipManager.dataOf(entry.uuid()).totalActivations() : 0;
         return new ItemBuilder(Material.PLAYER_HEAD)
-                .name("<white>" + (name != null ? name : entry.uuid()))
+                .name("<white>" + name)
                 .lore(List.of(
                         "<gray>Creditos: <white>" + services.economyHook.format(entry.balance()),
                         "<gray>Ativacoes: <white>" + activations

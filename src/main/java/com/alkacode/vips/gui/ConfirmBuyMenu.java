@@ -31,6 +31,8 @@ public final class ConfirmBuyMenu extends BaseGui {
             setItem(13, services.keyManager.buildItem(key, type));
         }
         setItem(15, new ItemBuilder(Material.RED_WOOL).name("<red>Cancelar").build(), e -> player.closeInventory());
+        setItem(22, new ItemBuilder(Material.BARRIER).name("<red>Voltar").build(),
+                e -> new MarketplaceMenu(player, services).open());
         fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
     }
 

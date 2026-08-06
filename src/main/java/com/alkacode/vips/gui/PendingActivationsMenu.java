@@ -13,6 +13,8 @@ import java.util.List;
 
 public final class PendingActivationsMenu extends BaseGui {
 
+    private static final int CONTENT_LIMIT = 18;
+
     private final VipsServices services;
 
     public PendingActivationsMenu(Player viewer, VipsServices services) {
@@ -24,23 +26,30 @@ public final class PendingActivationsMenu extends BaseGui {
     @Override
     public void render() {
         List<PlayerVip> pending = services.playerVipManager.getPendingVips(player.getUniqueId());
-        int slot = 0;
-        for (PlayerVip vip : pending) {
-            if (slot >= getInventory().getSize()) {
-                break;
+        if (pending.isEmpty()) {
+            setItem(13, new ItemBuilder(Material.BARRIER).name("<yellow>Nenhuma ativacao pendente")
+                    .lore(List.of("<gray>Compre um VIP na loja para aparecer aqui.")).build());
+        } else {
+            int slot = 0;
+            for (PlayerVip vip : pending) {
+                if (slot >= CONTENT_LIMIT) {
+                    break;
+                }
+                VipType type = services.vipTypeManager.get(vip.vipTypeId());
+                String display = type != null ? TextUtil.plain(type.display()) : vip.vipTypeId();
+                var item = new ItemBuilder(Material.CHEST_MINECART)
+                        .name("<green>" + display)
+                        .lore(List.of("<gray>Clique para coletar!"))
+                        .build();
+                setItem(slot, item, e -> {
+                    services.activationService.collectPending(player, vip);
+                    refresh();
+                });
+                slot++;
             }
-            VipType type = services.vipTypeManager.get(vip.vipTypeId());
-            String display = type != null ? TextUtil.plain(type.display()) : vip.vipTypeId();
-            var item = new ItemBuilder(Material.CHEST_MINECART)
-                    .name("<green>" + display)
-                    .lore(List.of("<gray>Clique para coletar!"))
-                    .build();
-            setItem(slot, item, e -> {
-                services.activationService.collectPending(player, vip);
-                refresh();
-            });
-            slot++;
         }
+        setItem(22, new ItemBuilder(Material.BARRIER).name("<red>Voltar").build(),
+                e -> new MainVipMenu(player, services).open());
         fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
     }
 }
