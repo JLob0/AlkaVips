@@ -4,6 +4,7 @@ import com.alkacode.vips.config.ConfigManager;
 import com.alkacode.vips.gui.ChatInputManager;
 import com.alkacode.vips.hook.AlkaEconomyHook;
 import com.alkacode.vips.hook.DiscordWebhook;
+import com.alkacode.vips.hook.HookManager;
 import com.alkacode.vips.manager.CreditManager;
 import com.alkacode.vips.manager.KeyManager;
 import com.alkacode.vips.manager.KitManager;
@@ -44,6 +45,7 @@ public final class VipsServices {
     public final ChatInputManager chatInputManager;
     public final PerksManager perksManager;
     public final KitManager kitManager;
+    public final HookManager hooks;
 
     public VipsServices(JavaPlugin plugin, ConfigManager configManager, VipTypeManager vipTypeManager,
                          VipsRepository database, PlayerVipManager playerVipManager, CreditManager creditManager,
@@ -51,7 +53,8 @@ public final class VipsServices {
                          DiscordWebhook discordWebhook, ActivationService activationService,
                          UpgradeService upgradeService, MarketplaceService marketplaceService,
                          KeyUsageService keyUsageService, ExpirationService expirationService,
-                         ChatInputManager chatInputManager, PerksManager perksManager, KitManager kitManager) {
+                         ChatInputManager chatInputManager, PerksManager perksManager, KitManager kitManager,
+                         HookManager hooks) {
         this.plugin = plugin;
         this.configManager = configManager;
         this.vipTypeManager = vipTypeManager;
@@ -70,6 +73,7 @@ public final class VipsServices {
         this.chatInputManager = chatInputManager;
         this.perksManager = perksManager;
         this.kitManager = kitManager;
+        this.hooks = hooks;
     }
 
     public void sendMessage(org.bukkit.entity.Player player, String path, java.util.Map<String, String> placeholders) {

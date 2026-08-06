@@ -64,11 +64,11 @@ market:
   empty-list: "<yellow>Nenhuma key a venda no momento."
 
 credit:
-  balance: "<green>Voce possui <white><amount></white> creditos VIP."
-  added: "<green>Adicionado(s) <white><amount></white> credito(s) para <white><name></white>."
-  removed: "<green>Removido(s) <white><amount></white> credito(s) de <white><name></white>."
-  set: "<green>Creditos de <white><name></white> definidos para <white><amount></white>."
-  insufficient: "<red>Voce nao possui creditos suficientes."
+  balance: "<gray>Saldo: <yellow>✦ <amount> Essencia Alka"
+  added: "<green>Adicionado(s) <white><amount></white> de <yellow>✦ Essencia Alka</yellow> para <white><name></white>."
+  removed: "<green>Removido(s) <white><amount></white> de <yellow>✦ Essencia Alka</yellow> de <white><name></white>."
+  set: "<green>Essencia Alka de <white><name></white> definida para <white><amount></white>."
+  insufficient: "<red>Voce nao tem <yellow>✦ Essencia Alka <red>suficiente!"
 
 party:
   progress: "<green>Progresso do Party VIP: <white><progress></white>/<white><goal></white> (<percentage>%)"

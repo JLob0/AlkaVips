@@ -3,6 +3,7 @@ package com.alkacode.vips.service;
 import com.alkacode.vips.config.ConfigManager;
 import com.alkacode.vips.event.VipActivateEvent;
 import com.alkacode.vips.hook.DiscordWebhook;
+import com.alkacode.vips.hook.HookManager;
 import com.alkacode.vips.manager.CreditManager;
 import com.alkacode.vips.manager.PartyVipManager;
 import com.alkacode.vips.manager.PlayerVipManager;
@@ -31,17 +32,19 @@ public final class ActivationService {
     private final ConfigManager configManager;
     private final DiscordWebhook discordWebhook;
     private final VipTypeManager vipTypeManager;
+    private final HookManager hooks;
     private final Random random = new Random();
 
     public ActivationService(PlayerVipManager playerVipManager, CreditManager creditManager,
                               PartyVipManager partyVipManager, ConfigManager configManager, DiscordWebhook discordWebhook,
-                              VipTypeManager vipTypeManager) {
+                              VipTypeManager vipTypeManager, HookManager hooks) {
         this.playerVipManager = playerVipManager;
         this.creditManager = creditManager;
         this.partyVipManager = partyVipManager;
         this.configManager = configManager;
         this.discordWebhook = discordWebhook;
         this.vipTypeManager = vipTypeManager;
+        this.hooks = hooks;
     }
 
     /**
@@ -97,6 +100,7 @@ public final class ActivationService {
 
         applyGroupCommands(player, vipType, duration, accumulated);
         applyActivationRewards(player, vipType);
+        applyHookRewards(player, vipType);
         creditManager.add(uuid, vipType.credit());
         creditManager.incrementActivations(uuid);
         partyVipManager.addProgress(vipType.partyVipValue());
@@ -141,6 +145,28 @@ public final class ActivationService {
             if (roll(item.chance())) {
                 player.getInventory().addItem(item.itemStack().clone());
             }
+        }
+    }
+
+    /**
+     * Recompensas dos hooks de terceiros opcionais (com.alkacode.vips.hook) - cada
+     * chamada e no-op silencioso se o plugin correspondente nao estiver instalado.
+     * XP do mcMMO usa os campos mcmmo-xp-boost/mcmmo-xp-flat do VipType (nao um
+     * multiplicador fixo hardcoded), pra ficar ajustavel por tier via vips.yml.
+     */
+    private void applyHookRewards(Player player, VipType vipType) {
+        int mcmmoXp = (int) Math.round(vipType.credit() * vipType.mcmmoXpBoost()) + vipType.mcmmoXpFlat();
+        if (mcmmoXp > 0) {
+            hooks.mcmmo().addSkillXpAll(player, mcmmoXp);
+        }
+        if (vipType.battlepassXp() > 0) {
+            hooks.battlePass().addXp(player, vipType.battlepassXp());
+        }
+        if (vipType.mythicDrop() != null && !vipType.mythicDrop().isBlank()) {
+            hooks.mythicMobs().giveDrop(player, vipType.mythicDrop());
+        }
+        for (String petId : vipType.pets()) {
+            hooks.mcPets().givePet(player, petId);
         }
     }
 

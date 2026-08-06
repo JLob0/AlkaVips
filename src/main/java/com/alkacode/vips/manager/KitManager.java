@@ -75,7 +75,13 @@ public final class KitManager {
     private VipKit parse(String vipTypeId, String kitId, ConfigurationSection section) {
         String name = section.getString("name", kitId);
         long cooldownMillis = section.getLong("cooldown-seconds", 86_400L) * 1000L;
-        List<ItemStack> items = (List<ItemStack>) section.getList("items", List.of());
+        List<ItemStack> rawItems = (List<ItemStack>) section.getList("items", List.of());
+        List<ItemStack> items = rawItems.stream()
+                .filter(i -> i != null && !i.getType().isAir())
+                .collect(java.util.stream.Collectors.toList());
+        if (items.isEmpty()) {
+            plugin.getLogger().warning("Kit '" + kitId + "' do VIP '" + vipTypeId + "' carregado sem itens.");
+        }
         return new VipKit(vipTypeId.toLowerCase(), kitId, name, cooldownMillis, items);
     }
 
@@ -112,8 +118,10 @@ public final class KitManager {
         database.saveKitCooldown(player.getUniqueId(), kit.key(), now);
 
         for (ItemStack item : kit.items()) {
+            if (item == null || item.getType().isAir()) continue;
             Map<Integer, ItemStack> overflow = player.getInventory().addItem(item.clone());
             for (ItemStack leftover : overflow.values()) {
+                if (leftover == null || leftover.getType().isAir()) continue;
                 Item dropped = player.getWorld().dropItemNaturally(player.getLocation(), leftover);
                 dropped.setOwner(player.getUniqueId());
             }

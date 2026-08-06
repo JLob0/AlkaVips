@@ -62,6 +62,16 @@ public final class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder glow(boolean glow) {
+        if (glow) {
+            ItemMeta meta = stack.getItemMeta();
+            meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
+            meta.addEnchant(org.bukkit.enchantments.Enchantment.UNBREAKING, 1, true);
+            stack.setItemMeta(meta);
+        }
+        return this;
+    }
+
     public ItemStack build() {
         return stack;
     }

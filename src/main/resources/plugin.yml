@@ -39,7 +39,7 @@ commands:
     description: Ve o progresso do Party VIP.
     usage: /<command>
   creditovip:
-    description: Ve seus creditos VIP (ou gerencia, para admins).
+    description: Ve sua Essencia Alka (ou gerencia, para admins).
     usage: /<command> [add|remove|set <jogador> <quantia>]
   congelarvip:
     description: Congela/descongela o tempo do seu VIP.
@@ -145,7 +145,7 @@ permissions:
   alkavips.admin.bonus:
     default: op
   alkavips.admin.credit:
-    description: Permite gerenciar creditos VIP de outros jogadores.
+    description: Permite gerenciar Essencia Alka de outros jogadores.
     default: op
   alkavips.admin.reload:
     default: op

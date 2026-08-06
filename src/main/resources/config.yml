@@ -41,20 +41,49 @@ marketplace:
   # taxa cobrada do vendedor no momento da venda (percentual, 0.0 a 1.0)
   sale-tax: 0.0
 
-# Loja de Creditos VIP (menu /vip > Loja de Creditos)
+# Loja de Essencia Alka (menu /vip > Loja de Essencia Alka)
 credit-shop:
+  title: "<#00FFAA>✦ Loja Alka"
   items:
-    item-1:
+    crystal-common:
+      material: EMERALD
+      name: "<#55FF55>✦ Cristal Comum"
+      lore:
+        - "<gray>Um cristal basico imbuido"
+        - "<gray>com essencia de Alka."
+        - ""
+        - "<gray>Custo: <yellow>✦ 50 Essencia Alka"
       cost: 50.0
-      material: DIAMOND
-      name: "<aqua>Diamante"
-      lore: ["<gray>Custa <white><cost></white> creditos VIP."]
       amount: 1
-    item-2:
-      cost: 200.0
+    crystal-rare:
+      material: DIAMOND
+      name: "<#55AAFF>✦✦ Cristal Raro"
+      lore:
+        - "<gray>Cristal de diamante puro"
+        - "<gray>carregado com magia azul."
+        - ""
+        - "<gray>Custo: <yellow>✦ 150 Essencia Alka"
+      cost: 150.0
+      amount: 1
+    crystal-legendary:
       material: NETHERITE_INGOT
-      name: "<dark_purple>Lingote de Netherita"
-      lore: ["<gray>Custa <white><cost></white> creditos VIP."]
+      name: "<#FFD700>✦✦✦ Cristal Lendario"
+      lore:
+        - "<gray>Metal forjado no nucleo de Alka."
+        - "<gray>Apenas os dignos podem maneja-lo."
+        - ""
+        - "<gray>Custo: <yellow>✦ 500 Essencia Alka"
+      cost: 500.0
+      amount: 1
+    key-vip-discount:
+      material: TRIPWIRE_HOOK
+      name: "<#55FF55>🔑 Chave VIP (50% OFF)"
+      lore:
+        - "<gray>Uma chave VIP com desconto"
+        - "<gray>para gastadores de Essencia."
+        - ""
+        - "<gray>Custo: <yellow>✦ 200 Essencia Alka"
+      cost: 200.0
       amount: 1
 
 # Cache de tick da task de expiracao (em ticks, 1200 = 1 minuto)

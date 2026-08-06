@@ -13,6 +13,7 @@ import com.alkacode.vips.config.ConfigManager;
 import com.alkacode.vips.gui.ChatInputManager;
 import com.alkacode.vips.hook.AlkaEconomyHook;
 import com.alkacode.vips.hook.DiscordWebhook;
+import com.alkacode.vips.hook.HookManager;
 import com.alkacode.vips.hook.PlaceholderAPIHook;
 import com.alkacode.vips.listener.ChatInputListener;
 import com.alkacode.vips.listener.KeyInteractListener;
@@ -57,7 +58,8 @@ public final class AlkaVipsPlugin extends AlkaPlugin {
 
         database = new VipsRepository(api.getDatabase(), getLogger());
 
-        VipTypeManager vipTypeManager = new VipTypeManager(this);
+        HookManager hooks = new HookManager(this);
+        VipTypeManager vipTypeManager = new VipTypeManager(this, hooks);
         vipTypeManager.load();
 
         AlkaEconomyHook economyHook = AlkaEconomyHook.resolve();
@@ -78,14 +80,15 @@ public final class AlkaVipsPlugin extends AlkaPlugin {
 
         ExpirationService expirationService = new ExpirationService(playerVipManager, vipTypeManager, configManager);
         ActivationService activationService = new ActivationService(playerVipManager, creditManager, partyVipManager,
-                configManager, discordWebhook, vipTypeManager);
+                configManager, discordWebhook, vipTypeManager, hooks);
         UpgradeService upgradeService = new UpgradeService(playerVipManager, vipTypeManager, configManager, economyHook);
         MarketplaceService marketplaceService = new MarketplaceService(keyManager, vipTypeManager, configManager, economyHook);
         KeyUsageService keyUsageService = new KeyUsageService(keyManager, vipTypeManager, activationService);
 
         services = new VipsServices(this, configManager, vipTypeManager, database, playerVipManager, creditManager,
                 keyManager, partyVipManager, economyHook, discordWebhook, activationService, upgradeService,
-                marketplaceService, keyUsageService, expirationService, chatInputManager, perksManager, kitManager);
+                marketplaceService, keyUsageService, expirationService, chatInputManager, perksManager, kitManager,
+                hooks);
 
         compensateServerDowntime(vipTypeManager, database);
 

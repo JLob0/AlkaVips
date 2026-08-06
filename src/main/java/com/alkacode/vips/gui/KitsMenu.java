@@ -65,6 +65,7 @@ public final class KitsMenu extends BaseGui {
 
     private void renderColumn(int column, VipType tier, boolean owned) {
         setItem(HEADER_SLOTS[column], new ItemBuilder(owned ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE)
+                .glow(owned)
                 .name(TextUtil.plain(tier.display()))
                 .build());
 
@@ -73,28 +74,48 @@ public final class KitsMenu extends BaseGui {
             VipKit kit = kits.get(KIT_ROWS.get(row));
             int slot = KIT_SLOTS[row][column];
             if (!owned) {
-                setItem(slot, lockedItem("<red>Bloqueado", "<gray>Voce nao possui " + TextUtil.plain(tier.display())));
+                setItem(slot, lockedTierItem(tier));
             } else if (kit == null) {
-                setItem(slot, lockedItem("<gray>Sem kit", "<gray>Este tier nao tem kit " + KIT_ROWS.get(row) + "."));
+                setItem(slot, noKitItem(KIT_ROWS.get(row)));
             } else {
                 setItem(slot, kitItem(kit), e -> claim(kit));
             }
         }
     }
 
-    private org.bukkit.inventory.ItemStack lockedItem(String name, String lore) {
-        return new ItemBuilder(Material.BARRIER).name(name).lore(List.of(lore)).build();
+    private org.bukkit.inventory.ItemStack lockedTierItem(VipType tier) {
+        return new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+                .name("<dark_red><bold>Bloqueado")
+                .lore(List.of("<gray>Voce nao possui " + TextUtil.plain(tier.display())))
+                .build();
+    }
+
+    private org.bukkit.inventory.ItemStack noKitItem(String row) {
+        return new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE)
+                .name("<gray><bold>Sem Kit")
+                .lore(List.of("<gray>Este tier nao tem kit " + row + "."))
+                .build();
     }
 
     private org.bukkit.inventory.ItemStack kitItem(VipKit kit) {
         long remaining = services.kitManager.remainingCooldown(player.getUniqueId(), kit);
         boolean available = remaining <= 0;
-        ItemBuilder builder = new ItemBuilder(available ? Material.CHEST : Material.BARRIER)
-                .name((available ? "<green>" : "<red>") + kit.displayName());
+        ItemBuilder builder = new ItemBuilder(Material.CHEST)
+                .glow(available)
+                .name(available ? "<green><bold>" + kit.displayName() : "<red><bold>Em Recarga");
         if (available) {
-            builder.lore(List.of("<gray>Clique para resgatar."));
+            builder.lore(List.of(
+                    "<gray>─────────────────",
+                    "<gray>Status: <green>Disponivel",
+                    "",
+                    "<green><bold>Clique para resgatar",
+                    "<gray>─────────────────"));
         } else {
-            builder.lore(List.of("<gray>Disponivel em: <white>" + TimeUtil.formatRemaining(remaining)));
+            builder.lore(List.of(
+                    "<gray>─────────────────",
+                    "<gray>" + kit.displayName(),
+                    "<gray>Disponivel em: <white>" + TimeUtil.formatRemaining(remaining),
+                    "<gray>─────────────────"));
         }
         return builder.build();
     }

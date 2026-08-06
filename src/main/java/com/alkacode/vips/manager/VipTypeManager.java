@@ -1,5 +1,6 @@
 package com.alkacode.vips.manager;
 
+import com.alkacode.vips.hook.HookManager;
 import com.alkacode.vips.model.IconTemplate;
 import com.alkacode.vips.model.VipItem;
 import com.alkacode.vips.model.VipPerks;
@@ -8,6 +9,7 @@ import com.alkacode.vips.model.enums.TimeType;
 import com.alkacode.vips.util.ItemBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -20,10 +22,12 @@ import java.util.logging.Level;
 public final class VipTypeManager {
 
     private final JavaPlugin plugin;
+    private final HookManager hooks;
     private final Map<String, VipType> vipTypes = new LinkedHashMap<>();
 
-    public VipTypeManager(JavaPlugin plugin) {
+    public VipTypeManager(JavaPlugin plugin, HookManager hooks) {
         this.plugin = plugin;
+        this.hooks = hooks;
     }
 
     public void load() {
@@ -66,7 +70,12 @@ public final class VipTypeManager {
                 .activationMenu(section.getBoolean("activation-menu", false))
                 .allowSell(section.getBoolean("allow-sell", true))
                 .order(section.getInt("order", 0))
-                .tagPermanent(section.getBoolean("tag-permanent", false));
+                .tagPermanent(section.getBoolean("tag-permanent", false))
+                .mcmmoXpBoost(section.getDouble("mcmmo-xp-boost", 1.0))
+                .mcmmoXpFlat(section.getInt("mcmmo-xp-flat", 0))
+                .mythicDrop(section.getString("mythic-drop", ""))
+                .battlepassXp(section.getInt("battlepass-xp", 0))
+                .pets(section.getStringList("pets"));
 
         builder.icon(IconTemplate.fromSection(section.getConfigurationSection("icon")))
                 .keyPreview(IconTemplate.fromSection(section.getConfigurationSection("key-preview")))
@@ -150,10 +159,41 @@ public final class VipTypeManager {
                 continue;
             }
             double chance = entry.getDouble("chance", 100.0);
-            org.bukkit.inventory.ItemStack stack = ItemBuilder.fromSection(entry).build();
-            items.add(new VipItem(chance, stack));
+            items.add(new VipItem(chance, buildActivationItem(entry)));
         }
         return items;
+    }
+
+    /**
+     * Campo "itemsadder" opcional troca o item base por um item custom do ItemsAdder
+     * (fallback pro material padrao se o hook nao estiver disponivel); "ae-enchants"
+     * opcional aplica encantamentos do AdvancedEnchantments por cima do item resultante.
+     * Ambos sao soft-dependency - se o plugin correspondente nao estiver instalado, o
+     * item sai identico ao que sairia sem esses campos.
+     */
+    private ItemStack buildActivationItem(ConfigurationSection entry) {
+        ItemStack stack = null;
+        String itemsAdderId = entry.getString("itemsadder", "");
+        if (itemsAdderId != null && !itemsAdderId.isBlank() && hooks.itemsAdder().isAvailable()) {
+            stack = hooks.itemsAdder().getItemStack(itemsAdderId);
+        }
+        if (stack == null) {
+            stack = ItemBuilder.fromSection(entry).build();
+        }
+        if (hooks.advancedEnchantments().isAvailable()) {
+            for (String raw : entry.getStringList("ae-enchants")) {
+                String[] parts = raw.split(":", 2);
+                if (parts.length != 2) {
+                    continue;
+                }
+                try {
+                    hooks.advancedEnchantments().applyEnchant(stack, parts[0], Integer.parseInt(parts[1].trim()));
+                } catch (NumberFormatException ignored) {
+                    plugin.getLogger().warning("Nivel de ae-enchants invalido: '" + raw + "'");
+                }
+            }
+        }
+        return stack;
     }
 
     private TimeType parseTimeType(String raw) {

@@ -59,9 +59,13 @@ public final class UpgradeMenu extends BaseGui {
             }
             String currency = entry.getKey();
             double price = services.upgradeService.calculateUpgradePrice(currentVip, fromType, currency);
-            var item = new ItemBuilder(Material.GOLD_NUGGET)
-                    .name("<yellow>Pagar com " + currency.toUpperCase())
-                    .lore(List.of("<gray>Preco: <white>" + services.economyHook.format(price),
+            boolean canAfford = services.economyHook.has(player.getUniqueId(), currency, price);
+            var item = new ItemBuilder(canAfford ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE)
+                    .glow(canAfford)
+                    .name(canAfford ? "<green>Disponivel" : "<red>Bloqueado")
+                    .lore(List.of(
+                            "<gray>Pagar com <white>" + currency.toUpperCase(),
+                            "<gray>Preco: <white>" + services.economyHook.format(price),
                             "<gray>Upar para: <white>" + (toType != null ? TextUtil.plain(toType.display()) : fromType.upgradeTo())))
                     .build();
             setItem(slot, item, e -> attemptUpgrade(currency));
@@ -78,9 +82,13 @@ public final class UpgradeMenu extends BaseGui {
             }
             String currency = entry.getKey();
             double price = entry.getValue();
-            var item = new ItemBuilder(Material.GOLD_NUGGET)
-                    .name("<yellow>Pagar com " + currency.toUpperCase())
-                    .lore(List.of("<gray>Adiciona <white>" + TimeUtil.formatRemaining(additionalDuration),
+            boolean canAfford = services.economyHook.has(player.getUniqueId(), currency, price);
+            var item = new ItemBuilder(canAfford ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE)
+                    .glow(canAfford)
+                    .name(canAfford ? "<green>Disponivel" : "<red>Bloqueado")
+                    .lore(List.of(
+                            "<gray>Pagar com <white>" + currency.toUpperCase(),
+                            "<gray>Adiciona <white>" + TimeUtil.formatRemaining(additionalDuration),
                             "<gray>Preco: <white>" + services.economyHook.format(price)))
                     .build();
             setItem(slot, item, e -> attemptExtend(currency, additionalDuration));

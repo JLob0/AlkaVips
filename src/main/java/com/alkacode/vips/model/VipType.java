@@ -49,6 +49,14 @@ public final class VipType {
     private final int order;
     private final boolean tagPermanent;
 
+    // Integracao com hooks de plugins de terceiros (com.alkacode.vips.hook) - todos
+    // opcionais, sem efeito se o plugin correspondente nao estiver instalado.
+    private final double mcmmoXpBoost;
+    private final int mcmmoXpFlat;
+    private final String mythicDrop;
+    private final int battlepassXp;
+    private final List<String> pets;
+
     private VipType(Builder builder) {
         this.id = builder.id;
         this.display = builder.display;
@@ -84,6 +92,11 @@ public final class VipType {
         this.perks = builder.perks;
         this.order = builder.order;
         this.tagPermanent = builder.tagPermanent;
+        this.mcmmoXpBoost = builder.mcmmoXpBoost;
+        this.mcmmoXpFlat = builder.mcmmoXpFlat;
+        this.mythicDrop = builder.mythicDrop;
+        this.battlepassXp = builder.battlepassXp;
+        this.pets = builder.pets;
     }
 
     public String id() { return id; }
@@ -121,6 +134,11 @@ public final class VipType {
     public VipPerks perks() { return perks; }
     public int getOrder() { return order; }
     public boolean isTagPermanent() { return tagPermanent; }
+    public double mcmmoXpBoost() { return mcmmoXpBoost; }
+    public int mcmmoXpFlat() { return mcmmoXpFlat; }
+    public String mythicDrop() { return mythicDrop; }
+    public int battlepassXp() { return battlepassXp; }
+    public List<String> pets() { return pets; }
 
     public static Builder builder(String id) {
         return new Builder(id);
@@ -161,6 +179,11 @@ public final class VipType {
         private VipPerks perks = VipPerks.NONE;
         private int order;
         private boolean tagPermanent;
+        private double mcmmoXpBoost = 1.0;
+        private int mcmmoXpFlat = 0;
+        private String mythicDrop = "";
+        private int battlepassXp = 0;
+        private List<String> pets = List.of();
 
         private Builder(String id) {
             this.id = id;
@@ -199,6 +222,11 @@ public final class VipType {
         public Builder perks(VipPerks perks) { this.perks = perks; return this; }
         public Builder order(int order) { this.order = order; return this; }
         public Builder tagPermanent(boolean tagPermanent) { this.tagPermanent = tagPermanent; return this; }
+        public Builder mcmmoXpBoost(double mcmmoXpBoost) { this.mcmmoXpBoost = mcmmoXpBoost; return this; }
+        public Builder mcmmoXpFlat(int mcmmoXpFlat) { this.mcmmoXpFlat = mcmmoXpFlat; return this; }
+        public Builder mythicDrop(String mythicDrop) { this.mythicDrop = mythicDrop; return this; }
+        public Builder battlepassXp(int battlepassXp) { this.battlepassXp = battlepassXp; return this; }
+        public Builder pets(List<String> pets) { this.pets = pets; return this; }
 
         public VipType build() {
             return new VipType(this);

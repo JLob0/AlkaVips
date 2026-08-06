@@ -20,13 +20,16 @@ vips:
       lore: []
     key-preview:
       material: TRIPWIRE_HOOK
-      name: '<#55FF55>[VIP] <dark_gray><id>'
+      name: '<#55FF55>★ [VIP] <dark_gray><id>'
       lore:
-        - ' <gray>Vip: <#55FF55>[VIP]'
-        - ' <gray>Duracao: <white><expire_remaining>'
+        - '<gray>─────────────────'
+        - '<gray>Tier: <#55FF55>[VIP]'
+        - '<gray>Duracao: <white><expire_remaining>'
+        - '<gray>Codigo: <dark_gray><id>'
         - ''
-        - '<green>Botao <white>ESQUERDO <green>para ativar'
-        - '<green>Botao <white>DIREITO <green>para vender'
+        - '<green><bold>⬅ ESQUERDO <gray>para ativar'
+        - '<red><bold>➡ DIREITO <gray>para vender'
+        - '<gray>─────────────────'
     active-preview:
       material: EMERALD
       name: '<#55FF55>[VIP] <dark_gray><id>'
@@ -103,13 +106,16 @@ vips:
       lore: []
     key-preview:
       material: TRIPWIRE_HOOK
-      name: '<#55FF55>[VIP+] <dark_gray><id>'
+      name: '<#55FF55>★★ [VIP+] <dark_gray><id>'
       lore:
-        - ' <gray>Vip: <#55FF55>[VIP+]'
-        - ' <gray>Duracao: <white><expire_remaining>'
+        - '<gray>─────────────────'
+        - '<gray>Tier: <#55FF55>[VIP+]'
+        - '<gray>Duracao: <white><expire_remaining>'
+        - '<gray>Codigo: <dark_gray><id>'
         - ''
-        - '<green>Botao <white>ESQUERDO <green>para ativar'
-        - '<green>Botao <white>DIREITO <green>para vender'
+        - '<green><bold>⬅ ESQUERDO <gray>para ativar'
+        - '<red><bold>➡ DIREITO <gray>para vender'
+        - '<gray>─────────────────'
     active-preview:
       material: EMERALD_BLOCK
       name: '<#55FF55>[VIP+] <dark_gray><id>'
@@ -186,13 +192,16 @@ vips:
       lore: []
     key-preview:
       material: TRIPWIRE_HOOK
-      name: '<#55AAFF>[MVP] <dark_gray><id>'
+      name: '<#55AAFF>★★★ [MVP] <dark_gray><id>'
       lore:
-        - ' <gray>Vip: <#55AAFF>[MVP]'
-        - ' <gray>Duracao: <white><expire_remaining>'
+        - '<gray>─────────────────'
+        - '<gray>Tier: <#55AAFF>[MVP]'
+        - '<gray>Duracao: <white><expire_remaining>'
+        - '<gray>Codigo: <dark_gray><id>'
         - ''
-        - '<green>Botao <white>ESQUERDO <green>para ativar'
-        - '<green>Botao <white>DIREITO <green>para vender'
+        - '<green><bold>⬅ ESQUERDO <gray>para ativar'
+        - '<red><bold>➡ DIREITO <gray>para vender'
+        - '<gray>─────────────────'
     active-preview:
       material: DIAMOND
       name: '<#55AAFF>[MVP] <dark_gray><id>'
@@ -269,13 +278,16 @@ vips:
       lore: []
     key-preview:
       material: TRIPWIRE_HOOK
-      name: '<#FF55FF>[MVP+] <dark_gray><id>'
+      name: '<#FF55FF>★★★★ [MVP+] <dark_gray><id>'
       lore:
-        - ' <gray>Vip: <#FF55FF>[MVP+]'
-        - ' <gray>Duracao: <white><expire_remaining>'
+        - '<gray>─────────────────'
+        - '<gray>Tier: <#FF55FF>[MVP+]'
+        - '<gray>Duracao: <white><expire_remaining>'
+        - '<gray>Codigo: <dark_gray><id>'
         - ''
-        - '<green>Botao <white>ESQUERDO <green>para ativar'
-        - '<green>Botao <white>DIREITO <green>para vender'
+        - '<green><bold>⬅ ESQUERDO <gray>para ativar'
+        - '<red><bold>➡ DIREITO <gray>para vender'
+        - '<gray>─────────────────'
     active-preview:
       material: DIAMOND_BLOCK
       name: '<#FF55FF>[MVP+] <dark_gray><id>'
@@ -352,13 +364,16 @@ vips:
       lore: []
     key-preview:
       material: TRIPWIRE_HOOK
-      name: '<#FFD700>[ALKA] <dark_gray><id>'
+      name: '<#FFD700>★★★★★ [ALKA] <dark_gray><id>'
       lore:
-        - ' <gray>Vip: <#FFD700>[ALKA]'
-        - ' <gray>Duracao: <white><expire_remaining>'
+        - '<gray>─────────────────'
+        - '<gray>Tier: <#FFD700>[ALKA]'
+        - '<gray>Duracao: <white><expire_remaining>'
+        - '<gray>Codigo: <dark_gray><id>'
         - ''
-        - '<green>Botao <white>ESQUERDO <green>para ativar'
-        - '<green>Botao <white>DIREITO <green>para vender'
+        - '<green><bold>⬅ ESQUERDO <gray>para ativar'
+        - '<red><bold>➡ DIREITO <gray>para vender'
+        - '<gray>─────────────────'
     active-preview:
       material: NETHERITE_INGOT
       name: '<#FFD700>[ALKA] <dark_gray><id>'
@@ -435,13 +450,17 @@ vips:
       lore: []
     key-preview:
       material: TRIPWIRE_HOOK
-      name: '<#FF0000>[DRAKKAR] <dark_gray><id>'
+      glow: true
+      name: '<#FF0000>👑 [DRAKKAR] <dark_gray><id>'
       lore:
-        - ' <gray>Vip: <#FF0000>[DRAKKAR]'
-        - ' <gray>Duracao: <white><expire_remaining>'
+        - '<gray>─────────────────'
+        - '<gray>Tier: <#FF0000>[DRAKKAR]'
+        - '<gray>Duracao: <white><expire_remaining>'
+        - '<gray>Codigo: <dark_gray><id>'
         - ''
-        - '<green>Botao <white>ESQUERDO <green>para ativar'
-        - '<green>Botao <white>DIREITO <green>para vender'
+        - '<green><bold>⬅ ESQUERDO <gray>para ativar'
+        - '<red><bold>➡ DIREITO <gray>para vender'
+        - '<gray>─────────────────'
     active-preview:
       material: DRAGON_EGG
       name: '<#FF0000>[DRAKKAR] <dark_gray><id>'

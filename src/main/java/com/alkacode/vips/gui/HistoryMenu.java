@@ -6,7 +6,6 @@ import com.alkacode.vips.model.PlayerVip;
 import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.model.enums.VipStatus;
 import com.alkacode.vips.util.ItemBuilder;
-import com.alkacode.vips.util.TextUtil;
 import com.alkacode.vips.util.TimeUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,14 +36,18 @@ public final class HistoryMenu extends BaseGui {
                 break;
             }
             VipType type = services.vipTypeManager.get(vip.vipTypeId());
-            String display = type != null ? TextUtil.plain(type.display()) : vip.vipTypeId();
+            String title = type != null ? tierBadge(type) + " " + type.prefix() : "<white>" + vip.vipTypeId();
             Material material = vip.status() == VipStatus.EXPIRED ? Material.GRAY_DYE
                     : vip.status() == VipStatus.PENDING ? Material.CLOCK : Material.LIME_DYE;
             var item = new ItemBuilder(material)
-                    .name("<white>" + display + " <gray>— " + statusLine(vip))
+                    .glow(vip.status() != VipStatus.EXPIRED)
+                    .name(title)
                     .lore(List.of(
+                            "<gray>─────────────────",
                             "<gray>Ativado: <white>" + DATE_FORMAT.format(java.time.Instant.ofEpochMilli(vip.activatedAt())),
-                            "<gray>Duracao: <white>" + durationText(vip)
+                            "<gray>Duracao: <white>" + durationText(vip),
+                            "<gray>Status: " + statusLine(vip),
+                            "<gray>─────────────────"
                     ))
                     .build();
             setItem(slot, item);
@@ -53,6 +56,16 @@ public final class HistoryMenu extends BaseGui {
         setItem(getInventory().getSize() - 5, new ItemBuilder(Material.BARRIER).name("<red>Voltar").build(),
                 e -> new MainVipMenu(player, services).open());
         fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
+    }
+
+    /** Distintivo de rank do tier a partir de {@link VipType#getOrder()} - data-driven em vez de
+     * uma lista fixa de nomes, pra nao quebrar quando vips.yml ganhar/perder tiers. Tag-permanent
+     * (hoje so DRAKKAR) ganha coroa em vez de estrelas, ja que fica no topo da cadeia. */
+    private String tierBadge(VipType type) {
+        if (type.isTagPermanent()) {
+            return "👑";
+        }
+        return "★".repeat(Math.max(1, type.getOrder()));
     }
 
     private String statusLine(PlayerVip vip) {
