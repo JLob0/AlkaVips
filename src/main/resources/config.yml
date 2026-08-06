@@ -1,0 +1,78 @@
+# Configuracao geral do AlkaVips. Suporta tags MiniMessage (<red>, <b>, etc) nas mensagens.
+
+# Atualizacao automatica do menu principal (em ticks, 20 = 1 segundo)
+menu-updater: true
+menu-updater-time: 20
+
+# Party VIP - meta coletiva do servidor
+party-vip:
+  enabled: true
+  goal: 1000.0
+  reward-commands:
+    - 'give {player} diamond 64'
+  announce: "<green><b>PARTY VIP!</b> <gray>Meta atingida! Todos ganharam recompensas!"
+
+# Discord
+discord:
+  webhook-url: ''
+  embeds:
+    activated:
+      title: 'VIP Ativado'
+      description: '{player} ativou {vip_display}'
+      color: '#00FF00'
+    upgraded:
+      title: 'VIP Upado'
+      description: '{player} upou de {vip_from} para {vip_to}'
+      color: '#FFAA00'
+
+# Banco de dados
+storage:
+  type: SQLITE  # SQLITE | MYSQL
+  mysql:
+    host: localhost
+    port: 3306
+    database: alkavips
+    username: root
+    password: ''
+    pool-size: 10
+
+# Marketplace
+marketplace:
+  # taxa cobrada do vendedor no momento da venda (percentual, 0.0 a 1.0)
+  sale-tax: 0.0
+
+# Loja de Creditos VIP (menu /vip > Loja de Creditos)
+credit-shop:
+  items:
+    item-1:
+      cost: 50.0
+      material: DIAMOND
+      name: "<aqua>Diamante"
+      lore: ["<gray>Custa <white><cost></white> creditos VIP."]
+      amount: 1
+    item-2:
+      cost: 200.0
+      material: NETHERITE_INGOT
+      name: "<dark_purple>Lingote de Netherita"
+      lore: ["<gray>Custa <white><cost></white> creditos VIP."]
+      amount: 1
+
+# Cache de tick da task de expiracao (em ticks, 1200 = 1 minuto)
+expiration-check-interval: 1200
+
+# Sistema de upgrade (moeda default sugerida pra GUI/comandos que nao especificam
+# qual moeda usar - cada VipType em vips.yml ainda define seu proprio mapa de precos
+# por moeda em upgrade.prices, isso aqui e so um fallback/preferencia global)
+upgrade:
+  allow-partial: true
+  currency: 'drakonio'
+
+# Opcoes de renovacao (em dias) oferecidas nos menus/comandos de renovar VIP
+renewal:
+  options: [7, 15, 30, 90]
+
+# Tag de veterano do Drakkar (VipType com tag-permanent: true em vips.yml) - a cada
+# season, incrementar current-season; a tag vira DRAKKAR_S<season>.
+drakkar:
+  season-prefix: 'DRAKKAR'
+  current-season: 1

@@ -1,0 +1,51 @@
+# Titulos e tamanhos das GUIs do AlkaVips. Slots de itens fixos sao definidos no codigo
+# (ver especificacao), aqui so titulo/tamanho/itens de navegacao sao configuraveis.
+
+main:
+  title: "<dark_gray>VIPs <dark_gray>» <light_purple>Principal"
+  size: 36
+
+keys:
+  title: "<dark_gray>Minhas Keys"
+  size: 54
+
+pending:
+  title: "<dark_gray>Ativacoes Pendentes"
+  size: 27
+
+history:
+  title: "<dark_gray>Historico de VIPs"
+  size: 54
+
+shop:
+  title: "<dark_gray>Loja de Creditos"
+  size: 54
+
+marketplace:
+  title: "<dark_gray>Loja de Chaves"
+  size: 54
+
+sell:
+  title: "<dark_gray>Vender Key"
+  size: 27
+
+confirm-buy:
+  title: "<dark_gray>Confirmar Compra"
+  size: 27
+
+top:
+  title: "<dark_gray>TOP VIP"
+  size: 27
+
+party:
+  title: "<dark_gray>Party VIP"
+  size: 27
+
+kits:
+  title: "<dark_gray>Kits VIP"
+  size: 54
+
+fill-empty:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: " "

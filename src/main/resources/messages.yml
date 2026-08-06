@@ -1,0 +1,93 @@
+# Mensagens do AlkaVips. Suporta tags MiniMessage (<red>, <b>, etc).
+
+prefix: "<dark_gray>[<light_purple>AlkaVips</light_purple>]</dark_gray> "
+
+general:
+  player-only: "<red>Este comando so pode ser usado por jogadores."
+  no-permission: "<red>Voce nao tem permissao para usar este comando."
+  invalid-usage: "<red>Uso: <white><usage>"
+  unknown-player: "<red>Jogador <white><name></white> nao encontrado."
+  unknown-vip: "<red>VIP invalido: <white><value></white>."
+  invalid-amount: "<red>Quantidade invalida: <white><value></white>."
+  invalid-time: "<red>Duracao invalida: <white><value></white>. Use algo como 1d12h30m."
+  reloaded: "<green>Configuracao do AlkaVips recarregada."
+
+key:
+  not-found: "<red>Key <white><code></white> nao encontrada."
+  already-used: "<red>Essa key ja foi utilizada."
+  used-success: "<green>Key ativada com sucesso!"
+  pending-added: "<green>Sua ativacao foi para a fila. Colete em <white>/vip</white> > Ativacoes Pendentes."
+  given: "<green>Key <white><code></white> (<vip>) entregue para <white><name></white>."
+  received: "<green>Voce recebeu uma key de <vip>! Codigo: <white><code></white>"
+  generated: "<green>Geradas <white><amount></white>x keys de <vip> (<duration>)."
+  created: "<green>Key <white><code></white> criada com sucesso."
+  code-exists: "<red>Ja existe uma key com o codigo <white><code></white>."
+  removed: "<green>Key <white><code></white> removida."
+  bonus-given: "<green>Entregue(s) <white><amount></white>x key(s) bonus de <vip> para <white><name></white>."
+  not-held: "<red>Voce precisa estar segurando a key <white><code></white> pra vende-la."
+
+vip:
+  no-active: "<yellow>Voce nao possui nenhum VIP ativo."
+  activated: "<green>VIP <vip> ativado com sucesso!"
+  accumulated: "<green>Voce ja possuia esse VIP - o tempo foi somado!"
+  given: "<green>VIP <vip> concedido a <white><name></white> por <white><duration></white>."
+  set: "<green>VIP <vip> definido para <white><name></white> (silencioso)."
+  removed: "<green>VIP <vip> removido de <white><name></white>."
+  removed-time: "<green>Removido(s) <white><duration></white> do VIP <vip> de <white><name></white>."
+  no-vip-to-remove: "<red><name> nao possui o VIP <vip>."
+  time-remaining: "<green>Seu VIP <vip> expira em: <white><time>"
+  frozen: "<green>Seu VIP foi congelado."
+  unfrozen: "<green>Seu VIP foi descongelado."
+  no-vip-to-freeze: "<red>Voce nao possui um VIP ativo para congelar."
+  swapped: "<green>Voce trocou para o VIP <vip>."
+  no-vips-to-swap: "<yellow>Voce precisa de pelo menos 2 VIPs ativos para trocar."
+
+upgrade:
+  no-upgrade-available: "<yellow>Seu VIP nao possui upgrade disponivel."
+  insufficient-funds: "<red>Voce precisa de <white><cost></white> (<currency>) para upar para <vip>."
+  success-private: "<green>Voce upou para o VIP <vip>!"
+  success-broadcast: "<gray>{player}<green> upou para o VIP <vip>!"
+
+market:
+  not-owner: "<red>Essa key nao e sua."
+  already-for-sale: "<red>Essa key ja esta a venda."
+  not-for-sale: "<red>Essa key nao esta a venda."
+  invalid-currency: "<red>Moeda invalida: <white><value></white>."
+  invalid-price: "<red>Preco invalido: <white><value></white>."
+  listed: "<green>Key <white><code></white> colocada a venda por <white><price></white> (<currency>)."
+  cancelled: "<green>Venda da key <white><code></white> cancelada."
+  buy-own: "<red>Voce nao pode comprar sua propria key."
+  insufficient-funds: "<red>Voce precisa de <white><price></white> (<currency>) para comprar essa key."
+  bought: "<green>Voce comprou a key <white><code></white> por <white><price></white>!"
+  sold: "<green>Sua key <white><code></white> foi vendida por <white><price></white>!"
+  empty-list: "<yellow>Nenhuma key a venda no momento."
+
+credit:
+  balance: "<green>Voce possui <white><amount></white> creditos VIP."
+  added: "<green>Adicionado(s) <white><amount></white> credito(s) para <white><name></white>."
+  removed: "<green>Removido(s) <white><amount></white> credito(s) de <white><name></white>."
+  set: "<green>Creditos de <white><name></white> definidos para <white><amount></white>."
+  insufficient: "<red>Voce nao possui creditos suficientes."
+
+party:
+  progress: "<green>Progresso do Party VIP: <white><progress></white>/<white><goal></white> (<percentage>%)"
+  goal-reached: "<green><b>PARTY VIP!</b> <gray>Meta atingida! Todos ganharam recompensas!"
+
+info:
+  header: "<gray>--- <white>Info de VIP: <name> <gray>---"
+  no-vips: "<yellow><name> nao possui nenhum VIP."
+  line: "<gray>- <vip> <white>(<status>) <gray>expira em <white><time>"
+
+perks:
+  no-access: "<red>Seu VIP nao possui esse perk."
+  fly-on: "<green>Fly ativado."
+  fly-off: "<yellow>Fly desativado."
+  no-death-location: "<yellow>Voce nao possui um local de morte registrado."
+  back-success: "<green>Voce voltou para o local da sua morte."
+  feed-cooldown: "<yellow>Aguarde um pouco antes de usar o /vipfeed novamente."
+  fed: "<green>Fome restaurada."
+  no-item-to-repair: "<red>Segure um item danificavel para reparar."
+  repaired: "<green>Item reparado."
+
+kit:
+  claimed: "<green>Voce resgatou o kit <white><kit></white>!"

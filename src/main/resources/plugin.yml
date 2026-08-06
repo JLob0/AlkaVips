@@ -1,0 +1,151 @@
+name: AlkaVips
+version: '${version}'
+main: com.alkacode.vips.AlkaVipsPlugin
+api-version: '1.21.8'
+author: MestreDEV
+description: Sistema completo de gerenciamento de VIPs com keys, upgrades, creditos e marketplace.
+depend: [AlkaCore, AlkaEconomy]
+softdepend: [PlaceholderAPI, LuckPerms]
+
+commands:
+  vip:
+    description: Abre o menu principal de VIPs.
+    usage: /<command>
+  vips:
+    description: Ve seus VIPs ativos.
+    usage: /<command>
+  tempovip:
+    description: Ve o tempo restante do seu VIP.
+    usage: /<command>
+  usarkey:
+    description: Ativa uma key de VIP.
+    usage: /<command> <codigo>
+  trocarvip:
+    description: Troca entre VIPs ativos.
+    usage: /<command>
+  vendervip:
+    description: Coloca uma key a venda no marketplace.
+    usage: /<command> <codigo> <moeda> <preco>
+  cancelarvenda:
+    description: Cancela a venda de uma key.
+    usage: /<command> <codigo>
+  comprarvip:
+    description: Compra uma key do marketplace.
+    usage: /<command> <codigo>
+  vendasvip:
+    description: Abre a loja de chaves (marketplace).
+    usage: /<command>
+  partyvip:
+    description: Ve o progresso do Party VIP.
+    usage: /<command>
+  creditovip:
+    description: Ve seus creditos VIP (ou gerencia, para admins).
+    usage: /<command> [add|remove|set <jogador> <quantia>]
+  congelarvip:
+    description: Congela/descongela o tempo do seu VIP.
+    usage: /<command>
+    permission: alkavips.freeze
+  darvip:
+    description: Da um VIP a um jogador.
+    usage: /<command> <jogador> <vip> <duracao>
+    permission: alkavips.admin.give
+  removervip:
+    description: Remove um VIP de um jogador.
+    usage: /<command> <jogador> <vip>
+    permission: alkavips.admin.remove
+  setvip:
+    description: Define um VIP a um jogador (silencioso).
+    usage: /<command> <jogador> <vip> <duracao>
+    permission: alkavips.admin.set
+  removertempovip:
+    description: Remove tempo de um VIP ativo.
+    usage: /<command> <jogador> <vip> <tempo>
+    permission: alkavips.admin.removetime
+  gerarkey:
+    description: Gera keys aleatorias.
+    usage: /<command> <vip> <duracao> [quantidade]
+    permission: alkavips.admin.genkey
+  criarkey:
+    description: Cria uma key com codigo customizado.
+    usage: /<command> <vip> <duracao> <codigo>
+    permission: alkavips.admin.createkey
+  removerkey:
+    description: Deleta uma key.
+    usage: /<command> <codigo>
+    permission: alkavips.admin.delkey
+  editarkey:
+    description: Edita uma key existente.
+    usage: /<command> <codigo>
+    permission: alkavips.admin.editkey
+  verkeys:
+    description: Ve as keys de um jogador.
+    usage: /<command> [jogador]
+    permission: alkavips.admin.seekeys
+  darkey:
+    description: Gera e entrega uma key direto ao jogador.
+    usage: /<command> <jogador> <vip> <duracao>
+    permission: alkavips.admin.givekey
+  infovip:
+    description: Ve informacoes de VIP de um jogador.
+    usage: /<command> <jogador>
+    permission: alkavips.admin.info
+  bonusvip:
+    description: Da uma key bonus (nao vendavel).
+    usage: /<command> <vip> <jogador> [quantidade]
+    permission: alkavips.admin.bonus
+  alkavips:
+    description: Comando administrativo do AlkaVips.
+    usage: /<command> reload
+    permission: alkavips.admin.reload
+  vipfly:
+    description: Liga/desliga o fly do seu VIP.
+    usage: /<command>
+  vipback:
+    description: Volta para o local da sua ultima morte.
+    usage: /<command>
+  vipfeed:
+    description: Restaura sua fome.
+    usage: /<command>
+  vipreparar:
+    description: Repara o item na mao.
+    usage: /<command>
+  vipbigorna:
+    description: Abre uma bigorna portatil.
+    usage: /<command>
+  vipbancada:
+    description: Abre uma bancada portatil.
+    usage: /<command>
+
+permissions:
+  alkavips.freeze:
+    description: Permite congelar/descongelar o proprio VIP.
+    default: true
+  alkavips.admin.give:
+    default: op
+  alkavips.admin.remove:
+    default: op
+  alkavips.admin.set:
+    default: op
+  alkavips.admin.removetime:
+    default: op
+  alkavips.admin.genkey:
+    default: op
+  alkavips.admin.createkey:
+    default: op
+  alkavips.admin.delkey:
+    default: op
+  alkavips.admin.editkey:
+    default: op
+  alkavips.admin.seekeys:
+    default: op
+  alkavips.admin.givekey:
+    default: op
+  alkavips.admin.info:
+    default: op
+  alkavips.admin.bonus:
+    default: op
+  alkavips.admin.credit:
+    description: Permite gerenciar creditos VIP de outros jogadores.
+    default: op
+  alkavips.admin.reload:
+    default: op

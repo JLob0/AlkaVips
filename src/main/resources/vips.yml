@@ -1,0 +1,500 @@
+# Definicao de todos os VIPs do servidor. Suporta tags MiniMessage nas mensagens/lore.
+# time-type: ONLINE (so desconta online) | SERVER (desconta com o servidor ligado) | REALTIME (desconta sempre)
+# order: usado por VipTypeManager#getOrderedVips() (menor -> maior). tag-permanent: se true,
+# o jogador mantem uma "tag de veterano" mesmo apos o VIP expirar (so faz sentido no topo da cadeia).
+
+vips:
+  vip:
+    display: '<#55FF55>[VIP]'
+    prefix: '<#55FF55><b>VIP</b>'
+    time-type: 'ONLINE'
+    credit: 10.0
+    party-vip-value: 10.0
+    activation-menu: false
+    allow-sell: true
+    order: 1
+    tag-permanent: false
+    icon:
+      material: EMERALD
+      name: '<#55FF55>VIP'
+      lore: []
+    key-preview:
+      material: TRIPWIRE_HOOK
+      name: '<#55FF55>[VIP] <dark_gray><id>'
+      lore:
+        - ' <gray>Vip: <#55FF55>[VIP]'
+        - ' <gray>Duracao: <white><expire_remaining>'
+        - ''
+        - '<green>Botao <white>ESQUERDO <green>para ativar'
+        - '<green>Botao <white>DIREITO <green>para vender'
+    active-preview:
+      material: EMERALD
+      name: '<#55FF55>[VIP] <dark_gray><id>'
+      lore:
+        - ' <white>Ativado por: <green><player>'
+        - ' <white>Status: <green>Ativo'
+        - ' <gray>Expira em: <white><expire_remaining>'
+    expired-preview:
+      material: EMERALD
+      name: '<#55FF55>[VIP] <dark_gray><id>'
+      lore:
+        - ' <white>Status: <red>EXPIRADO'
+    announces:
+      sound: ''
+      effect: ''
+      actionbar: '<gray><player><aqua> acaba de ativar o <#55FF55>VIP'
+      title: '<gray><player><aqua> ativou<newline><#55FF55>VIP'
+      chat: |
+        <green><b>VIPS</b>
+        <aqua>O jogador <gray><player> <aqua>acaba de
+        <aqua>se tornar <gray>(<#55FF55>VIP<gray>)<aqua>.
+      chat-private: |
+        <green><b>VIPS</b>
+        <gray>Recolha sua ativacao no /vip
+    group-command:
+      add: ['lp user {player} parent add vip']
+      remove: ['lp user {player} parent remove vip']
+      addtime: ['lp user {player} parent addtemp vip {time} accumulate']
+      removetime: ['lp user {player} parent removetemp vip {time}']
+    activation-commands:
+      - '100.0,give {player} emerald 16'
+    activation-items:
+      item-1:
+        chance: 100.0
+        material: EMERALD
+        name: '<#55FF55>Cristal VIP'
+        amount: 1
+    upgrade:
+      vip-type: 'vip+'
+      message: |
+        <aqua><b>UPGRADE</b>
+        <green>Voce upou do <#55FF55>[VIP] <green>para o <#55FF55><b>VIP+</b>
+      message-broadcast: ''
+      prices:
+        coins: 5000.0
+    discord:
+      webhook-enabled: true
+      embed-id: 'activated'
+    perks:
+      fly: false
+      autopickup: false
+      autosmelt: false
+      keep-inventory: false
+      back: false
+      feed: true
+      reparar: false
+      bigorna: true
+      bancada: true
+      colored-signs: false
+
+  vip+:
+    display: '<#55FF55>[VIP+]'
+    prefix: '<#55FF55><b>VIP+</b>'
+    time-type: 'ONLINE'
+    credit: 18.0
+    party-vip-value: 18.0
+    activation-menu: false
+    allow-sell: true
+    order: 2
+    tag-permanent: false
+    icon:
+      material: EMERALD_BLOCK
+      name: '<#55FF55>VIP+'
+      lore: []
+    key-preview:
+      material: TRIPWIRE_HOOK
+      name: '<#55FF55>[VIP+] <dark_gray><id>'
+      lore:
+        - ' <gray>Vip: <#55FF55>[VIP+]'
+        - ' <gray>Duracao: <white><expire_remaining>'
+        - ''
+        - '<green>Botao <white>ESQUERDO <green>para ativar'
+        - '<green>Botao <white>DIREITO <green>para vender'
+    active-preview:
+      material: EMERALD_BLOCK
+      name: '<#55FF55>[VIP+] <dark_gray><id>'
+      lore:
+        - ' <white>Ativado por: <green><player>'
+        - ' <white>Status: <green>Ativo'
+        - ' <gray>Expira em: <white><expire_remaining>'
+    expired-preview:
+      material: EMERALD_BLOCK
+      name: '<#55FF55>[VIP+] <dark_gray><id>'
+      lore:
+        - ' <white>Status: <red>EXPIRADO'
+    announces:
+      sound: ''
+      effect: ''
+      actionbar: '<gray><player><aqua> acaba de ativar o <#55FF55>VIP+'
+      title: '<gray><player><aqua> ativou<newline><#55FF55>VIP+'
+      chat: |
+        <green><b>VIPS</b>
+        <aqua>O jogador <gray><player> <aqua>acaba de
+        <aqua>se tornar <gray>(<#55FF55>VIP+<gray>)<aqua>.
+      chat-private: |
+        <green><b>VIPS</b>
+        <gray>Recolha sua ativacao no /vip
+    group-command:
+      add: ['lp user {player} parent add vipplus']
+      remove: ['lp user {player} parent remove vipplus']
+      addtime: ['lp user {player} parent addtemp vipplus {time} accumulate']
+      removetime: ['lp user {player} parent removetemp vipplus {time}']
+    activation-commands:
+      - '100.0,give {player} emerald_block 4'
+    activation-items:
+      item-1:
+        chance: 100.0
+        material: EMERALD_BLOCK
+        name: '<#55FF55>Bloco VIP+'
+        amount: 1
+    upgrade:
+      vip-type: 'mvp'
+      message: |
+        <aqua><b>UPGRADE</b>
+        <green>Voce upou do <#55FF55>[VIP+] <green>para o <#55AAFF><b>MVP</b>
+      message-broadcast: ''
+      prices:
+        coins: 8000.0
+    discord:
+      webhook-enabled: true
+      embed-id: 'activated'
+    perks:
+      fly: false
+      autopickup: false
+      autosmelt: false
+      keep-inventory: false
+      back: false
+      feed: true
+      reparar: false
+      bigorna: true
+      bancada: true
+      colored-signs: true
+
+  mvp:
+    display: '<#55AAFF>[MVP]'
+    prefix: '<#55AAFF><b>MVP</b>'
+    time-type: 'ONLINE'
+    credit: 32.0
+    party-vip-value: 32.0
+    activation-menu: false
+    allow-sell: true
+    order: 3
+    tag-permanent: false
+    icon:
+      material: DIAMOND
+      name: '<#55AAFF>MVP'
+      lore: []
+    key-preview:
+      material: TRIPWIRE_HOOK
+      name: '<#55AAFF>[MVP] <dark_gray><id>'
+      lore:
+        - ' <gray>Vip: <#55AAFF>[MVP]'
+        - ' <gray>Duracao: <white><expire_remaining>'
+        - ''
+        - '<green>Botao <white>ESQUERDO <green>para ativar'
+        - '<green>Botao <white>DIREITO <green>para vender'
+    active-preview:
+      material: DIAMOND
+      name: '<#55AAFF>[MVP] <dark_gray><id>'
+      lore:
+        - ' <white>Ativado por: <green><player>'
+        - ' <white>Status: <green>Ativo'
+        - ' <gray>Expira em: <white><expire_remaining>'
+    expired-preview:
+      material: DIAMOND
+      name: '<#55AAFF>[MVP] <dark_gray><id>'
+      lore:
+        - ' <white>Status: <red>EXPIRADO'
+    announces:
+      sound: ''
+      effect: ''
+      actionbar: '<gray><player><aqua> acaba de ativar o <#55AAFF>MVP'
+      title: '<gray><player><aqua> ativou<newline><#55AAFF>MVP'
+      chat: |
+        <green><b>VIPS</b>
+        <aqua>O jogador <gray><player> <aqua>acaba de
+        <aqua>se tornar <gray>(<#55AAFF>MVP<gray>)<aqua>.
+      chat-private: |
+        <green><b>VIPS</b>
+        <gray>Recolha sua ativacao no /vip
+    group-command:
+      add: ['lp user {player} parent add mvp']
+      remove: ['lp user {player} parent remove mvp']
+      addtime: ['lp user {player} parent addtemp mvp {time} accumulate']
+      removetime: ['lp user {player} parent removetemp mvp {time}']
+    activation-commands:
+      - '100.0,give {player} diamond 8'
+    activation-items:
+      item-1:
+        chance: 100.0
+        material: DIAMOND
+        name: '<#55AAFF>Diamante MVP'
+        amount: 1
+    upgrade:
+      vip-type: 'mvp+'
+      message: |
+        <aqua><b>UPGRADE</b>
+        <green>Voce upou do <#55AAFF>[MVP] <green>para o <#FF55FF><b>MVP+</b>
+      message-broadcast: ''
+      prices:
+        drakonio: 3000.0
+    discord:
+      webhook-enabled: true
+      embed-id: 'activated'
+    perks:
+      fly: false
+      autopickup: true
+      autosmelt: false
+      keep-inventory: false
+      back: false
+      feed: true
+      reparar: false
+      bigorna: true
+      bancada: true
+      colored-signs: true
+
+  mvp+:
+    display: '<#FF55FF>[MVP+]'
+    prefix: '<#FF55FF><b>MVP+</b>'
+    time-type: 'ONLINE'
+    credit: 58.0
+    party-vip-value: 58.0
+    activation-menu: false
+    allow-sell: true
+    order: 4
+    tag-permanent: false
+    icon:
+      material: DIAMOND_BLOCK
+      name: '<#FF55FF>MVP+'
+      lore: []
+    key-preview:
+      material: TRIPWIRE_HOOK
+      name: '<#FF55FF>[MVP+] <dark_gray><id>'
+      lore:
+        - ' <gray>Vip: <#FF55FF>[MVP+]'
+        - ' <gray>Duracao: <white><expire_remaining>'
+        - ''
+        - '<green>Botao <white>ESQUERDO <green>para ativar'
+        - '<green>Botao <white>DIREITO <green>para vender'
+    active-preview:
+      material: DIAMOND_BLOCK
+      name: '<#FF55FF>[MVP+] <dark_gray><id>'
+      lore:
+        - ' <white>Ativado por: <green><player>'
+        - ' <white>Status: <green>Ativo'
+        - ' <gray>Expira em: <white><expire_remaining>'
+    expired-preview:
+      material: DIAMOND_BLOCK
+      name: '<#FF55FF>[MVP+] <dark_gray><id>'
+      lore:
+        - ' <white>Status: <red>EXPIRADO'
+    announces:
+      sound: ''
+      effect: ''
+      actionbar: '<gray><player><aqua> acaba de ativar o <#FF55FF>MVP+'
+      title: '<gray><player><aqua> ativou<newline><#FF55FF>MVP+'
+      chat: |
+        <green><b>VIPS</b>
+        <aqua>O jogador <gray><player> <aqua>acaba de
+        <aqua>se tornar <gray>(<#FF55FF>MVP+<gray>)<aqua>.
+      chat-private: |
+        <green><b>VIPS</b>
+        <gray>Recolha sua ativacao no /vip
+    group-command:
+      add: ['lp user {player} parent add mvpplus']
+      remove: ['lp user {player} parent remove mvpplus']
+      addtime: ['lp user {player} parent addtemp mvpplus {time} accumulate']
+      removetime: ['lp user {player} parent removetemp mvpplus {time}']
+    activation-commands:
+      - '100.0,give {player} diamond_block 3'
+    activation-items:
+      item-1:
+        chance: 100.0
+        material: DIAMOND_BLOCK
+        name: '<#FF55FF>Bloco MVP+'
+        amount: 1
+    upgrade:
+      vip-type: 'alka'
+      message: |
+        <aqua><b>UPGRADE</b>
+        <green>Voce upou do <#FF55FF>[MVP+] <green>para o <#FFD700><b>ALKA</b>
+      message-broadcast: ''
+      prices:
+        drakonio: 6000.0
+    discord:
+      webhook-enabled: true
+      embed-id: 'activated'
+    perks:
+      fly: false
+      autopickup: true
+      autosmelt: true
+      keep-inventory: false
+      back: true
+      feed: true
+      reparar: true
+      bigorna: true
+      bancada: true
+      colored-signs: true
+
+  alka:
+    display: '<#FFD700>[ALKA]'
+    prefix: '<#FFD700><b>ALKA</b>'
+    time-type: 'ONLINE'
+    credit: 105.0
+    party-vip-value: 105.0
+    activation-menu: false
+    allow-sell: true
+    order: 5
+    tag-permanent: false
+    icon:
+      material: NETHERITE_INGOT
+      name: '<#FFD700>ALKA'
+      lore: []
+    key-preview:
+      material: TRIPWIRE_HOOK
+      name: '<#FFD700>[ALKA] <dark_gray><id>'
+      lore:
+        - ' <gray>Vip: <#FFD700>[ALKA]'
+        - ' <gray>Duracao: <white><expire_remaining>'
+        - ''
+        - '<green>Botao <white>ESQUERDO <green>para ativar'
+        - '<green>Botao <white>DIREITO <green>para vender'
+    active-preview:
+      material: NETHERITE_INGOT
+      name: '<#FFD700>[ALKA] <dark_gray><id>'
+      lore:
+        - ' <white>Ativado por: <green><player>'
+        - ' <white>Status: <green>Ativo'
+        - ' <gray>Expira em: <white><expire_remaining>'
+    expired-preview:
+      material: NETHERITE_INGOT
+      name: '<#FFD700>[ALKA] <dark_gray><id>'
+      lore:
+        - ' <white>Status: <red>EXPIRADO'
+    announces:
+      sound: ''
+      effect: ''
+      actionbar: '<gray><player><aqua> acaba de ativar o <#FFD700>ALKA'
+      title: '<gray><player><aqua> ativou<newline><#FFD700>ALKA'
+      chat: |
+        <green><b>VIPS</b>
+        <aqua>O jogador <gray><player> <aqua>acaba de
+        <aqua>se tornar <gray>(<#FFD700>ALKA<gray>)<aqua>.
+      chat-private: |
+        <green><b>VIPS</b>
+        <gray>Recolha sua ativacao no /vip
+    group-command:
+      add: ['lp user {player} parent add alka']
+      remove: ['lp user {player} parent remove alka']
+      addtime: ['lp user {player} parent addtemp alka {time} accumulate']
+      removetime: ['lp user {player} parent removetemp alka {time}']
+    activation-commands:
+      - '100.0,give {player} netherite_ingot 2'
+    activation-items:
+      item-1:
+        chance: 100.0
+        material: NETHERITE_INGOT
+        name: '<#FFD700>Lingote ALKA'
+        amount: 1
+    upgrade:
+      vip-type: 'drakkar'
+      message: |
+        <aqua><b>UPGRADE</b>
+        <green>Voce upou do <#FFD700>[ALKA] <green>para o <#FF0000><b>DRAKKAR</b>
+      message-broadcast: '<gray>{player}<green> upou para o <#FF0000><b>DRAKKAR</b><green>!'
+      prices:
+        drakonio: 12000.0
+    discord:
+      webhook-enabled: true
+      embed-id: 'activated'
+    perks:
+      fly: true
+      autopickup: true
+      autosmelt: true
+      keep-inventory: true
+      back: true
+      feed: true
+      reparar: true
+      bigorna: true
+      bancada: true
+      colored-signs: true
+
+  drakkar:
+    display: '<#FF0000>[DRAKKAR]'
+    prefix: '<#FF0000><b>DRAKKAR</b>'
+    time-type: 'ONLINE'
+    credit: 190.0
+    party-vip-value: 190.0
+    activation-menu: false
+    allow-sell: true
+    order: 6
+    tag-permanent: true
+    icon:
+      material: DRAGON_EGG
+      name: '<#FF0000>DRAKKAR'
+      lore: []
+    key-preview:
+      material: TRIPWIRE_HOOK
+      name: '<#FF0000>[DRAKKAR] <dark_gray><id>'
+      lore:
+        - ' <gray>Vip: <#FF0000>[DRAKKAR]'
+        - ' <gray>Duracao: <white><expire_remaining>'
+        - ''
+        - '<green>Botao <white>ESQUERDO <green>para ativar'
+        - '<green>Botao <white>DIREITO <green>para vender'
+    active-preview:
+      material: DRAGON_EGG
+      name: '<#FF0000>[DRAKKAR] <dark_gray><id>'
+      lore:
+        - ' <white>Ativado por: <green><player>'
+        - ' <white>Status: <green>Ativo'
+        - ' <gray>Expira em: <white><expire_remaining>'
+    expired-preview:
+      material: DRAGON_EGG
+      name: '<#FF0000>[DRAKKAR] <dark_gray><id>'
+      lore:
+        - ' <white>Status: <red>EXPIRADO'
+    announces:
+      sound: ''
+      effect: ''
+      actionbar: '<gray><player><aqua> acaba de ativar o <#FF0000>DRAKKAR'
+      title: '<gray><player><aqua> ativou<newline><#FF0000>DRAKKAR'
+      chat: |
+        <green><b>VIPS</b>
+        <aqua>O jogador <gray><player> <aqua>acaba de
+        <aqua>se tornar <gray>(<#FF0000>DRAKKAR<gray>)<aqua>.
+      chat-private: |
+        <green><b>VIPS</b>
+        <gray>Recolha sua ativacao no /vip
+    group-command:
+      add: ['lp user {player} parent add drakkar']
+      remove: ['lp user {player} parent remove drakkar']
+      addtime: ['lp user {player} parent addtemp drakkar {time} accumulate']
+      removetime: ['lp user {player} parent removetemp drakkar {time}']
+    activation-commands:
+      - '100.0,give {player} dragon_breath 1'
+    activation-items:
+      item-1:
+        chance: 100.0
+        material: DRAGON_BREATH
+        name: '<#FF0000>Fragmento DRAKKAR'
+        amount: 1
+    upgrade:
+      vip-type: ''
+      message: ''
+      message-broadcast: ''
+      prices: {}
+    discord:
+      webhook-enabled: true
+      embed-id: 'activated'
+    perks:
+      fly: true
+      autopickup: true
+      autosmelt: true
+      keep-inventory: true
+      back: true
+      feed: true
+      reparar: true
+      bigorna: true
+      bancada: true
+      colored-signs: true
