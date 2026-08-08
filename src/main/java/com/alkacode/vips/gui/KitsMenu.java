@@ -48,7 +48,7 @@ public final class KitsMenu extends BaseGui {
     @Override
     public void render() {
         fillBorder(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
-        setItem(getInventory().getSize() - 5, new ItemBuilder(Material.BARRIER).name("<red>Voltar").build(),
+        setItem(getInventory().getSize() - 5, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(),
                 e -> new MainVipMenu(player, services).open());
 
         List<VipType> tiers = services.vipTypeManager.getOrderedVips();

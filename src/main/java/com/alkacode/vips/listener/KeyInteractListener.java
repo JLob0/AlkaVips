@@ -36,12 +36,14 @@ public final class KeyInteractListener implements Listener {
             new SellKeyMenu(event.getPlayer(), services, keyId, item).open();
         } else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
             KeyUsageService.Result result = services.keyUsageService.use(event.getPlayer(), keyId, item);
-            String path = switch (result) {
-                case SUCCESS -> "key.used-success";
-                case NOT_FOUND -> "key.not-found";
-                case ALREADY_USED -> "key.already-used";
-            };
-            services.sendMessage(event.getPlayer(), path, Map.of());
+            switch (result) {
+                case NOT_FOUND -> services.sendMessage(event.getPlayer(), "key.not-found", Map.of());
+                case ALREADY_USED -> services.sendMessage(event.getPlayer(), "key.already-used", Map.of());
+                case SUCCESS -> {
+                    // ActivationService.activateDirect ja mandou vip.activated/vip.accumulated -
+                    // mandar key.used-success aqui tambem duplicava a mensagem de sucesso no chat.
+                }
+            }
         }
     }
 }

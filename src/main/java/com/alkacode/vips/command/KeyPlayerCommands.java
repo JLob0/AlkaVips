@@ -52,12 +52,14 @@ public final class KeyPlayerCommands implements CommandExecutor, TabCompleter {
             return true;
         }
         KeyUsageService.Result result = services.keyUsageService.use(player, args[0].toUpperCase(), null);
-        String path = switch (result) {
-            case SUCCESS -> "key.used-success";
-            case NOT_FOUND -> "key.not-found";
-            case ALREADY_USED -> "key.already-used";
-        };
-        services.sendMessage(player, path, Map.of());
+        switch (result) {
+            case NOT_FOUND -> services.sendMessage(player, "key.not-found", Map.of());
+            case ALREADY_USED -> services.sendMessage(player, "key.already-used", Map.of());
+            case SUCCESS -> {
+                // ActivationService.activateDirect ja mandou vip.activated/vip.accumulated -
+                // mandar key.used-success aqui tambem duplicava a mensagem de sucesso no chat.
+            }
+        }
         return true;
     }
 

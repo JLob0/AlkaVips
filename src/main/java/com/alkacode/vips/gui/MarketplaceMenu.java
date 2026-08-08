@@ -64,7 +64,7 @@ public final class MarketplaceMenu extends BaseGui {
                     .build();
             setItem(SLOTS[i], item, e -> new ConfirmBuyMenu(player, services, key).open());
         }
-        setItem(49, new ItemBuilder(Material.BARRIER).name("<red>Voltar").build(), e -> new MainVipMenu(player, services).open());
+        setItem(49, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(), e -> new MainVipMenu(player, services).open());
         if (page > 0) {
             setItem(45, new ItemBuilder(Material.ARROW).name("<white>Anterior").build(),
                     e -> new MarketplaceMenu(player, services, page - 1).open());

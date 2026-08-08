@@ -47,6 +47,8 @@ public final class UpgradeMenu extends BaseGui {
         } else {
             renderUpgrade();
         }
+        setItem(getInventory().getSize() - 5, new ItemBuilder(Material.ARROW).name("<#AAAAAA>← Voltar").build(),
+                e -> new MainVipMenu(player, services).open());
         fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
     }
 

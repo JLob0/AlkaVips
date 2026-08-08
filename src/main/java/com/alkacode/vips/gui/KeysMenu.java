@@ -45,7 +45,7 @@ public final class KeysMenu extends BaseGui {
             }
         }
 
-        setItem(49, new ItemBuilder(Material.BARRIER).name("<red>Voltar").build(), e -> new MainVipMenu(player, services).open());
+        setItem(49, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(), e -> new MainVipMenu(player, services).open());
         if (page > 0) {
             setItem(18, new ItemBuilder(Material.ARROW).name("<white>Anterior").build(),
                     e -> new KeysMenu(player, services, page - 1).open());

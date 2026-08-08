@@ -53,7 +53,7 @@ public final class HistoryMenu extends BaseGui {
             setItem(slot, item);
             slot++;
         }
-        setItem(getInventory().getSize() - 5, new ItemBuilder(Material.BARRIER).name("<red>Voltar").build(),
+        setItem(getInventory().getSize() - 5, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(),
                 e -> new MainVipMenu(player, services).open());
         fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
     }
