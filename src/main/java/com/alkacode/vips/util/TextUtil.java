@@ -13,13 +13,17 @@ public final class TextUtil {
 
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
     /**
-     * nChat nao entende tags MiniMessage - so legacy '&' + hex textual "&#RRGGBB"
-     * (sem useUnusualXRepeatedCharacterHexFormat, que geraria o formato
-     * "§x§R..." nativo do Bukkit em vez do "&#RRGGBB" que o nChat espera).
+     * player.sendMessage(String) so entende codigos '§' ja prontos - nao traduz
+     * '&' sozinho. Por isso o character aqui e SECTION_CHAR (padrao do builder,
+     * mas explicito pra nao repetir o erro de configurar '&' por engano de novo)
+     * e useUnusualXRepeatedCharacterHexFormat() gera o hex nativo "§x§R§R§G§G§B§B"
+     * que o cliente realmente entende (o formato "§#RRGGBB" compacto NAO existe
+     * pro protocolo - so o expandido §x funciona).
      */
     private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.builder()
-            .character('&')
+            .character(LegacyComponentSerializer.SECTION_CHAR)
             .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
             .build();
 
     private TextUtil() {
@@ -34,10 +38,10 @@ public final class TextUtil {
     }
 
     /**
-     * Mesma entrada MiniMessage de parse(), mas serializada pra legacy '&' -
-     * usar em qualquer sendMessage(String) que passe pelo chat (nChat so
-     * entende esse formato; title/actionbar continuam via parse()/Component
-     * porque vao direto pro cliente sem passar pelo nChat).
+     * Mesma entrada MiniMessage de parse(), mas serializada pra '§' legacy -
+     * usar em qualquer sendMessage(String), que so aceita codigo legacy pronto
+     * (title/actionbar continuam via parse()/Component porque tem overload
+     * proprio no Adventure que aceita Component direto, sem essa limitacao).
      */
     public static String legacyParse(String raw) {
         return LEGACY.serialize(parse(raw));
