@@ -2,7 +2,6 @@ package com.alkacode.vips.command;
 
 import com.alkacode.vips.VipsServices;
 import com.alkacode.vips.model.VipPerks;
-import com.alkacode.vips.util.TextUtil;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,7 +28,7 @@ public final class PerkCommands implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("general.player-only")));
+            services.sendMessage(sender, "general.player-only", Map.of());
             return true;
         }
 

@@ -29,7 +29,7 @@ public final class CreditCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
             if (!(sender instanceof Player player)) {
-                sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("general.player-only")));
+                services.sendMessage(sender, "general.player-only", Map.of());
                 return true;
             }
             double credits = services.creditManager.getCredits(player.getUniqueId());
@@ -38,42 +38,42 @@ public final class CreditCommand implements CommandExecutor, TabCompleter {
         }
 
         if (!sender.hasPermission("alkavips.admin.credit")) {
-            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("general.no-permission")));
+            services.sendMessage(sender, "general.no-permission", Map.of());
             return true;
         }
 
         if (args.length < 3) {
-            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<red>Uso: /creditovip <add|remove|set> <jogador> <quantia>"));
+            sendUsage(sender);
             return true;
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
         double amount = parseDouble(args[2]);
         if (amount < 0) {
-            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("general.invalid-amount")
-                    .replace("<value>", args[2])));
+            services.sendMessage(sender, "general.invalid-amount", Map.of("value", args[2]));
             return true;
         }
 
         switch (args[0].toLowerCase()) {
             case "add" -> {
                 services.creditManager.add(target.getUniqueId(), amount);
-                sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("credit.added"),
-                        Map.of("amount", String.valueOf(amount), "name", nameOf(target))));
+                services.sendMessage(sender, "credit.added", Map.of("amount", String.valueOf(amount), "name", nameOf(target)));
             }
             case "remove" -> {
                 services.creditManager.remove(target.getUniqueId(), amount);
-                sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("credit.removed"),
-                        Map.of("amount", String.valueOf(amount), "name", nameOf(target))));
+                services.sendMessage(sender, "credit.removed", Map.of("amount", String.valueOf(amount), "name", nameOf(target)));
             }
             case "set" -> {
                 services.creditManager.set(target.getUniqueId(), amount);
-                sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("credit.set"),
-                        Map.of("amount", String.valueOf(amount), "name", nameOf(target))));
+                services.sendMessage(sender, "credit.set", Map.of("amount", String.valueOf(amount), "name", nameOf(target)));
             }
-            default -> sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<red>Uso: /creditovip <add|remove|set> <jogador> <quantia>"));
+            default -> sendUsage(sender);
         }
         return true;
+    }
+
+    private void sendUsage(CommandSender sender) {
+        sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<red>Uso: /creditovip <add|remove|set> <jogador> <quantia>"));
     }
 
     private String nameOf(OfflinePlayer player) {

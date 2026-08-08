@@ -76,8 +76,8 @@ public final class VipsServices {
         this.hooks = hooks;
     }
 
-    public void sendMessage(org.bukkit.entity.Player player, String path, java.util.Map<String, String> placeholders) {
+    public void sendMessage(org.bukkit.command.CommandSender sender, String path, java.util.Map<String, String> placeholders) {
         String raw = configManager.prefix() + configManager.message(path);
-        player.sendMessage(com.alkacode.vips.util.TextUtil.parse(raw, placeholders));
+        sender.sendMessage(com.alkacode.vips.util.TextUtil.parse(raw, placeholders));
     }
 }

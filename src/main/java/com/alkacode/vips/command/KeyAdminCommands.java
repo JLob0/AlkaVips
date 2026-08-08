@@ -65,9 +65,9 @@ public final class KeyAdminCommands implements CommandExecutor, TabCompleter {
         for (int i = 0; i < amount; i++) {
             services.keyManager.generate(vipType, duration, false).join();
         }
-        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("key.generated"),
-                Map.of("amount", String.valueOf(amount), "vip", TextUtil.plain(vipType.display()),
-                        "duration", duration == 0 ? "Permanente" : TimeUtil.formatRemaining(duration))));
+        services.sendMessage(sender, "key.generated",
+                Map.of("amount", String.valueOf(amount), "vip", vipType.display(),
+                        "duration", duration == 0 ? "Permanente" : TimeUtil.formatRemaining(duration)));
         return true;
     }
 
@@ -92,8 +92,7 @@ public final class KeyAdminCommands implements CommandExecutor, TabCompleter {
             error(sender, "key.code-exists", Map.of("code", code));
             return true;
         }
-        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("key.created"),
-                Map.of("code", code)));
+        services.sendMessage(sender, "key.created", Map.of("code", code));
         return true;
     }
 
@@ -109,8 +108,7 @@ public final class KeyAdminCommands implements CommandExecutor, TabCompleter {
             return true;
         }
         services.keyManager.delete(code);
-        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("key.removed"),
-                Map.of("code", code)));
+        services.sendMessage(sender, "key.removed", Map.of("code", code));
         return true;
     }
 
@@ -150,7 +148,7 @@ public final class KeyAdminCommands implements CommandExecutor, TabCompleter {
                 return true;
             }
         }
-        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<green>Key " + code + " atualizada."));
+        sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<green>Key " + code + " atualizada."));
         return true;
     }
 
@@ -171,13 +169,13 @@ public final class KeyAdminCommands implements CommandExecutor, TabCompleter {
             if (keyId != null) {
                 VipKey key = services.keyManager.findSync(keyId);
                 if (key != null) {
-                    sender.sendMessage(TextUtil.legacyParse("<gray>- <white>" + key.id() + " <gray>(" + key.vipTypeId() + ")"));
+                    sender.sendMessage(TextUtil.parse("<gray>- <white>" + key.id() + " <gray>(" + key.vipTypeId() + ")"));
                     found++;
                 }
             }
         }
         if (found == 0) {
-            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<yellow>Nenhuma key encontrada no inventario de " + targetName + "."));
+            sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<yellow>Nenhuma key encontrada no inventario de " + targetName + "."));
         }
         return true;
     }
@@ -204,10 +202,8 @@ public final class KeyAdminCommands implements CommandExecutor, TabCompleter {
         }
         VipKey key = services.keyManager.generate(vipType, duration, false).join();
         target.getInventory().addItem(services.keyManager.buildItem(key, vipType));
-        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("key.given"),
-                Map.of("code", key.id(), "vip", TextUtil.plain(vipType.display()), "name", target.getName())));
-        target.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("key.received"),
-                Map.of("vip", TextUtil.plain(vipType.display()), "code", key.id())));
+        services.sendMessage(sender, "key.given", Map.of("code", key.id(), "vip", vipType.display(), "name", target.getName()));
+        services.sendMessage(target, "key.received", Map.of("vip", vipType.display(), "code", key.id()));
         return true;
     }
 
@@ -220,11 +216,11 @@ public final class KeyAdminCommands implements CommandExecutor, TabCompleter {
     }
 
     private void usage(CommandSender sender, String usage) {
-        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<red>Uso: " + usage));
+        sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<red>Uso: " + usage));
     }
 
     private void error(CommandSender sender, String path, Map<String, String> placeholders) {
-        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message(path), placeholders));
+        services.sendMessage(sender, path, placeholders);
     }
 
     @Override

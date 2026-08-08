@@ -126,7 +126,7 @@ public final class ActivationService {
         Bukkit.getPluginManager().callEvent(new VipActivateEvent(player, vipType, playerVip, accumulated));
 
         String key = accumulated ? "vip.accumulated" : "vip.activated";
-        send(player, key, Map.of("vip", TextUtil.plain(vipType.display())));
+        send(player, key, Map.of("vip", vipType.display()));
     }
 
     private void applyGroupCommands(Player player, VipType vipType, long duration, boolean accumulated) {
@@ -194,7 +194,7 @@ public final class ActivationService {
         }
         send(player, "kit.activation-delivered", Map.of(
                 "count", String.valueOf(kits.size()),
-                "vip", TextUtil.plain(vipType.display())));
+                "vip", vipType.display()));
     }
 
     /**

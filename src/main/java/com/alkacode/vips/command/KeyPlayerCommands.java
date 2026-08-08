@@ -5,7 +5,6 @@ import com.alkacode.vips.gui.MarketplaceMenu;
 import com.alkacode.vips.service.KeyUsageService;
 import com.alkacode.vips.service.MarketplaceService;
 import com.alkacode.vips.util.TabCompleteUtil;
-import com.alkacode.vips.util.TextUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,7 +28,7 @@ public final class KeyPlayerCommands implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("general.player-only")));
+            services.sendMessage(sender, "general.player-only", Map.of());
             return true;
         }
 

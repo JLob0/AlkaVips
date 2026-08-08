@@ -85,15 +85,16 @@ public final class UpgradeService {
         dispatchAll(toType.upgradeCommands(), Map.of("player", player.getName()));
 
         Map<String, String> placeholders = Map.of(
-                "vip_from", TextUtil.plain(fromType.display()),
-                "vip_to", TextUtil.plain(toType.display()),
+                "vip_from", fromType.display(),
+                "vip_to", toType.display(),
                 "player", player.getName()
         );
         if (!fromType.upgradeMessage().isBlank()) {
             player.sendMessage(TextUtil.legacyParse(configManager.prefix() + fromType.upgradeMessage(), placeholders));
         }
         if (!fromType.upgradeBroadcast().isBlank()) {
-            Bukkit.broadcast(TextUtil.parse(fromType.upgradeBroadcast(), placeholders));
+            String broadcastMessage = TextUtil.legacyParse(fromType.upgradeBroadcast(), placeholders);
+            Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(broadcastMessage));
         }
 
         Bukkit.getPluginManager().callEvent(new VipUpgradeEvent(player, fromType, toType));

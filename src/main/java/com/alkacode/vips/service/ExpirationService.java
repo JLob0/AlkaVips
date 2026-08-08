@@ -61,7 +61,7 @@ public final class ExpirationService {
         Player player = Bukkit.getPlayer(uuid);
         if (player != null && vipType != null) {
             String raw = configManager.prefix() + "<yellow>Seu VIP <white><vip></white> expirou.";
-            player.sendMessage(TextUtil.legacyParse(raw, Map.of("vip", TextUtil.plain(vipType.display()))));
+            player.sendMessage(TextUtil.legacyParse(raw, Map.of("vip", vipType.display())));
         }
     }
 

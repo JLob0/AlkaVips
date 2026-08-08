@@ -9,6 +9,7 @@ import org.bukkit.command.TabCompleter;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public final class AlkaVipsCommand implements CommandExecutor, TabCompleter {
 
@@ -24,10 +25,10 @@ public final class AlkaVipsCommand implements CommandExecutor, TabCompleter {
             services.configManager.reload();
             services.vipTypeManager.reload();
             services.kitManager.reload();
-            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("general.reloaded")));
+            services.sendMessage(sender, "general.reloaded", Map.of());
             return true;
         }
-        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<red>Uso: /alkavips reload"));
+        sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<red>Uso: /alkavips reload"));
         return true;
     }
 

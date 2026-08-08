@@ -5,7 +5,6 @@ import com.alkacode.vips.gui.MainVipMenu;
 import com.alkacode.vips.gui.PartyVipMenu;
 import com.alkacode.vips.model.PlayerVip;
 import com.alkacode.vips.model.VipType;
-import com.alkacode.vips.util.TextUtil;
 import com.alkacode.vips.util.TimeUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,7 +26,7 @@ public final class VipPlayerCommands implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("general.player-only")));
+            services.sendMessage(sender, "general.player-only", Map.of());
             return true;
         }
 
@@ -53,7 +52,7 @@ public final class VipPlayerCommands implements CommandExecutor {
         }
         for (PlayerVip vip : vips) {
             VipType type = services.vipTypeManager.get(vip.vipTypeId());
-            String display = type != null ? TextUtil.plain(type.display()) : vip.vipTypeId();
+            String display = type != null ? type.display() : vip.vipTypeId();
             String remaining = vip.isPermanent() ? "Permanente" : TimeUtil.formatRemaining(vip.remainingMillis());
             services.sendMessage(player, "info.line", Map.of(
                     "vip", display, "status", vip.status().name(), "time", remaining));
@@ -68,7 +67,7 @@ public final class VipPlayerCommands implements CommandExecutor {
         }
         PlayerVip vip = selected.get();
         VipType type = services.vipTypeManager.get(vip.vipTypeId());
-        String display = type != null ? TextUtil.plain(type.display()) : vip.vipTypeId();
+        String display = type != null ? type.display() : vip.vipTypeId();
         String remaining = vip.isPermanent() ? "Permanente" : TimeUtil.formatRemaining(vip.remainingMillis());
         services.sendMessage(player, "vip.time-remaining", Map.of("vip", display, "time", remaining));
     }
@@ -80,7 +79,7 @@ public final class VipPlayerCommands implements CommandExecutor {
             return;
         }
         VipType type = services.vipTypeManager.get(next.get().vipTypeId());
-        services.sendMessage(player, "vip.swapped", Map.of("vip", type != null ? TextUtil.plain(type.display()) : ""));
+        services.sendMessage(player, "vip.swapped", Map.of("vip", type != null ? type.display() : ""));
     }
 
     private void freeze(Player player) {
