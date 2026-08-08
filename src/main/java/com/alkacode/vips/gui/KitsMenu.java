@@ -9,6 +9,8 @@ import com.alkacode.vips.util.ItemBuilder;
 import com.alkacode.vips.util.TextUtil;
 import com.alkacode.vips.util.TimeUtil;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -126,6 +128,8 @@ public final class KitsMenu extends BaseGui {
         }
         services.kitManager.claim(player, kit);
         services.sendMessage(player, "kit.claimed", Map.of("kit", kit.displayName()));
+        player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+        player.getWorld().spawnParticle(Particle.TOTEM_OF_UNDYING, player.getLocation().add(0, 1, 0), 20, 0.4, 0.5, 0.4, 0.05);
         refresh();
     }
 }
