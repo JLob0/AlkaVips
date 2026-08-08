@@ -90,7 +90,7 @@ public final class UpgradeService {
                 "player", player.getName()
         );
         if (!fromType.upgradeMessage().isBlank()) {
-            player.sendMessage(TextUtil.parse(configManager.prefix() + fromType.upgradeMessage(), placeholders));
+            player.sendMessage(TextUtil.legacyParse(configManager.prefix() + fromType.upgradeMessage(), placeholders));
         }
         if (!fromType.upgradeBroadcast().isBlank()) {
             Bukkit.broadcast(TextUtil.parse(fromType.upgradeBroadcast(), placeholders));

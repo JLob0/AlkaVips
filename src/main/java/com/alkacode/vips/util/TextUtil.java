@@ -3,6 +3,7 @@ package com.alkacode.vips.util;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,15 @@ import java.util.stream.Collectors;
 public final class TextUtil {
 
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
+    /**
+     * nChat nao entende tags MiniMessage - so legacy '&' + hex textual "&#RRGGBB"
+     * (sem useUnusualXRepeatedCharacterHexFormat, que geraria o formato
+     * "§x§R..." nativo do Bukkit em vez do "&#RRGGBB" que o nChat espera).
+     */
+    private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.builder()
+            .character('&')
+            .hexColors()
+            .build();
 
     private TextUtil() {
     }
@@ -21,6 +31,20 @@ public final class TextUtil {
 
     public static Component parse(String raw, Map<String, String> placeholders) {
         return parse(replace(raw, placeholders));
+    }
+
+    /**
+     * Mesma entrada MiniMessage de parse(), mas serializada pra legacy '&' -
+     * usar em qualquer sendMessage(String) que passe pelo chat (nChat so
+     * entende esse formato; title/actionbar continuam via parse()/Component
+     * porque vao direto pro cliente sem passar pelo nChat).
+     */
+    public static String legacyParse(String raw) {
+        return LEGACY.serialize(parse(raw));
+    }
+
+    public static String legacyParse(String raw, Map<String, String> placeholders) {
+        return LEGACY.serialize(parse(raw, placeholders));
     }
 
     public static List<Component> parseList(List<String> raws, Map<String, String> placeholders) {

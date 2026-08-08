@@ -29,7 +29,7 @@ public final class CreditCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
             if (!(sender instanceof Player player)) {
-                sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message("general.player-only")));
+                sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("general.player-only")));
                 return true;
             }
             double credits = services.creditManager.getCredits(player.getUniqueId());
@@ -38,19 +38,19 @@ public final class CreditCommand implements CommandExecutor, TabCompleter {
         }
 
         if (!sender.hasPermission("alkavips.admin.credit")) {
-            sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message("general.no-permission")));
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("general.no-permission")));
             return true;
         }
 
         if (args.length < 3) {
-            sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<red>Uso: /creditovip <add|remove|set> <jogador> <quantia>"));
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<red>Uso: /creditovip <add|remove|set> <jogador> <quantia>"));
             return true;
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
         double amount = parseDouble(args[2]);
         if (amount < 0) {
-            sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message("general.invalid-amount")
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("general.invalid-amount")
                     .replace("<value>", args[2])));
             return true;
         }
@@ -58,20 +58,20 @@ public final class CreditCommand implements CommandExecutor, TabCompleter {
         switch (args[0].toLowerCase()) {
             case "add" -> {
                 services.creditManager.add(target.getUniqueId(), amount);
-                sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message("credit.added"),
+                sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("credit.added"),
                         Map.of("amount", String.valueOf(amount), "name", nameOf(target))));
             }
             case "remove" -> {
                 services.creditManager.remove(target.getUniqueId(), amount);
-                sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message("credit.removed"),
+                sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("credit.removed"),
                         Map.of("amount", String.valueOf(amount), "name", nameOf(target))));
             }
             case "set" -> {
                 services.creditManager.set(target.getUniqueId(), amount);
-                sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message("credit.set"),
+                sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("credit.set"),
                         Map.of("amount", String.valueOf(amount), "name", nameOf(target))));
             }
-            default -> sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<red>Uso: /creditovip <add|remove|set> <jogador> <quantia>"));
+            default -> sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<red>Uso: /creditovip <add|remove|set> <jogador> <quantia>"));
         }
         return true;
     }

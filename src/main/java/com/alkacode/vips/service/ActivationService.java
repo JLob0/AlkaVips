@@ -198,9 +198,11 @@ public final class ActivationService {
     }
 
     /**
-     * Title, actionbar e som vao pra TODO MUNDO online (celebra a ativacao pro
-     * servidor inteiro, nao so pra quem ativou) - chat ja fazia isso via
-     * Bukkit.broadcast. chat-private e a particula continuam so pro jogador que
+     * Title, actionbar, som e chat vao pra TODO MUNDO online (celebra a ativacao pro
+     * servidor inteiro, nao so pra quem ativou). Chat usa sendMessage direto por
+     * player em vez de Bukkit.broadcast() pra nao depender da permissao
+     * bukkit.broadcast.user - garante entrega mesmo se algum grupo do LuckPerms
+     * nao tiver essa node. chat-private e a particula continuam so pro jogador que
      * ativou (mensagem pessoal / efeito no proprio corpo dele).
      */
     private void sendAnnounces(Player player, VipType vipType) {
@@ -220,10 +222,11 @@ public final class ActivationService {
             Bukkit.getOnlinePlayers().forEach(p -> p.showTitle(title));
         }
         if (!vipType.announceChat().isBlank()) {
-            Bukkit.broadcast(TextUtil.parse(vipType.announceChat(), placeholders));
+            String chatMessage = TextUtil.legacyParse(vipType.announceChat(), placeholders);
+            Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(chatMessage));
         }
         if (!vipType.announceChatPrivate().isBlank()) {
-            player.sendMessage(TextUtil.parse(vipType.announceChatPrivate(), placeholders));
+            player.sendMessage(TextUtil.legacyParse(vipType.announceChatPrivate(), placeholders));
         }
         if (!vipType.announceSound().isBlank()) {
             org.bukkit.Sound sound = org.bukkit.Registry.SOUNDS.get(
@@ -265,6 +268,6 @@ public final class ActivationService {
 
     private void send(Player player, String path, Map<String, String> placeholders) {
         String raw = configManager.prefix() + configManager.message(path);
-        player.sendMessage(TextUtil.parse(raw, placeholders));
+        player.sendMessage(TextUtil.legacyParse(raw, placeholders));
     }
 }

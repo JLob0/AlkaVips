@@ -43,7 +43,7 @@ public final class VipAdminCommands implements CommandExecutor, TabCompleter {
 
     private boolean giveVip(CommandSender sender, String[] args, boolean silent) {
         if (args.length < 3) {
-            sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<red>Uso: /" + (silent ? "setvip" : "darvip") + " <jogador> <vip> <duracao>"));
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<red>Uso: /" + (silent ? "setvip" : "darvip") + " <jogador> <vip> <duracao>"));
             return true;
         }
         Player target = Bukkit.getPlayer(args[0]);
@@ -64,14 +64,14 @@ public final class VipAdminCommands implements CommandExecutor, TabCompleter {
         services.activationService.activate(target, vipType, duration, null, silent);
         String path = silent ? "vip.set" : "vip.given";
         String durationText = duration == 0 ? "Permanente" : TimeUtil.formatRemaining(duration);
-        sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message(path),
+        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message(path),
                 Map.of("vip", TextUtil.plain(vipType.display()), "name", target.getName(), "duration", durationText)));
         return true;
     }
 
     private boolean removeVip(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<red>Uso: /removervip <jogador> <vip>"));
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<red>Uso: /removervip <jogador> <vip>"));
             return true;
         }
         var target = Bukkit.getOfflinePlayer(args[0]);
@@ -82,7 +82,7 @@ public final class VipAdminCommands implements CommandExecutor, TabCompleter {
         }
         List<PlayerVip> matches = services.playerVipManager.getActiveVipsOfType(target.getUniqueId(), vipType.id());
         if (matches.isEmpty()) {
-            sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message("vip.no-vip-to-remove"),
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("vip.no-vip-to-remove"),
                     Map.of("name", args[0], "vip", TextUtil.plain(vipType.display()))));
             return true;
         }
@@ -93,14 +93,14 @@ public final class VipAdminCommands implements CommandExecutor, TabCompleter {
             }
             services.playerVipManager.remove(vip);
         }
-        sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message("vip.removed"),
+        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("vip.removed"),
                 Map.of("vip", TextUtil.plain(vipType.display()), "name", args[0])));
         return true;
     }
 
     private boolean removeTime(CommandSender sender, String[] args) {
         if (args.length < 3) {
-            sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<red>Uso: /removertempovip <jogador> <vip> <tempo>"));
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<red>Uso: /removertempovip <jogador> <vip> <tempo>"));
             return true;
         }
         var target = Bukkit.getOfflinePlayer(args[0]);
@@ -116,7 +116,7 @@ public final class VipAdminCommands implements CommandExecutor, TabCompleter {
         }
         List<PlayerVip> matches = services.playerVipManager.getActiveVipsOfType(target.getUniqueId(), vipType.id());
         if (matches.isEmpty()) {
-            sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message("vip.no-vip-to-remove"),
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("vip.no-vip-to-remove"),
                     Map.of("name", args[0], "vip", TextUtil.plain(vipType.display()))));
             return true;
         }
@@ -125,21 +125,21 @@ public final class VipAdminCommands implements CommandExecutor, TabCompleter {
             vip.expiresAt(Math.max(System.currentTimeMillis(), vip.expiresAt() - time));
             services.playerVipManager.update(vip);
         }
-        sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message("vip.removed-time"),
+        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("vip.removed-time"),
                 Map.of("duration", TimeUtil.formatRemaining(time), "name", args[0], "vip", TextUtil.plain(vipType.display()))));
         return true;
     }
 
     private boolean info(CommandSender sender, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<red>Uso: /infovip <jogador>"));
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<red>Uso: /infovip <jogador>"));
             return true;
         }
         var target = Bukkit.getOfflinePlayer(args[0]);
         List<PlayerVip> vips = services.playerVipManager.getVips(target.getUniqueId());
-        sender.sendMessage(TextUtil.parse(services.configManager.message("info.header"), Map.of("name", args[0])));
+        sender.sendMessage(TextUtil.legacyParse(services.configManager.message("info.header"), Map.of("name", args[0])));
         if (vips.isEmpty()) {
-            sender.sendMessage(TextUtil.parse(services.configManager.message("info.no-vips"), Map.of("name", args[0])));
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.message("info.no-vips"), Map.of("name", args[0])));
             return true;
         }
         for (PlayerVip vip : vips) {
@@ -147,7 +147,7 @@ public final class VipAdminCommands implements CommandExecutor, TabCompleter {
             String display = type != null ? TextUtil.plain(type.display()) : vip.vipTypeId();
             String time = vip.status() == VipStatus.ACTIVE
                     ? (vip.isPermanent() ? "Permanente" : TimeUtil.formatRemaining(vip.remainingMillis())) : "-";
-            sender.sendMessage(TextUtil.parse(services.configManager.message("info.line"),
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.message("info.line"),
                     Map.of("vip", display, "status", vip.status().name(), "time", time)));
         }
         return true;
@@ -155,7 +155,7 @@ public final class VipAdminCommands implements CommandExecutor, TabCompleter {
 
     private boolean bonus(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            sender.sendMessage(TextUtil.parse(services.configManager.prefix() + "<red>Uso: /bonusvip <vip> <jogador> [quantidade]"));
+            sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + "<red>Uso: /bonusvip <vip> <jogador> [quantidade]"));
             return true;
         }
         VipType vipType = services.vipTypeManager.get(args[0]);
@@ -177,7 +177,7 @@ public final class VipAdminCommands implements CommandExecutor, TabCompleter {
             var key = services.keyManager.generate(vipType, 0, true).join();
             target.getInventory().addItem(services.keyManager.buildItem(key, vipType));
         }
-        sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message("key.bonus-given"),
+        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message("key.bonus-given"),
                 Map.of("amount", String.valueOf(amount), "vip", TextUtil.plain(vipType.display()), "name", target.getName())));
         return true;
     }
@@ -191,7 +191,7 @@ public final class VipAdminCommands implements CommandExecutor, TabCompleter {
     }
 
     private void sendError(CommandSender sender, String path, Map<String, String> placeholders) {
-        sender.sendMessage(TextUtil.parse(services.configManager.prefix() + services.configManager.message(path), placeholders));
+        sender.sendMessage(TextUtil.legacyParse(services.configManager.prefix() + services.configManager.message(path), placeholders));
     }
 
     @Override

@@ -127,7 +127,7 @@ public final class MarketplaceService {
         Player seller = Bukkit.getPlayer(sellerUuid);
         if (seller != null) {
             String raw = configManager.prefix() + configManager.message("market.sold");
-            seller.sendMessage(TextUtil.parse(raw, java.util.Map.of(
+            seller.sendMessage(TextUtil.legacyParse(raw, java.util.Map.of(
                     "code", key.id(),
                     "price", economyHook.format(proceeds)
             )));
