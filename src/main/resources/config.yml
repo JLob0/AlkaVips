@@ -4,6 +4,10 @@
 menu-updater: true
 menu-updater-time: 20
 
+# URL da loja usada no placeholder <shop-url> dos anuncios de ativacao de VIP
+# (vips.yml -> announces.chat). Vazio = o link nao aparece nos anuncios.
+shop-url: ''
+
 # Party VIP - meta coletiva do servidor
 party-vip:
   enabled: true

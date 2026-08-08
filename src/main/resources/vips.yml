@@ -46,15 +46,20 @@ vips:
       sound: 'ENTITY_PLAYER_LEVELUP'
       effect: 'HAPPY_VILLAGER'
       actionbar: '<#55FF55>✦ <white>ATIVAÇÃO DE VIP <#55FF55>✦  <gray><player> <dark_gray>→ <#55FF55><bold>VIP</bold>'
-      title: '<gradient:#55FF55:#FFFFFF><player></gradient><newline><gray>se tornou <#55FF55><bold>[VIP]</bold>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>se tornou <#55FF55><bold>[VIP]</bold>'
       chat: |
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
         <#55FF55><bold>✦ NOVO VIP ✦</bold>
-        <gray><player> <dark_gray>acaba de se tornar <#55FF55><bold>[VIP]</bold><gray>!
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>acaba de se tornar <#55FF55><bold>[VIP]</bold><gray>!
+
+        <gray>Garanta o seu também em
+        <#FFD700>➤ <click:open_url:'<shop-url>'><hover:show_text:'<#55FF55>Clique para abrir a loja!'><shop-url></hover></click>
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
       chat-private: |
-        <#55FF55><bold>✦ VIP ATIVADO!</bold>
-        <gray>Recolha sua ativação em <#55FF55>/vip
+        <#55FF55><bold>✦ PARABÉNS!</bold>
+        <white>Você ativou o <#55FF55><bold>[VIP]</bold><white>!
+        <gray>Use <click:suggest_command:'/vip'><hover:show_text:'<#55FF55>Clique para abrir o menu VIP'><#55FF55>/vip</hover></click> <gray>para gerenciar seus benefícios.
     group-command:
       add: ['lp user {player} parent add vip']
       remove: ['lp user {player} parent remove vip']
@@ -133,15 +138,20 @@ vips:
       sound: 'ENTITY_PLAYER_LEVELUP'
       effect: 'HAPPY_VILLAGER'
       actionbar: '<#55FF55>✦ <white>ATIVAÇÃO DE VIP <#55FF55>✦  <gray><player> <dark_gray>→ <#55FF55><bold>VIP+</bold>'
-      title: '<gradient:#55FF55:#FFFFFF><player></gradient><newline><gray>se tornou <#55FF55><bold>[VIP+]</bold>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>se tornou <#55FF55><bold>[VIP+]</bold>'
       chat: |
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
         <#55FF55><bold>✦ NOVO VIP+ ✦</bold>
-        <gray><player> <dark_gray>acaba de se tornar <#55FF55><bold>[VIP+]</bold><gray>!
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>acaba de se tornar <#55FF55><bold>[VIP+]</bold><gray>!
+
+        <gray>Garanta o seu também em
+        <#FFD700>➤ <click:open_url:'<shop-url>'><hover:show_text:'<#55FF55>Clique para abrir a loja!'><shop-url></hover></click>
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
       chat-private: |
-        <#55FF55><bold>✦ VIP+ ATIVADO!</bold>
-        <gray>Recolha sua ativação em <#55FF55>/vip
+        <#55FF55><bold>✦ PARABÉNS!</bold>
+        <white>Você ativou o <#55FF55><bold>[VIP+]</bold><white>!
+        <gray>Use <click:suggest_command:'/vip'><hover:show_text:'<#55FF55>Clique para abrir o menu VIP'><#55FF55>/vip</hover></click> <gray>para gerenciar seus benefícios.
     group-command:
       add: ['lp user {player} parent add vipplus']
       remove: ['lp user {player} parent remove vipplus']
@@ -220,15 +230,20 @@ vips:
       sound: 'BLOCK_BEACON_ACTIVATE'
       effect: 'END_ROD'
       actionbar: '<#55AAFF>✦ <white>ATIVAÇÃO DE MVP <#55AAFF>✦  <gray><player> <dark_gray>→ <#55AAFF><bold>MVP</bold>'
-      title: '<gradient:#55AAFF:#FFFFFF><player></gradient><newline><gray>se tornou <#55AAFF><bold>[MVP]</bold>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>se tornou <#55AAFF><bold>[MVP]</bold>'
       chat: |
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
         <#55AAFF><bold>✦ NOVO MVP ✦</bold>
-        <gray><player> <dark_gray>acaba de se tornar <#55AAFF><bold>[MVP]</bold><gray>!
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>acaba de se tornar <#55AAFF><bold>[MVP]</bold><gray>!
+
+        <gray>Garanta o seu também em
+        <#FFD700>➤ <click:open_url:'<shop-url>'><hover:show_text:'<#55FF55>Clique para abrir a loja!'><shop-url></hover></click>
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
       chat-private: |
-        <#55AAFF><bold>✦ MVP ATIVADO!</bold>
-        <gray>Recolha sua ativação em <#55AAFF>/vip
+        <#55AAFF><bold>✦ PARABÉNS!</bold>
+        <white>Você ativou o <#55AAFF><bold>[MVP]</bold><white>!
+        <gray>Use <click:suggest_command:'/vip'><hover:show_text:'<#55FF55>Clique para abrir o menu VIP'><#55AAFF>/vip</hover></click> <gray>para gerenciar seus benefícios.
     group-command:
       add: ['lp user {player} parent add mvp']
       remove: ['lp user {player} parent remove mvp']
@@ -307,15 +322,20 @@ vips:
       sound: 'BLOCK_BEACON_ACTIVATE'
       effect: 'DRAGON_BREATH'
       actionbar: '<#FF55FF>✦ <white>ATIVAÇÃO DE MVP+ <#FF55FF>✦  <gray><player> <dark_gray>→ <#FF55FF><bold>MVP+</bold>'
-      title: '<gradient:#FF55FF:#FFFFFF><player></gradient><newline><gray>se tornou <#FF55FF><bold>[MVP+]</bold>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>se tornou <#FF55FF><bold>[MVP+]</bold>'
       chat: |
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
         <#FF55FF><bold>✦ NOVO MVP+ ✦</bold>
-        <gray><player> <dark_gray>acaba de se tornar <#FF55FF><bold>[MVP+]</bold><gray>!
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>acaba de se tornar <#FF55FF><bold>[MVP+]</bold><gray>!
+
+        <gray>Garanta o seu também em
+        <#FFD700>➤ <click:open_url:'<shop-url>'><hover:show_text:'<#55FF55>Clique para abrir a loja!'><shop-url></hover></click>
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
       chat-private: |
-        <#FF55FF><bold>✦ MVP+ ATIVADO!</bold>
-        <gray>Recolha sua ativação em <#FF55FF>/vip
+        <#FF55FF><bold>✦ PARABÉNS!</bold>
+        <white>Você ativou o <#FF55FF><bold>[MVP+]</bold><white>!
+        <gray>Use <click:suggest_command:'/vip'><hover:show_text:'<#55FF55>Clique para abrir o menu VIP'><#FF55FF>/vip</hover></click> <gray>para gerenciar seus benefícios.
     group-command:
       add: ['lp user {player} parent add mvpplus']
       remove: ['lp user {player} parent remove mvpplus']
@@ -394,15 +414,20 @@ vips:
       sound: 'UI_TOAST_CHALLENGE_COMPLETE'
       effect: 'TOTEM_OF_UNDYING'
       actionbar: '<#FFD700>✦ <white>ATIVAÇÃO DE ALKA <#FFD700>✦  <gray><player> <dark_gray>→ <#FFD700><bold>ALKA</bold>'
-      title: '<gradient:#FFD700:#FFFFFF><player></gradient><newline><gray>se tornou <#FFD700><bold>[ALKA]</bold>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>se tornou <#FFD700><bold>[ALKA]</bold>'
       chat: |
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
         <#FFD700><bold>✦ NOVO ALKA ✦</bold>
-        <gray><player> <dark_gray>acaba de se tornar <#FFD700><bold>[ALKA]</bold><gray>!
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>acaba de se tornar <#FFD700><bold>[ALKA]</bold><gray>!
+
+        <gray>Garanta o seu também em
+        <#FFD700>➤ <click:open_url:'<shop-url>'><hover:show_text:'<#55FF55>Clique para abrir a loja!'><shop-url></hover></click>
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
       chat-private: |
-        <#FFD700><bold>✦ ALKA ATIVADO!</bold>
-        <gray>Recolha sua ativação em <#FFD700>/vip
+        <#FFD700><bold>✦ PARABÉNS!</bold>
+        <white>Você ativou o <#FFD700><bold>[ALKA]</bold><white>!
+        <gray>Use <click:suggest_command:'/vip'><hover:show_text:'<#55FF55>Clique para abrir o menu VIP'><#FFD700>/vip</hover></click> <gray>para gerenciar seus benefícios.
     group-command:
       add: ['lp user {player} parent add alka']
       remove: ['lp user {player} parent remove alka']
@@ -482,15 +507,20 @@ vips:
       sound: 'ENTITY_ENDER_DRAGON_GROWL'
       effect: 'FLAME'
       actionbar: '<gradient:#FF0000:#FFD700>✦ ATIVAÇÃO DE DRAKKAR ✦</gradient>  <gray><player> <dark_gray>→ <#FF0000><bold>DRAKKAR</bold>'
-      title: '<gradient:#FF0000:#FFD700:#FF0000><player></gradient><newline><gray>se tornou <#FF0000><bold>[DRAKKAR]</bold>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>se tornou <#FF0000><bold>[DRAKKAR]</bold>'
       chat: |
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
         <gradient:#FF0000:#FFD700><bold>✦ NOVO DRAKKAR ✦</bold></gradient>
-        <gray><player> <dark_gray>acaba de se tornar <#FF0000><bold>[DRAKKAR]</bold><gray>, o tier mais alto do servidor!
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>acaba de se tornar <#FF0000><bold>[DRAKKAR]</bold><gray>, o tier mais alto do servidor!
+
+        <gray>Garanta o seu também em
+        <#FFD700>➤ <click:open_url:'<shop-url>'><hover:show_text:'<#55FF55>Clique para abrir a loja!'><shop-url></hover></click>
         <dark_gray><st>――――――――――――――――――――――――――――――</st>
       chat-private: |
-        <gradient:#FF0000:#FFD700><bold>✦ DRAKKAR ATIVADO!</bold></gradient>
-        <gray>Recolha sua ativação em <#FF0000>/vip
+        <gradient:#FF0000:#FFD700><bold>✦ PARABÉNS!</bold></gradient>
+        <white>Você ativou o <#FF0000><bold>[DRAKKAR]</bold><white>, o tier mais alto do servidor!
+        <gray>Use <click:suggest_command:'/vip'><hover:show_text:'<#55FF55>Clique para abrir o menu VIP'><#FF0000>/vip</hover></click> <gray>para gerenciar seus benefícios.
     group-command:
       add: ['lp user {player} parent add drakkar']
       remove: ['lp user {player} parent remove drakkar']

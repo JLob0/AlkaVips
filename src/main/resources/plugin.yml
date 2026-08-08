@@ -5,7 +5,14 @@ api-version: '1.21.8'
 author: MestreDEV
 description: Sistema completo de gerenciamento de VIPs com keys, upgrades, creditos e marketplace.
 depend: [AlkaCore, AlkaEconomy]
-softdepend: [PlaceholderAPI, LuckPerms]
+# LuckPerms/PlaceholderAPI ja estavam aqui. Os outros 8 sao os hooks reais de
+# com.alkacode.vips.hook (HookManager) - cada um resolve o Plugin via getPlugin(id)
+# UMA VEZ no proprio construtor (chamado no onEnable). Sem softdepend aqui, se
+# qualquer um desses carregar DEPOIS do AlkaVips na sequencia de plugins do
+# servidor, o hook fica "indisponivel" pra sempre (nunca re-verifica depois),
+# mesmo com o plugin presente e habilitado - softdepend garante que Bukkit os
+# carrega antes de tentar habilitar o AlkaVips.
+softdepend: [PlaceholderAPI, LuckPerms, AdvancedEnchantments, BattlePass, Citizens, ItemsAdder, mcMMO, MCPets, MythicMobs, TAB]
 
 commands:
   vip:

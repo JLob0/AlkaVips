@@ -75,12 +75,12 @@ public final class AlkaVipsPlugin extends AlkaPlugin {
         DiscordWebhook discordWebhook = new DiscordWebhook(this, configManager);
         ChatInputManager chatInputManager = new ChatInputManager();
         PerksManager perksManager = new PerksManager(playerVipManager, vipTypeManager);
-        KitManager kitManager = new KitManager(this, database);
+        KitManager kitManager = new KitManager(this, database, hooks);
         kitManager.load();
 
         ExpirationService expirationService = new ExpirationService(playerVipManager, vipTypeManager, configManager);
         ActivationService activationService = new ActivationService(playerVipManager, creditManager, partyVipManager,
-                configManager, discordWebhook, vipTypeManager, hooks);
+                configManager, discordWebhook, vipTypeManager, hooks, kitManager);
         UpgradeService upgradeService = new UpgradeService(playerVipManager, vipTypeManager, configManager, economyHook);
         MarketplaceService marketplaceService = new MarketplaceService(keyManager, vipTypeManager, configManager, economyHook);
         KeyUsageService keyUsageService = new KeyUsageService(keyManager, vipTypeManager, activationService);

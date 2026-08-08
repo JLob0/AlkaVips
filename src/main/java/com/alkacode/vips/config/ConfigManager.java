@@ -75,6 +75,11 @@ public final class ConfigManager {
         return config.getIntegerList("renewal.options");
     }
 
+    /** URL da loja usada no placeholder &lt;shop-url&gt; dos anuncios de ativacao - vazio por padrao (nao configurado). */
+    public String shopUrl() {
+        return config.getString("shop-url", "");
+    }
+
     public String getDrakkarSeasonTag() {
         String prefix = config.getString("drakkar.season-prefix", "DRAKKAR");
         int season = config.getInt("drakkar.current-season", 1);

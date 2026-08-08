@@ -1,15 +1,27 @@
 # Kits por tipo de VIP - `items` usa a serializacao nativa do Bukkit (==: org.bukkit.inventory.ItemStack).
 # cooldown-seconds: tempo entre resgates do mesmo kit.
+# icon (opcional): icone do kit na GUI /vip > Kits - NAO e um item entregue, so o
+# icone. "itemsadder" tem prioridade sobre "material" se o ItemsAdder estiver
+# instalado e o namespace existir; senao cai pro "material" (CHEST por padrao).
+# itemsadder-items (opcional): lista de namespaces do ItemsAdder ENTREGUES junto com
+# `items` no resgate (1 unidade cada) - so funciona com o ItemsAdder instalado, e
+# ignorado silenciosamente (namespace pulado) se o plugin estiver ausente ou o
+# namespace nao existir no registro.
 
 kits:
   vip:
     diario:
       name: '<#55FF55>Kit VIP Diario'
       cooldown-seconds: 86400
+      icon:
+        material: CHEST
+        # itemsadder: 'alkavips:kit_daily'
       items:
         - ==: org.bukkit.inventory.ItemStack
           type: EMERALD
           amount: 4
+      # itemsadder-items:
+      #   - 'alkavips:vip_crystal'
 
   vip+:
     diario:

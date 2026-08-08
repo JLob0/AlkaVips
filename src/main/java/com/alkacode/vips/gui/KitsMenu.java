@@ -66,7 +66,7 @@ public final class KitsMenu extends BaseGui {
     }
 
     private void renderColumn(int column, VipType tier, boolean owned) {
-        setItem(HEADER_SLOTS[column], new ItemBuilder(owned ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE)
+        setItem(HEADER_SLOTS[column], new ItemBuilder(tier.icon().build())
                 .glow(owned)
                 .name(TextUtil.plain(tier.display()))
                 .build());
@@ -86,9 +86,9 @@ public final class KitsMenu extends BaseGui {
     }
 
     private org.bukkit.inventory.ItemStack lockedTierItem(VipType tier) {
-        return new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+        return new ItemBuilder(Material.BARRIER)
                 .name("<dark_red><bold>Bloqueado")
-                .lore(List.of("<gray>Voce nao possui " + TextUtil.plain(tier.display())))
+                .lore(List.of("<#FF5555>Voce nao possui " + TextUtil.plain(tier.display())))
                 .build();
     }
 
@@ -99,25 +99,35 @@ public final class KitsMenu extends BaseGui {
                 .build();
     }
 
+    /** Icone custom do ItemsAdder tem prioridade sobre o Material configurado no kit - cai pro Material se ausente/indisponivel. */
+    private org.bukkit.inventory.ItemStack resolveKitIcon(VipKit kit) {
+        if (!kit.iconItemsAdder().isBlank() && services.hooks.itemsAdder().isAvailable()) {
+            org.bukkit.inventory.ItemStack custom = services.hooks.itemsAdder().getItemStack(kit.iconItemsAdder());
+            if (custom != null) {
+                return custom;
+            }
+        }
+        return new org.bukkit.inventory.ItemStack(kit.iconMaterial());
+    }
+
     private org.bukkit.inventory.ItemStack kitItem(VipKit kit) {
         long remaining = services.kitManager.remainingCooldown(player.getUniqueId(), kit);
         boolean available = remaining <= 0;
-        ItemBuilder builder = new ItemBuilder(Material.CHEST)
+        ItemBuilder builder = new ItemBuilder(resolveKitIcon(kit))
                 .glow(available)
                 .name(available ? "<green><bold>" + kit.displayName() : "<red><bold>Em Recarga");
         if (available) {
             builder.lore(List.of(
-                    "<gray>─────────────────",
-                    "<gray>Status: <green>Disponivel",
-                    "",
-                    "<green><bold>Clique para resgatar",
-                    "<gray>─────────────────"));
+                    "<dark_gray>─────────────────",
+                    "<#55FF55>Status: <bold>DISPONÍVEL</bold>",
+                    "<#AAAAAA>Clique para resgatar",
+                    "<dark_gray>─────────────────"));
         } else {
             builder.lore(List.of(
-                    "<gray>─────────────────",
-                    "<gray>" + kit.displayName(),
-                    "<gray>Disponivel em: <white>" + TimeUtil.formatRemaining(remaining),
-                    "<gray>─────────────────"));
+                    "<dark_gray>─────────────────",
+                    "<#FF5555>Status: <bold>EM RECARGA</bold>",
+                    "<#AAAAAA>Disponível em: <#FFD700>" + TimeUtil.formatRemaining(remaining),
+                    "<dark_gray>─────────────────"));
         }
         return builder.build();
     }
@@ -128,8 +138,8 @@ public final class KitsMenu extends BaseGui {
         }
         services.kitManager.claim(player, kit);
         services.sendMessage(player, "kit.claimed", Map.of("kit", kit.displayName()));
-        player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
-        player.getWorld().spawnParticle(Particle.TOTEM_OF_UNDYING, player.getLocation().add(0, 1, 0), 20, 0.4, 0.5, 0.4, 0.05);
+        player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.2f, 1f);
+        player.getWorld().spawnParticle(Particle.TOTEM_OF_UNDYING, player.getLocation().add(0, 1, 0), 35, 0.5, 0.6, 0.5, 0.05);
         refresh();
     }
 }

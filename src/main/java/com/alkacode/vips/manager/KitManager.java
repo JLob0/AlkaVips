@@ -1,7 +1,9 @@
 package com.alkacode.vips.manager;
 
+import com.alkacode.vips.hook.HookManager;
 import com.alkacode.vips.model.VipKit;
 import com.alkacode.vips.storage.VipsRepository;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Item;
@@ -27,12 +29,14 @@ public final class KitManager {
 
     private final JavaPlugin plugin;
     private final VipsRepository database;
+    private final HookManager hooks;
     private final Map<String, Map<String, VipKit>> kitsByVipType = new LinkedHashMap<>();
     private final Map<UUID, Map<String, Long>> cooldownCache = new ConcurrentHashMap<>();
 
-    public KitManager(JavaPlugin plugin, VipsRepository database) {
+    public KitManager(JavaPlugin plugin, VipsRepository database, HookManager hooks) {
         this.plugin = plugin;
         this.database = database;
+        this.hooks = hooks;
     }
 
     public void load() {
@@ -82,7 +86,20 @@ public final class KitManager {
         if (items.isEmpty()) {
             plugin.getLogger().warning("Kit '" + kitId + "' do VIP '" + vipTypeId + "' carregado sem itens.");
         }
-        return new VipKit(vipTypeId.toLowerCase(), kitId, name, cooldownMillis, items);
+
+        ConfigurationSection iconSection = section.getConfigurationSection("icon");
+        Material iconMaterial = Material.CHEST;
+        String iconItemsAdder = "";
+        if (iconSection != null) {
+            Material parsed = Material.matchMaterial(iconSection.getString("material", "CHEST"));
+            iconMaterial = parsed != null ? parsed : Material.CHEST;
+            iconItemsAdder = iconSection.getString("itemsadder", "");
+        }
+
+        List<String> itemsAdderItemIds = section.getStringList("itemsadder-items");
+
+        return new VipKit(vipTypeId.toLowerCase(), kitId, name, cooldownMillis, items, iconMaterial, iconItemsAdder,
+                itemsAdderItemIds);
     }
 
     public Map<String, VipKit> getKits(String vipTypeId) {
@@ -116,15 +133,39 @@ public final class KitManager {
         long now = System.currentTimeMillis();
         cooldownsOf(player.getUniqueId()).put(kit.key(), now);
         database.saveKitCooldown(player.getUniqueId(), kit.key(), now);
+        deliver(player, kit);
+    }
 
+    /**
+     * Entrega os itens do kit SEM registrar cooldown - usado na primeira ativacao de
+     * um tier (bonus de boas-vindas), pra nao "gastar" o resgate periodico normal do
+     * jogador. Ele ainda pode resgatar esse mesmo kit pelo /vip > Kits depois, no
+     * ciclo normal de cooldown.
+     */
+    public void claimIgnoreCooldown(Player player, VipKit kit) {
+        deliver(player, kit);
+    }
+
+    private void deliver(Player player, VipKit kit) {
         for (ItemStack item : kit.items()) {
-            if (item == null || item.getType().isAir()) continue;
-            Map<Integer, ItemStack> overflow = player.getInventory().addItem(item.clone());
-            for (ItemStack leftover : overflow.values()) {
-                if (leftover == null || leftover.getType().isAir()) continue;
-                Item dropped = player.getWorld().dropItemNaturally(player.getLocation(), leftover);
-                dropped.setOwner(player.getUniqueId());
+            give(player, item);
+        }
+        if (!kit.itemsAdderItemIds().isEmpty() && hooks.itemsAdder().isAvailable()) {
+            for (String namespacedId : kit.itemsAdderItemIds()) {
+                give(player, hooks.itemsAdder().getItemStack(namespacedId));
             }
+        }
+    }
+
+    private void give(Player player, ItemStack item) {
+        if (item == null || item.getType().isAir()) {
+            return;
+        }
+        Map<Integer, ItemStack> overflow = player.getInventory().addItem(item.clone());
+        for (ItemStack leftover : overflow.values()) {
+            if (leftover == null || leftover.getType().isAir()) continue;
+            Item dropped = player.getWorld().dropItemNaturally(player.getLocation(), leftover);
+            dropped.setOwner(player.getUniqueId());
         }
     }
 }

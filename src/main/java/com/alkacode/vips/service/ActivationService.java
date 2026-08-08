@@ -5,11 +5,13 @@ import com.alkacode.vips.event.VipActivateEvent;
 import com.alkacode.vips.hook.DiscordWebhook;
 import com.alkacode.vips.hook.HookManager;
 import com.alkacode.vips.manager.CreditManager;
+import com.alkacode.vips.manager.KitManager;
 import com.alkacode.vips.manager.PartyVipManager;
 import com.alkacode.vips.manager.PlayerVipManager;
 import com.alkacode.vips.manager.VipTypeManager;
 import com.alkacode.vips.model.PlayerVip;
 import com.alkacode.vips.model.VipItem;
+import com.alkacode.vips.model.VipKit;
 import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.model.enums.VipStatus;
 import com.alkacode.vips.util.CommandUtil;
@@ -33,11 +35,12 @@ public final class ActivationService {
     private final DiscordWebhook discordWebhook;
     private final VipTypeManager vipTypeManager;
     private final HookManager hooks;
+    private final KitManager kitManager;
     private final Random random = new Random();
 
     public ActivationService(PlayerVipManager playerVipManager, CreditManager creditManager,
                               PartyVipManager partyVipManager, ConfigManager configManager, DiscordWebhook discordWebhook,
-                              VipTypeManager vipTypeManager, HookManager hooks) {
+                              VipTypeManager vipTypeManager, HookManager hooks, KitManager kitManager) {
         this.playerVipManager = playerVipManager;
         this.creditManager = creditManager;
         this.partyVipManager = partyVipManager;
@@ -45,6 +48,7 @@ public final class ActivationService {
         this.discordWebhook = discordWebhook;
         this.vipTypeManager = vipTypeManager;
         this.hooks = hooks;
+        this.kitManager = kitManager;
     }
 
     /**
@@ -104,6 +108,10 @@ public final class ActivationService {
         creditManager.add(uuid, vipType.credit());
         creditManager.incrementActivations(uuid);
         partyVipManager.addProgress(vipType.partyVipValue());
+
+        if (!accumulated) {
+            deliverActivationKits(player, vipType);
+        }
 
         if (!silent) {
             sendAnnounces(player, vipType);
@@ -170,16 +178,46 @@ public final class ActivationService {
         }
     }
 
+    /**
+     * Bonus de boas-vindas: na primeira ativacao de um tier (nao quando so acumula
+     * tempo de um VIP que o jogador ja tinha), entrega todos os kits configurados
+     * pra esse tier de uma vez, SEM gastar o cooldown periodico normal - o jogador
+     * ainda pode resgatar cada um de novo pelo ciclo normal em /vip > Kits.
+     */
+    private void deliverActivationKits(Player player, VipType vipType) {
+        Map<String, VipKit> kits = kitManager.getKits(vipType.id());
+        if (kits.isEmpty()) {
+            return;
+        }
+        for (VipKit kit : kits.values()) {
+            kitManager.claimIgnoreCooldown(player, kit);
+        }
+        send(player, "kit.activation-delivered", Map.of(
+                "count", String.valueOf(kits.size()),
+                "vip", TextUtil.plain(vipType.display())));
+    }
+
+    /**
+     * Title, actionbar e som vao pra TODO MUNDO online (celebra a ativacao pro
+     * servidor inteiro, nao so pra quem ativou) - chat ja fazia isso via
+     * Bukkit.broadcast. chat-private e a particula continuam so pro jogador que
+     * ativou (mensagem pessoal / efeito no proprio corpo dele).
+     */
     private void sendAnnounces(Player player, VipType vipType) {
-        Map<String, String> placeholders = Map.of("player", player.getName());
+        Map<String, String> placeholders = Map.of(
+                "player", player.getName(),
+                "shop-url", configManager.shopUrl());
+
         if (!vipType.announceActionBar().isBlank()) {
-            player.sendActionBar(TextUtil.parse(vipType.announceActionBar(), placeholders));
+            var actionBar = TextUtil.parse(vipType.announceActionBar(), placeholders);
+            Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(actionBar));
         }
         if (!vipType.announceTitle().isBlank()) {
             String[] lines = vipType.announceTitle().split("<newline>", 2);
-            player.showTitle(net.kyori.adventure.title.Title.title(
+            var title = net.kyori.adventure.title.Title.title(
                     TextUtil.parse(lines[0], placeholders),
-                    TextUtil.parse(lines.length > 1 ? lines[1] : "", placeholders)));
+                    TextUtil.parse(lines.length > 1 ? lines[1] : "", placeholders));
+            Bukkit.getOnlinePlayers().forEach(p -> p.showTitle(title));
         }
         if (!vipType.announceChat().isBlank()) {
             Bukkit.broadcast(TextUtil.parse(vipType.announceChat(), placeholders));
@@ -191,7 +229,7 @@ public final class ActivationService {
             org.bukkit.Sound sound = org.bukkit.Registry.SOUNDS.get(
                     org.bukkit.NamespacedKey.minecraft(vipType.announceSound().toLowerCase()));
             if (sound != null) {
-                player.playSound(player.getLocation(), sound, 1f, 1f);
+                Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), sound, 0.8f, 1f));
             }
         }
         if (!vipType.announceEffect().isBlank()) {

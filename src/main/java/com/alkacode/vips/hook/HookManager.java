@@ -3,7 +3,7 @@ package com.alkacode.vips.hook;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Agrega os 8 hooks opcionais de plugins de terceiros do AlkaVips - cada um e uma
+ * Agrega os 9 hooks opcionais de plugins de terceiros do AlkaVips - cada um e uma
  * soft-dependency via reflection (ver {@link HookReflection}), nunca lanca excecao se o
  * plugin correspondente estiver ausente/desabilitado.
  */
@@ -17,6 +17,7 @@ public final class HookManager {
     private final MCPetsHook mcPets;
     private final TabHook tab;
     private final CitizensHook citizens;
+    private final NChatHook nChat;
 
     public HookManager(JavaPlugin plugin) {
         this.mcmmo = new McMMOHook(plugin);
@@ -27,6 +28,7 @@ public final class HookManager {
         this.mcPets = new MCPetsHook(plugin);
         this.tab = new TabHook(plugin);
         this.citizens = new CitizensHook(plugin);
+        this.nChat = new NChatHook(plugin);
     }
 
     public McMMOHook mcmmo() { return mcmmo; }
@@ -37,4 +39,5 @@ public final class HookManager {
     public MCPetsHook mcPets() { return mcPets; }
     public TabHook tab() { return tab; }
     public CitizensHook citizens() { return citizens; }
+    public NChatHook nChat() { return nChat; }
 }

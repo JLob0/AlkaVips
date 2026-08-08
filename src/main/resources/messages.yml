@@ -92,3 +92,4 @@ perks:
 
 kit:
   claimed: "<green>Voce resgatou o kit <white><kit></white>!"
+  activation-delivered: "<#55FF55>✦ <white><count> kit(s) do <vip> <white>foram entregues automaticamente! Resgate novamente em <#55FF55>/vip <white>> Kits."
