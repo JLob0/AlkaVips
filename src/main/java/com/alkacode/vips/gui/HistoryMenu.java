@@ -36,7 +36,7 @@ public final class HistoryMenu extends BaseGui {
                 break;
             }
             VipType type = services.vipTypeManager.get(vip.vipTypeId());
-            String title = type != null ? tierBadge(type) + " " + type.prefix() : "<white>" + vip.vipTypeId();
+            String title = type != null ? type.prefix() : "<white>" + vip.vipTypeId();
             Material material = vip.status() == VipStatus.EXPIRED ? Material.GRAY_DYE
                     : vip.status() == VipStatus.PENDING ? Material.CLOCK : Material.LIME_DYE;
             var item = new ItemBuilder(material)
@@ -56,16 +56,6 @@ public final class HistoryMenu extends BaseGui {
         setItem(getInventory().getSize() - 5, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(),
                 e -> new MainVipMenu(player, services).open());
         fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
-    }
-
-    /** Distintivo de rank do tier a partir de {@link VipType#getOrder()} - data-driven em vez de
-     * uma lista fixa de nomes, pra nao quebrar quando vips.yml ganhar/perder tiers. Tag-permanent
-     * (hoje so DRAKKAR) ganha coroa em vez de estrelas, ja que fica no topo da cadeia. */
-    private String tierBadge(VipType type) {
-        if (type.isTagPermanent()) {
-            return "👑";
-        }
-        return "★".repeat(Math.max(1, type.getOrder()));
     }
 
     private String statusLine(PlayerVip vip) {
