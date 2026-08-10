@@ -2,6 +2,7 @@ package com.alkacode.vips.manager;
 
 import com.alkacode.vips.model.PlayerVip;
 import com.alkacode.vips.model.VipPlayerData;
+import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.model.enums.VipStatus;
 import com.alkacode.vips.storage.VipsRepository;
 import org.bukkit.entity.Player;
@@ -24,11 +25,13 @@ import java.util.stream.Collectors;
 public final class PlayerVipManager {
 
     private final VipsRepository database;
+    private final VipTypeManager vipTypeManager;
     private final Map<UUID, List<PlayerVip>> vipsCache = new ConcurrentHashMap<>();
     private final Map<UUID, VipPlayerData> dataCache = new ConcurrentHashMap<>();
 
-    public PlayerVipManager(VipsRepository database) {
+    public PlayerVipManager(VipsRepository database, VipTypeManager vipTypeManager) {
         this.database = database;
+        this.vipTypeManager = vipTypeManager;
     }
 
     public CompletableFuture<Void> loadForJoin(Player player) {
@@ -88,7 +91,17 @@ public final class PlayerVipManager {
                 return match;
             }
         }
-        return active.stream().max(Comparator.comparingLong(PlayerVip::activatedAt));
+        // Sem escolha manual do jogador: o VIP de maior "order" (vips.yml) vence, nao o
+        // ativado mais recentemente - um jogador com VIP basico + TIRANO ativos ao mesmo
+        // tempo (ex: resgatou uma key nova sem passar pelo fluxo de upgrade) deve receber
+        // os perks do TIRANO, nao do que por acaso foi ativado por ultimo. activatedAt so
+        // desempata order igual.
+        return active.stream().max(Comparator.comparingInt(this::orderOf).thenComparingLong(PlayerVip::activatedAt));
+    }
+
+    private int orderOf(PlayerVip vip) {
+        VipType type = vipTypeManager.get(vip.vipTypeId());
+        return type != null ? type.getOrder() : 0;
     }
 
     public Optional<PlayerVip> cycleSelectedVip(UUID uuid) {

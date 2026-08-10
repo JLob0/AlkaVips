@@ -24,4 +24,10 @@ public interface AlkaVipsAPI {
     void addCredits(UUID player, double amount);
 
     void removeCredits(UUID player, double amount);
+
+    /** Info publica (id/display/order) de um vipId - null se o vipId nao existir. Use order pra comparar tiers sem hardcode. */
+    CompletableFuture<VipTypeInfo> getVipTypeInfo(String vipId);
+
+    /** Todos os VipTypes conhecidos, ordenados por order crescente (o ultimo da lista e o de maior tier). */
+    CompletableFuture<List<VipTypeInfo>> getVipTypesOrdered();
 }

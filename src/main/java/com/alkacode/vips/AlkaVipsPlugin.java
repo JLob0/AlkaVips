@@ -67,7 +67,7 @@ public final class AlkaVipsPlugin extends AlkaPlugin {
             getLogger().warning("AlkaEconomy nao encontrado - upgrades/marketplace ficarao indisponiveis.");
         }
 
-        PlayerVipManager playerVipManager = new PlayerVipManager(database);
+        PlayerVipManager playerVipManager = new PlayerVipManager(database, vipTypeManager);
         CreditManager creditManager = new CreditManager(playerVipManager, database, economyHook);
         PartyVipManager partyVipManager = new PartyVipManager(database, configManager);
         partyVipManager.load();
@@ -107,7 +107,7 @@ public final class AlkaVipsPlugin extends AlkaPlugin {
             getLogger().info("Expansao do PlaceholderAPI registrada.");
         }
 
-        AlkaVipsAPI vipsApi = new AlkaVipsAPIProvider(playerVipManager, creditManager, keyManager);
+        AlkaVipsAPI vipsApi = new AlkaVipsAPIProvider(playerVipManager, creditManager, keyManager, vipTypeManager);
         getServer().getServicesManager().register(AlkaVipsAPI.class, vipsApi, this, ServicePriority.Normal);
 
         getLogger().info("AlkaVips habilitado.");
