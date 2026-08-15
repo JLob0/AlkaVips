@@ -15,7 +15,7 @@ public final class ShopMenu extends BaseGui {
 
     public ShopMenu(Player viewer, VipsServices services) {
         super(services.plugin, viewer,
-                services.configManager.config().getString("credit-shop.title", "<#00FFAA>✦ Loja Alka"),
+                services.configManager.config().getString("credit-shop.title", "<#00FFAA>✦ Loja Prisma"),
                 services.configManager.menus().getInt("shop.size", 54) / 9, "vip_shop");
         this.services = services;
     }

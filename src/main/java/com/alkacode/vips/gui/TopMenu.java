@@ -49,41 +49,28 @@ public final class TopMenu extends BaseGui {
         }
         int activations = entry.uuid() != null ? services.playerVipManager.dataOf(entry.uuid()).totalActivations() : 0;
 
-        Material material;
-        String title;
-        boolean glow;
-        switch (position) {
-            case 1 -> {
-                material = Material.GOLD_BLOCK;
-                title = "<#FFD700><bold>🥇 " + name;
-                glow = true;
-            }
-            case 2 -> {
-                material = Material.IRON_BLOCK;
-                title = "<#AAAAAA><bold>🥈 " + name;
-                glow = true;
-            }
-            case 3 -> {
-                material = Material.COPPER_BLOCK;
-                title = "<#FFAA55><bold>🥉 " + name;
-                glow = true;
-            }
-            default -> {
-                material = Material.PLAYER_HEAD;
-                title = "<#55AAFF>" + position + "º Lugar <white>- " + name;
-                glow = false;
-            }
-        }
+        String[] lore = {
+                "<gray>─────────────────",
+                "<#FFD700>✦ Prisma: <white>" + services.economyHook.format(entry.balance()),
+                "<#55AAFF>Ativacoes: <white>" + activations,
+                "<gray>─────────────────"
+        };
 
-        return new ItemBuilder(material)
-                .glow(glow)
-                .name(title)
-                .lore(List.of(
-                        "<gray>─────────────────",
-                        "<#FFD700>✦ Essencia Alka: <white>" + services.economyHook.format(entry.balance()),
-                        "<#55AAFF>Ativacoes: <white>" + activations,
-                        "<gray>─────────────────"
-                ))
-                .build();
+        // Cabeca com o rosto real do jogador em TODAS as posicoes (BaseGui#head resolve via
+        // OfflinePlayer) - antes o top 3 usava blocos (ouro/ferro/cobre) sem nenhuma cabeca,
+        // e 4+ usava Material.PLAYER_HEAD cru via ItemBuilder local sem dono/textura setado,
+        // entao nunca aparecia rosto nenhum em lugar nenhum.
+        String title = switch (position) {
+            case 1 -> "<#FFD700><bold>🥇 " + name;
+            case 2 -> "<#AAAAAA><bold>🥈 " + name;
+            case 3 -> "<#FFAA55><bold>🥉 " + name;
+            default -> "<#55AAFF>" + position + "º Lugar <white>- " + name;
+        };
+
+        org.bukkit.inventory.ItemStack item = head(name, title, lore);
+        if (position <= 3) {
+            item = glow(item);
+        }
+        return item;
     }
 }

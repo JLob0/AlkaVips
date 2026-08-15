@@ -16,9 +16,9 @@ import java.util.UUID;
  */
 public final class CreditManager {
 
-    public static final String CURRENCY_ID = "credits_vip";
-    private static final String CURRENCY_NAME = "Essencia Alka";
-    private static final String CURRENCY_SYMBOL = "✦";
+    public static final String CURRENCY_ID = "prisma";
+    private static final String CURRENCY_NAME = "Prisma";
+    private static final String CURRENCY_SYMBOL = "◈";
 
     private final PlayerVipManager playerVipManager;
     private final VipsRepository database;

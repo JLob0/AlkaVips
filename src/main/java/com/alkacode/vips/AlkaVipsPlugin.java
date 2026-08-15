@@ -12,6 +12,7 @@ import com.alkacode.vips.command.VipPlayerCommands;
 import com.alkacode.vips.config.ConfigManager;
 import com.alkacode.vips.gui.ChatInputManager;
 import com.alkacode.vips.hook.AlkaEconomyHook;
+import com.alkacode.vips.hook.AlkaFlairHook;
 import com.alkacode.vips.hook.DiscordWebhook;
 import com.alkacode.vips.hook.HookManager;
 import com.alkacode.vips.hook.PlaceholderAPIHook;
@@ -20,22 +21,29 @@ import com.alkacode.vips.listener.KeyInteractListener;
 import com.alkacode.vips.listener.PerksListener;
 import com.alkacode.vips.listener.PlayerJoinListener;
 import com.alkacode.vips.listener.PlayerQuitListener;
+import com.alkacode.vips.manager.AffiliateManager;
+import com.alkacode.vips.manager.BoostManager;
 import com.alkacode.vips.manager.CreditManager;
 import com.alkacode.vips.manager.KeyManager;
-import com.alkacode.vips.manager.KitManager;
+import com.alkacode.vips.manager.LegacyManager;
 import com.alkacode.vips.manager.PartyVipManager;
+import com.alkacode.vips.manager.PerkTreeManager;
 import com.alkacode.vips.manager.PerksManager;
 import com.alkacode.vips.manager.PlayerVipManager;
 import com.alkacode.vips.manager.VipTypeManager;
+import com.alkacode.vips.manager.WalletManager;
 import com.alkacode.vips.model.PlayerVip;
 import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.model.enums.TimeType;
 import com.alkacode.vips.api.AlkaVipsAPI;
 import com.alkacode.vips.api.AlkaVipsAPIProvider;
+import com.alkacode.vips.api.AlkaVipsBoostAPI;
 import com.alkacode.vips.service.ActivationService;
 import com.alkacode.vips.service.ExpirationService;
 import com.alkacode.vips.service.KeyUsageService;
 import com.alkacode.vips.service.MarketplaceService;
+import com.alkacode.vips.service.P2PMarketService;
+import com.alkacode.vips.service.TransferService;
 import com.alkacode.vips.service.UpgradeService;
 import com.alkacode.vips.storage.VipsRepository;
 import com.alkacode.vips.task.VipExpirationTask;
@@ -71,24 +79,37 @@ public final class AlkaVipsPlugin extends AlkaPlugin {
         CreditManager creditManager = new CreditManager(playerVipManager, database, economyHook);
         PartyVipManager partyVipManager = new PartyVipManager(database, configManager);
         partyVipManager.load();
-        KeyManager keyManager = new KeyManager(this, database);
+        com.alkacode.core.util.PermissionNamesStore permissionNames =
+                new com.alkacode.core.util.PermissionNamesStore(this, "permission-names.yml");
+        KeyManager keyManager = new KeyManager(this, database, configManager, permissionNames);
         DiscordWebhook discordWebhook = new DiscordWebhook(this, configManager);
         ChatInputManager chatInputManager = new ChatInputManager();
         PerksManager perksManager = new PerksManager(playerVipManager, vipTypeManager);
-        KitManager kitManager = new KitManager(this, database, hooks);
-        kitManager.load();
 
         ExpirationService expirationService = new ExpirationService(playerVipManager, vipTypeManager, configManager);
         ActivationService activationService = new ActivationService(playerVipManager, creditManager, partyVipManager,
-                configManager, discordWebhook, vipTypeManager, hooks, kitManager);
+                configManager, discordWebhook, vipTypeManager, hooks, database);
         UpgradeService upgradeService = new UpgradeService(playerVipManager, vipTypeManager, configManager, economyHook);
         MarketplaceService marketplaceService = new MarketplaceService(keyManager, vipTypeManager, configManager, economyHook);
         KeyUsageService keyUsageService = new KeyUsageService(keyManager, vipTypeManager, activationService);
 
+        AlkaFlairHook flairHook = new AlkaFlairHook(getLogger());
+        com.alkacode.vips.hook.AlkaItemsHook itemsHook = new com.alkacode.vips.hook.AlkaItemsHook(getLogger());
+        TransferService transferService = new TransferService(playerVipManager);
+        LegacyManager legacyManager = new LegacyManager(database, playerVipManager, vipTypeManager);
+        WalletManager walletManager = new WalletManager(this, database, flairHook);
+        AffiliateManager affiliateManager = new AffiliateManager(this, database, playerVipManager, economyHook);
+        BoostManager boostManager = new BoostManager(flairHook);
+        double saleTaxPercent = configManager.config().getDouble("p2p-market.sale-tax-percent", 0);
+        P2PMarketService p2pMarketService = new P2PMarketService(database, playerVipManager, vipTypeManager,
+                economyHook, walletManager, discordWebhook, saleTaxPercent);
+        PerkTreeManager perkTreeManager = new PerkTreeManager(this, database);
+
         services = new VipsServices(this, configManager, vipTypeManager, database, playerVipManager, creditManager,
                 keyManager, partyVipManager, economyHook, discordWebhook, activationService, upgradeService,
-                marketplaceService, keyUsageService, expirationService, chatInputManager, perksManager, kitManager,
-                hooks);
+                marketplaceService, keyUsageService, expirationService, chatInputManager, perksManager,
+                hooks, flairHook, transferService, legacyManager, walletManager, affiliateManager, boostManager,
+                p2pMarketService, perkTreeManager, itemsHook, permissionNames);
 
         compensateServerDowntime(vipTypeManager, database);
 
@@ -109,6 +130,7 @@ public final class AlkaVipsPlugin extends AlkaPlugin {
 
         AlkaVipsAPI vipsApi = new AlkaVipsAPIProvider(playerVipManager, creditManager, keyManager, vipTypeManager);
         getServer().getServicesManager().register(AlkaVipsAPI.class, vipsApi, this, ServicePriority.Normal);
+        getServer().getServicesManager().register(AlkaVipsBoostAPI.class, boostManager, this, ServicePriority.Normal);
 
         getLogger().info("AlkaVips habilitado.");
     }
@@ -129,6 +151,11 @@ public final class AlkaVipsPlugin extends AlkaPlugin {
         setExecutor("trocarvip", vipPlayerCommands);
         setExecutor("congelarvip", vipPlayerCommands);
         setExecutor("partyvip", vipPlayerCommands);
+        setExecutor("transferirvip", vipPlayerCommands);
+        setExecutor("carteiravip", vipPlayerCommands);
+        setExecutor("mercadovip", vipPlayerCommands);
+        setExecutor("indicarvip", vipPlayerCommands);
+        setExecutor("perksvip", vipPlayerCommands);
 
         KeyPlayerCommands keyPlayerCommands = new KeyPlayerCommands(services);
         setExecutor("usarkey", keyPlayerCommands);
@@ -179,12 +206,15 @@ public final class AlkaVipsPlugin extends AlkaPlugin {
 
     private void registerListeners() {
         playerJoinListener = new PlayerJoinListener(this, services.playerVipManager, services.vipTypeManager,
-                services.expirationService, services.kitManager);
+                services.expirationService);
         getServer().getPluginManager().registerEvents(playerJoinListener, this);
-        getServer().getPluginManager().registerEvents(new PlayerQuitListener(services.playerVipManager, services.kitManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerQuitListener(services.playerVipManager), this);
         getServer().getPluginManager().registerEvents(new KeyInteractListener(services), this);
         getServer().getPluginManager().registerEvents(new ChatInputListener(this, services.chatInputManager), this);
         getServer().getPluginManager().registerEvents(new PerksListener(services.perksManager), this);
+        getServer().getPluginManager().registerEvents(new com.alkacode.vips.listener.VipLifecycleListener(
+                services.vipTypeManager, services.walletManager, services.legacyManager, services.boostManager,
+                services.affiliateManager, services.perkTreeManager, services.flairHook, services.itemsHook), this);
     }
 
     /**

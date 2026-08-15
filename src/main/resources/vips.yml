@@ -14,6 +14,7 @@ vips:
     allow-sell: true
     order: 1
     tag-permanent: false
+    permission-group: vip
     icon:
       material: EMERALD
       name: '<#55FF55>VIP'
@@ -26,6 +27,9 @@ vips:
         - '<gray>Tier: <#55FF55>[VIP]'
         - '<gray>Duracao: <white><expire_remaining>'
         - '<gray>Codigo: <dark_gray><id>'
+        - ''
+        - '<#55FF55>ᴘᴇʀᴍɪssões'
+        - '%permissions%'
         - ''
         - '<green><bold>⬅ ESQUERDO <gray>para ativar'
         - '<red><bold>➡ DIREITO <gray>para vender'
@@ -73,6 +77,35 @@ vips:
         material: EMERALD
         name: '<#55FF55>Cristal VIP'
         amount: 1
+    # Presente unico por conta (nunca se repete, nem se o jogador comprar VIP de novo
+    # mais pra frente) - so libera se ESTA compra valer 30+ dias, pra ninguem farmar
+    # comprando o VIP de 1h repetidas vezes. Ver ActivationService#deliverActivationBonus.
+    activation-bonus:
+      min-duration-days: 30
+      items:
+        item-1:
+          chance: 100.0
+          material: EMERALD_BLOCK
+          name: '<#55FF55><bold>Baú de Boas-Vindas [VIP]</bold>'
+          lore:
+            - '<gray>Presente unico por ativar 30+ dias'
+            - '<gray>de <#55FF55>[VIP]<gray> pela primeira vez.'
+          amount: 8
+        item-2:
+          chance: 30.0
+          material: DIAMOND
+          name: '<aqua>Diamante Bônus'
+          amount: 1
+      sound: 'ENTITY_PLAYER_LEVELUP'
+      effect: 'HAPPY_VILLAGER'
+      actionbar: '<#55FF55>✦ <white>BÔNUS DE ATIVAÇÃO <#55FF55>✦  <gray><player> <dark_gray>→ <gradient:#55FF55:#00FF00><bold>[VIP] 30+ dias</bold></gradient>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>desbloqueou o <gradient:#55FF55:#00FF00><bold>Bônus de Ativação</bold></gradient>'
+      chat: |
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
+        <gradient:#55FF55:#00FF00><bold>✦ BÔNUS DE ATIVAÇÃO ✦</bold></gradient>
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>ativou <#55FF55>30+ dias <gray>de <gradient:#55FF55:#00FF00><bold>[VIP]</bold></gradient> <gray>e recebeu um presente único!
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
     upgrade:
       vip-type: 'vip+'
       message: |
@@ -95,6 +128,17 @@ vips:
       bigorna: true
       bancada: true
       colored-signs: false
+    # Exemplo de acoes executaveis em eventos (formato "[tipo] conteudo", ver
+    # EventActionExecutor.java pros tipos suportados). Opcional - se a secao
+    # inteira for omitida, nenhuma acao extra roda no evento.
+    events:
+      on-activate:
+        - '[sound] ENTITY_PLAYER_LEVELUP'
+        - '[actionbar] <#55FF55>✦ Bem-vindo ao [VIP]!'
+      on-expire:
+        - '[console] tell {player} Seu VIP expirou. Renove pelo /vip!'
+      on-enable: []
+      on-disable: []
 
   vip+:
     display: '<#55FF55>[VIP+]'
@@ -106,6 +150,7 @@ vips:
     allow-sell: true
     order: 2
     tag-permanent: false
+    permission-group: vipplus
     icon:
       material: EMERALD_BLOCK
       name: '<#55FF55>VIP+'
@@ -118,6 +163,9 @@ vips:
         - '<gray>Tier: <#55FF55>[VIP+]'
         - '<gray>Duracao: <white><expire_remaining>'
         - '<gray>Codigo: <dark_gray><id>'
+        - ''
+        - '<#55FF55>ᴘᴇʀᴍɪssões'
+        - '%permissions%'
         - ''
         - '<green><bold>⬅ ESQUERDO <gray>para ativar'
         - '<red><bold>➡ DIREITO <gray>para vender'
@@ -165,6 +213,32 @@ vips:
         material: EMERALD_BLOCK
         name: '<#55FF55>Bloco VIP+'
         amount: 1
+    activation-bonus:
+      min-duration-days: 30
+      items:
+        item-1:
+          chance: 100.0
+          material: DIAMOND
+          name: '<#55FF55><bold>Baú de Boas-Vindas [VIP+]</bold>'
+          lore:
+            - '<gray>Presente unico por ativar 30+ dias'
+            - '<gray>de <#55FF55>[VIP+]<gray> pela primeira vez.'
+          amount: 4
+        item-2:
+          chance: 25.0
+          material: DIAMOND_BLOCK
+          name: '<aqua>Bloco de Diamante Bônus'
+          amount: 1
+      sound: 'ENTITY_PLAYER_LEVELUP'
+      effect: 'HAPPY_VILLAGER'
+      actionbar: '<#55FF55>✦ <white>BÔNUS DE ATIVAÇÃO <#55FF55>✦  <gray><player> <dark_gray>→ <gradient:#55FF55:#00FF00><bold>[VIP+] 30+ dias</bold></gradient>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>desbloqueou o <gradient:#55FF55:#00FF00><bold>Bônus de Ativação</bold></gradient>'
+      chat: |
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
+        <gradient:#55FF55:#00FF00><bold>✦ BÔNUS DE ATIVAÇÃO ✦</bold></gradient>
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>ativou <#55FF55>30+ dias <gray>de <gradient:#55FF55:#00FF00><bold>[VIP+]</bold></gradient> <gray>e recebeu um presente único!
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
     upgrade:
       vip-type: 'mvp'
       message: |
@@ -198,6 +272,7 @@ vips:
     allow-sell: true
     order: 3
     tag-permanent: false
+    permission-group: mvp
     icon:
       material: DIAMOND
       name: '<#55AAFF>MVP'
@@ -210,6 +285,9 @@ vips:
         - '<gray>Tier: <#55AAFF>[MVP]'
         - '<gray>Duracao: <white><expire_remaining>'
         - '<gray>Codigo: <dark_gray><id>'
+        - ''
+        - '<#55AAFF>ᴘᴇʀᴍɪssões'
+        - '%permissions%'
         - ''
         - '<green><bold>⬅ ESQUERDO <gray>para ativar'
         - '<red><bold>➡ DIREITO <gray>para vender'
@@ -257,6 +335,32 @@ vips:
         material: DIAMOND
         name: '<#55AAFF>Diamante MVP'
         amount: 1
+    activation-bonus:
+      min-duration-days: 30
+      items:
+        item-1:
+          chance: 100.0
+          material: DIAMOND_BLOCK
+          name: '<#55AAFF><bold>Baú de Boas-Vindas [MVP]</bold>'
+          lore:
+            - '<gray>Presente unico por ativar 30+ dias'
+            - '<gray>de <#55AAFF>[MVP]<gray> pela primeira vez.'
+          amount: 4
+        item-2:
+          chance: 20.0
+          material: NETHERITE_INGOT
+          name: '<#FFD700>Lingote de Netherite Bônus'
+          amount: 1
+      sound: 'BLOCK_BEACON_ACTIVATE'
+      effect: 'END_ROD'
+      actionbar: '<#55AAFF>✦ <white>BÔNUS DE ATIVAÇÃO <#55AAFF>✦  <gray><player> <dark_gray>→ <gradient:#55AAFF:#0055FF><bold>[MVP] 30+ dias</bold></gradient>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>desbloqueou o <gradient:#55AAFF:#0055FF><bold>Bônus de Ativação</bold></gradient>'
+      chat: |
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
+        <gradient:#55AAFF:#0055FF><bold>✦ BÔNUS DE ATIVAÇÃO ✦</bold></gradient>
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>ativou <#55AAFF>30+ dias <gray>de <gradient:#55AAFF:#0055FF><bold>[MVP]</bold></gradient> <gray>e recebeu um presente único!
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
     upgrade:
       vip-type: 'mvp+'
       message: |
@@ -290,6 +394,7 @@ vips:
     allow-sell: true
     order: 4
     tag-permanent: false
+    permission-group: mvpplus
     icon:
       material: DIAMOND_BLOCK
       name: '<#FF55FF>MVP+'
@@ -302,6 +407,9 @@ vips:
         - '<gray>Tier: <#FF55FF>[MVP+]'
         - '<gray>Duracao: <white><expire_remaining>'
         - '<gray>Codigo: <dark_gray><id>'
+        - ''
+        - '<#FF55FF>ᴘᴇʀᴍɪssões'
+        - '%permissions%'
         - ''
         - '<green><bold>⬅ ESQUERDO <gray>para ativar'
         - '<red><bold>➡ DIREITO <gray>para vender'
@@ -349,6 +457,32 @@ vips:
         material: DIAMOND_BLOCK
         name: '<#FF55FF>Bloco MVP+'
         amount: 1
+    activation-bonus:
+      min-duration-days: 30
+      items:
+        item-1:
+          chance: 100.0
+          material: NETHERITE_INGOT
+          name: '<#FF55FF><bold>Baú de Boas-Vindas [MVP+]</bold>'
+          lore:
+            - '<gray>Presente unico por ativar 30+ dias'
+            - '<gray>de <#FF55FF>[MVP+]<gray> pela primeira vez.'
+          amount: 4
+        item-2:
+          chance: 15.0
+          material: NETHERITE_BLOCK
+          name: '<#FFD700>Bloco de Netherite Bônus'
+          amount: 1
+      sound: 'BLOCK_BEACON_ACTIVATE'
+      effect: 'DRAGON_BREATH'
+      actionbar: '<#FF55FF>✦ <white>BÔNUS DE ATIVAÇÃO <#FF55FF>✦  <gray><player> <dark_gray>→ <gradient:#FF55FF:#AA00AA><bold>[MVP+] 30+ dias</bold></gradient>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>desbloqueou o <gradient:#FF55FF:#AA00AA><bold>Bônus de Ativação</bold></gradient>'
+      chat: |
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
+        <gradient:#FF55FF:#AA00AA><bold>✦ BÔNUS DE ATIVAÇÃO ✦</bold></gradient>
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>ativou <#FF55FF>30+ dias <gray>de <gradient:#FF55FF:#AA00AA><bold>[MVP+]</bold></gradient> <gray>e recebeu um presente único!
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
     upgrade:
       vip-type: 'alka'
       message: |
@@ -382,6 +516,7 @@ vips:
     allow-sell: true
     order: 5
     tag-permanent: false
+    permission-group: alka
     icon:
       material: NETHERITE_INGOT
       name: '<#FFD700>ALKA'
@@ -394,6 +529,9 @@ vips:
         - '<gray>Tier: <#FFD700>[ALKA]'
         - '<gray>Duracao: <white><expire_remaining>'
         - '<gray>Codigo: <dark_gray><id>'
+        - ''
+        - '<#FFD700>ᴘᴇʀᴍɪssões'
+        - '%permissions%'
         - ''
         - '<green><bold>⬅ ESQUERDO <gray>para ativar'
         - '<red><bold>➡ DIREITO <gray>para vender'
@@ -441,6 +579,32 @@ vips:
         material: NETHERITE_INGOT
         name: '<#FFD700>Lingote ALKA'
         amount: 1
+    activation-bonus:
+      min-duration-days: 30
+      items:
+        item-1:
+          chance: 100.0
+          material: NETHERITE_BLOCK
+          name: '<#FFD700><bold>Baú de Boas-Vindas [ALKA]</bold>'
+          lore:
+            - '<gray>Presente unico por ativar 30+ dias'
+            - '<gray>de <#FFD700>[ALKA]<gray> pela primeira vez.'
+          amount: 2
+        item-2:
+          chance: 10.0
+          material: NETHER_STAR
+          name: '<#FFD700>Estrela do Nether Bônus'
+          amount: 1
+      sound: 'UI_TOAST_CHALLENGE_COMPLETE'
+      effect: 'TOTEM_OF_UNDYING'
+      actionbar: '<#FFD700>✦ <white>BÔNUS DE ATIVAÇÃO <#FFD700>✦  <gray><player> <dark_gray>→ <gradient:#FFD700:#FF8C00><bold>[ALKA] 30+ dias</bold></gradient>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>desbloqueou o <gradient:#FFD700:#FF8C00><bold>Bônus de Ativação</bold></gradient>'
+      chat: |
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
+        <gradient:#FFD700:#FF8C00><bold>✦ BÔNUS DE ATIVAÇÃO ✦</bold></gradient>
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>ativou <#FFD700>30+ dias <gray>de <gradient:#FFD700:#FF8C00><bold>[ALKA]</bold></gradient> <gray>e recebeu um presente único!
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
     upgrade:
       vip-type: 'drakkar'
       message: |
@@ -463,6 +627,28 @@ vips:
       bigorna: true
       bancada: true
       colored-signs: true
+    # server-boost (Ideia 1 - "VIP Solidario"): so faz sentido em tiers caros/altos -
+    # ativar ALKA da um buff GLOBAL temporario pra todo o servidor. Multiplos ALKA
+    # ativados perto um do outro empilham (multiplicativo).
+    server-boost:
+      enabled: false
+      duration-minutes: 60
+      broadcast: true
+      effects:
+        - type: 'DROP_MULTIPLIER'
+          value: 1.1
+        - type: 'SELL_MULTIPLIER'
+          value: 1.05
+      rewards-to-buyer:
+        tag: ''
+        medal: ''
+        tag-duration-hours: 24
+    # item-rewards (integracao com AlkaItems, opcional): templates de items.yml
+    # entregues na primeira ativacao (nao-acumulada) deste tier - so acontece se o
+    # AlkaItems estiver instalado (softdepend puro, ver hook/AlkaItemsHook) e o
+    # jogador ainda nao tiver o item (checagem via PDC, nao duplica soulbound).
+    item-rewards:
+      - 'armadura_regeneracao'
 
   drakkar:
     display: '<#FF0000>[DRAKKAR]'
@@ -474,6 +660,7 @@ vips:
     allow-sell: true
     order: 6
     tag-permanent: true
+    permission-group: drakkar
     icon:
       material: DRAGON_EGG
       name: '<#FF0000>DRAKKAR'
@@ -487,6 +674,9 @@ vips:
         - '<gray>Tier: <#FF0000>[DRAKKAR]'
         - '<gray>Duracao: <white><expire_remaining>'
         - '<gray>Codigo: <dark_gray><id>'
+        - ''
+        - '<#FF0000>ᴘᴇʀᴍɪssões'
+        - '%permissions%'
         - ''
         - '<green><bold>⬅ ESQUERDO <gray>para ativar'
         - '<red><bold>➡ DIREITO <gray>para vender'
@@ -534,6 +724,32 @@ vips:
         material: DRAGON_BREATH
         name: '<#FF0000>Fragmento DRAKKAR'
         amount: 1
+    activation-bonus:
+      min-duration-days: 30
+      items:
+        item-1:
+          chance: 100.0
+          material: NETHERITE_BLOCK
+          name: '<#FF0000><bold>Baú de Boas-Vindas [DRAKKAR]</bold>'
+          lore:
+            - '<gray>Presente unico por ativar 30+ dias'
+            - '<gray>de <#FF0000>[DRAKKAR]<gray> pela primeira vez.'
+          amount: 2
+        item-2:
+          chance: 5.0
+          material: DRAGON_EGG
+          name: '<gradient:#FF0000:#8B0000><bold>Ovo de Dragão Bônus</bold></gradient>'
+          amount: 1
+      sound: 'ENTITY_ENDER_DRAGON_GROWL'
+      effect: 'FLAME'
+      actionbar: '<#FF0000>✦ <white>BÔNUS DE ATIVAÇÃO <#FF0000>✦  <gray><player> <dark_gray>→ <gradient:#FF0000:#8B0000><bold>[DRAKKAR] 30+ dias</bold></gradient>'
+      title: '<gradient:#00AAFF:#FFFFFF><player></gradient><newline><gray>desbloqueou o <gradient:#FF0000:#8B0000><bold>Bônus de Ativação</bold></gradient>'
+      chat: |
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
+        <gradient:#FF0000:#8B0000><bold>✦ BÔNUS DE ATIVAÇÃO ✦</bold></gradient>
+
+        <gradient:#00AAFF:#FFFFFF><player></gradient> <gray>ativou <#FF0000>30+ dias <gray>de <gradient:#FF0000:#8B0000><bold>[DRAKKAR]</bold></gradient> <gray>e recebeu um presente único!
+        <dark_gray><st>――――――――――――――――――――――――――――――</st>
     upgrade:
       vip-type: ''
       message: ''
@@ -553,3 +769,12 @@ vips:
       bigorna: true
       bancada: true
       colored-signs: true
+    # legacy (Ideia 2 - "Legado/Grace Period"): ao expirar o DRAKKAR (tier mais alto),
+    # o jogador cai automaticamente pro ALKA por alguns dias em vez de perder tudo de
+    # uma vez, e ganha desconto na renovacao do DRAKKAR original nesse periodo.
+    legacy:
+      enabled: false
+      fall-tier: 'alka'
+      grace-days: 7
+      renewal-discount-percent: 15
+      notify-daily: true

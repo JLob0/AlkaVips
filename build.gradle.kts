@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.alkacode"
-version = "1.0.18"
+version = "1.0.29"
 
 java {
     toolchain {
@@ -28,7 +28,7 @@ dependencies {
     // banco/HikariCP e o BaseGui vem do AlkaCore (DatabaseProvider/AbstractRepository,
     // com.alkacode.core.gui.BaseGui) - AlkaVips nao abre conexao JDBC propria nem
     // embarca driver, nem registra GuiListener proprio.
-    compileOnly("com.alkacode:AlkaCore:1.0.0")
+    compileOnly("com.alkacode:AlkaCore:1.0.3")
     // moedas do marketplace/upgrade vem do AlkaEconomy (publicado via
     // `./gradlew publishToMavenLocal` no projeto AlkaEconomy).
     compileOnly("com.alkacode:AlkaEconomy:1.0.5")

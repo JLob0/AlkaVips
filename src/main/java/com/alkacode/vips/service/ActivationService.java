@@ -5,15 +5,14 @@ import com.alkacode.vips.event.VipActivateEvent;
 import com.alkacode.vips.hook.DiscordWebhook;
 import com.alkacode.vips.hook.HookManager;
 import com.alkacode.vips.manager.CreditManager;
-import com.alkacode.vips.manager.KitManager;
 import com.alkacode.vips.manager.PartyVipManager;
 import com.alkacode.vips.manager.PlayerVipManager;
 import com.alkacode.vips.manager.VipTypeManager;
 import com.alkacode.vips.model.PlayerVip;
 import com.alkacode.vips.model.VipItem;
-import com.alkacode.vips.model.VipKit;
 import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.model.enums.VipStatus;
+import com.alkacode.vips.storage.VipsRepository;
 import com.alkacode.vips.util.CommandUtil;
 import com.alkacode.vips.util.TextUtil;
 import com.alkacode.vips.util.TimeUtil;
@@ -35,12 +34,12 @@ public final class ActivationService {
     private final DiscordWebhook discordWebhook;
     private final VipTypeManager vipTypeManager;
     private final HookManager hooks;
-    private final KitManager kitManager;
+    private final VipsRepository database;
     private final Random random = new Random();
 
     public ActivationService(PlayerVipManager playerVipManager, CreditManager creditManager,
                               PartyVipManager partyVipManager, ConfigManager configManager, DiscordWebhook discordWebhook,
-                              VipTypeManager vipTypeManager, HookManager hooks, KitManager kitManager) {
+                              VipTypeManager vipTypeManager, HookManager hooks, VipsRepository database) {
         this.playerVipManager = playerVipManager;
         this.creditManager = creditManager;
         this.partyVipManager = partyVipManager;
@@ -48,7 +47,7 @@ public final class ActivationService {
         this.discordWebhook = discordWebhook;
         this.vipTypeManager = vipTypeManager;
         this.hooks = hooks;
-        this.kitManager = kitManager;
+        this.database = database;
     }
 
     /**
@@ -105,13 +104,10 @@ public final class ActivationService {
         applyGroupCommands(player, vipType, duration, accumulated);
         applyActivationRewards(player, vipType);
         applyHookRewards(player, vipType);
+        deliverActivationBonus(player, vipType, duration);
         creditManager.add(uuid, vipType.credit());
         creditManager.incrementActivations(uuid);
         partyVipManager.addProgress(vipType.partyVipValue());
-
-        if (!accumulated) {
-            deliverActivationKits(player, vipType);
-        }
 
         if (!silent) {
             sendAnnounces(player, vipType);
@@ -179,25 +175,6 @@ public final class ActivationService {
     }
 
     /**
-     * Bonus de boas-vindas: na primeira ativacao de um tier (nao quando so acumula
-     * tempo de um VIP que o jogador ja tinha), entrega todos os kits configurados
-     * pra esse tier de uma vez, SEM gastar o cooldown periodico normal - o jogador
-     * ainda pode resgatar cada um de novo pelo ciclo normal em /vip > Kits.
-     */
-    private void deliverActivationKits(Player player, VipType vipType) {
-        Map<String, VipKit> kits = kitManager.getKits(vipType.id());
-        if (kits.isEmpty()) {
-            return;
-        }
-        for (VipKit kit : kits.values()) {
-            kitManager.claimIgnoreCooldown(player, kit);
-        }
-        send(player, "kit.activation-delivered", Map.of(
-                "count", String.valueOf(kits.size()),
-                "vip", vipType.display()));
-    }
-
-    /**
      * Title, actionbar, som e chat vao pra TODO MUNDO online (celebra a ativacao pro
      * servidor inteiro, nao so pra quem ativou). Chat usa sendMessage direto por
      * player em vez de Bukkit.broadcast() pra nao depender da permissao
@@ -239,6 +216,101 @@ public final class ActivationService {
             try {
                 player.getWorld().spawnParticle(org.bukkit.Particle.valueOf(vipType.announceEffect()),
                         player.getLocation().add(0, 1, 0), 30, 0.5, 0.5, 0.5);
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+    }
+
+    /**
+     * Presente de ativacao - uma vez por conta, pra sempre, so libera se ESTA
+     * ativacao especifica valer >= activation-bonus.min-duration-days (nao a soma
+     * acumulada de compras menores - ver vip_activation_bonus_claimed). Roda em
+     * TODA ativacao (accumulated ou nao) porque o que importa e a duracao da compra
+     * que acabou de entrar, nao se e a primeira vez que o jogador pega esse tier.
+     *
+     * <p>Nao entrega itens automaticamente - so marca o bonus como DISPONIVEL pra
+     * pegar na GUI de kits VIP (ver gui/VipKitsMenu). A entrega fisica acontece
+     * quando o jogador clica no kit, evitando que o inventario entupa e deixando o
+     * jogador escolher a hora de pegar.
+     */
+    private void deliverActivationBonus(Player player, VipType vipType, long duration) {
+        if (!vipType.hasActivationBonus()) {
+            return;
+        }
+        long durationDays = duration == 0 ? Long.MAX_VALUE : duration / 86_400_000L;
+        if (durationDays < vipType.activationBonusMinDurationDays()) {
+            return;
+        }
+        UUID uuid = player.getUniqueId();
+        if (database.hasClaimedActivationBonusSync(uuid, vipType.id())) {
+            return;
+        }
+        database.grantActivationBonusAvailableSync(uuid, vipType.id());
+        sendActivationBonusAnnounce(player, vipType);
+    }
+
+    /**
+     * Entrega o kit de ativacao que ficou disponivel (ver gui/VipKitsMenu) - da os
+     * itens fisicamente, marca como reivindicado e limpa o estado disponivel. Se o
+     * jogador ainda nao tem o bonus disponivel ou ja reivindicou, retorna false.
+     */
+    public boolean claimActivationBonus(Player player, VipType vipType) {
+        if (vipType == null || !vipType.hasActivationBonus()) {
+            return false;
+        }
+        UUID uuid = player.getUniqueId();
+        if (database.hasClaimedActivationBonusSync(uuid, vipType.id())) {
+            return false;
+        }
+        if (!database.isActivationBonusAvailableSync(uuid, vipType.id())) {
+            return false;
+        }
+        for (VipItem item : vipType.activationBonusItems()) {
+            if (roll(item.chance())) {
+                player.getInventory().addItem(item.itemStack().clone());
+            }
+        }
+        database.revokeActivationBonusAvailableSync(uuid, vipType.id());
+        database.markActivationBonusClaimedSync(uuid, vipType.id());
+        sendActivationBonusAnnounce(player, vipType);
+        return true;
+    }
+
+    /**
+     * Mesmo racional do sendAnnounces: chat vai por sendMessage direto (nao
+     * Bukkit.broadcast) pra nao depender de bukkit.broadcast.user; title/actionbar/
+     * som tambem vao pro servidor inteiro (e um marco raro - primeira vez que
+     * alguem bate a duracao minima de um tier), particula fica so no jogador.
+     */
+    private void sendActivationBonusAnnounce(Player player, VipType vipType) {
+        Map<String, String> placeholders = Map.of("player", player.getName(), "vip", TextUtil.plain(vipType.display()));
+
+        if (!vipType.activationBonusActionBar().isBlank()) {
+            var actionBar = TextUtil.parse(vipType.activationBonusActionBar(), placeholders);
+            Bukkit.getOnlinePlayers().forEach(p -> p.sendActionBar(actionBar));
+        }
+        if (!vipType.activationBonusTitle().isBlank()) {
+            String[] lines = vipType.activationBonusTitle().split("<newline>", 2);
+            var title = net.kyori.adventure.title.Title.title(
+                    TextUtil.parse(lines[0], placeholders),
+                    TextUtil.parse(lines.length > 1 ? lines[1] : "", placeholders));
+            Bukkit.getOnlinePlayers().forEach(p -> p.showTitle(title));
+        }
+        if (!vipType.activationBonusChat().isBlank()) {
+            String chatMessage = TextUtil.legacyParse(vipType.activationBonusChat(), placeholders);
+            Bukkit.getOnlinePlayers().forEach(p -> p.sendMessage(chatMessage));
+        }
+        if (!vipType.activationBonusSound().isBlank()) {
+            org.bukkit.Sound sound = org.bukkit.Registry.SOUNDS.get(
+                    org.bukkit.NamespacedKey.minecraft(vipType.activationBonusSound().toLowerCase()));
+            if (sound != null) {
+                Bukkit.getOnlinePlayers().forEach(p -> p.playSound(p.getLocation(), sound, 0.8f, 1f));
+            }
+        }
+        if (!vipType.activationBonusEffect().isBlank()) {
+            try {
+                player.getWorld().spawnParticle(org.bukkit.Particle.valueOf(vipType.activationBonusEffect()),
+                        player.getLocation().add(0, 1, 0), 40, 0.5, 0.5, 0.5);
             } catch (IllegalArgumentException ignored) {
             }
         }

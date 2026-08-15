@@ -1,6 +1,5 @@
 package com.alkacode.vips.listener;
 
-import com.alkacode.vips.manager.KitManager;
 import com.alkacode.vips.manager.PlayerVipManager;
 import com.alkacode.vips.model.VipPlayerData;
 import org.bukkit.event.EventHandler;
@@ -10,11 +9,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public final class PlayerQuitListener implements Listener {
 
     private final PlayerVipManager playerVipManager;
-    private final KitManager kitManager;
 
-    public PlayerQuitListener(PlayerVipManager playerVipManager, KitManager kitManager) {
+    public PlayerQuitListener(PlayerVipManager playerVipManager) {
         this.playerVipManager = playerVipManager;
-        this.kitManager = kitManager;
     }
 
     @EventHandler
@@ -24,6 +21,5 @@ public final class PlayerQuitListener implements Listener {
         data.lastQuitAt(System.currentTimeMillis());
         playerVipManager.saveData(uuid);
         playerVipManager.unload(uuid);
-        kitManager.unload(uuid);
     }
 }

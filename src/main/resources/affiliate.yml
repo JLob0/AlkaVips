@@ -1,0 +1,25 @@
+# "VIP Affiliate" - indicacao em cadeia. /vip indicar <jogador> registra a indicacao;
+# quando o indicado ativa o PRIMEIRO vip da conta dele, a recompensa sobe a cadeia
+# de indicadores (ate max-referral-depth niveis).
+enabled: true
+max-referral-depth: 3
+
+rewards:
+  level-1:
+    currency: coins
+    amount: 500
+    bonus-days: 3
+  level-2:
+    currency: coins
+    amount: 250
+    bonus-days: 1
+  level-3:
+    currency: coins
+    amount: 100
+    bonus-days: 0
+
+leaderboard:
+  # Tag/medalha do AlkaFlair pro top indicador - vazio desativa (softdepend, sem efeito sem o AlkaFlair)
+  top-tag: ""
+  top-medal: ""
+  top-medal-min-count: 3

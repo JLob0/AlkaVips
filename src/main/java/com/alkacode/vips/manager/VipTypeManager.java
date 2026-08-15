@@ -75,7 +75,8 @@ public final class VipTypeManager {
                 .mcmmoXpFlat(section.getInt("mcmmo-xp-flat", 0))
                 .mythicDrop(section.getString("mythic-drop", ""))
                 .battlepassXp(section.getInt("battlepass-xp", 0))
-                .pets(section.getStringList("pets"));
+                .pets(section.getStringList("pets"))
+                .permissionGroup(section.getString("permission-group", ""));
 
         builder.icon(IconTemplate.fromSection(section.getConfigurationSection("icon")))
                 .keyPreview(IconTemplate.fromSection(section.getConfigurationSection("key-preview")))
@@ -103,6 +104,17 @@ public final class VipTypeManager {
         builder.activationCommands(section.getStringList("activation-commands"));
         builder.activationItems(parseActivationItems(section.getConfigurationSection("activation-items")));
 
+        ConfigurationSection activationBonus = section.getConfigurationSection("activation-bonus");
+        if (activationBonus != null) {
+            builder.activationBonusMinDurationDays(activationBonus.getInt("min-duration-days", 0))
+                    .activationBonusItems(parseActivationItems(activationBonus.getConfigurationSection("items")))
+                    .activationBonusSound(activationBonus.getString("sound", ""))
+                    .activationBonusEffect(activationBonus.getString("effect", ""))
+                    .activationBonusTitle(activationBonus.getString("title", ""))
+                    .activationBonusActionBar(activationBonus.getString("actionbar", ""))
+                    .activationBonusChat(activationBonus.getString("chat", ""));
+        }
+
         ConfigurationSection upgrade = section.getConfigurationSection("upgrade");
         if (upgrade != null) {
             Map<String, Double> prices = new LinkedHashMap<>();
@@ -126,6 +138,47 @@ public final class VipTypeManager {
         }
 
         builder.perks(parsePerks(section.getConfigurationSection("perks")));
+
+        ConfigurationSection events = section.getConfigurationSection("events");
+        if (events != null) {
+            builder.eventsOnActivate(events.getStringList("on-activate"))
+                    .eventsOnExpire(events.getStringList("on-expire"))
+                    .eventsOnEnable(events.getStringList("on-enable"))
+                    .eventsOnDisable(events.getStringList("on-disable"));
+        }
+
+        ConfigurationSection legacy = section.getConfigurationSection("legacy");
+        if (legacy != null && legacy.getBoolean("enabled", false)) {
+            builder.legacy(new com.alkacode.vips.model.LegacyConfig(
+                    legacy.getString("fall-tier", ""),
+                    legacy.getInt("grace-days", 7),
+                    legacy.getInt("renewal-discount-percent", 0),
+                    legacy.getBoolean("notify-daily", true)));
+        }
+
+        ConfigurationSection serverBoost = section.getConfigurationSection("server-boost");
+        if (serverBoost != null && serverBoost.getBoolean("enabled", false)) {
+            List<com.alkacode.vips.model.ServerBoostConfig.BoostEffect> effects = new ArrayList<>();
+            List<Map<?, ?>> effectMaps = serverBoost.getMapList("effects");
+            for (Map<?, ?> effectMap : effectMaps) {
+                Object type = effectMap.get("type");
+                Object value = effectMap.get("value");
+                if (type instanceof String typeStr && value instanceof Number valueNum) {
+                    effects.add(new com.alkacode.vips.model.ServerBoostConfig.BoostEffect(typeStr, valueNum.doubleValue()));
+                }
+            }
+            ConfigurationSection rewards = serverBoost.getConfigurationSection("rewards-to-buyer");
+            builder.serverBoost(new com.alkacode.vips.model.ServerBoostConfig(
+                    true,
+                    serverBoost.getInt("duration-minutes", 30),
+                    serverBoost.getBoolean("broadcast", true),
+                    effects,
+                    rewards != null ? rewards.getString("medal", "") : "",
+                    rewards != null ? rewards.getString("tag", "") : "",
+                    rewards != null ? rewards.getInt("tag-duration-hours", 24) : 24));
+        }
+
+        builder.itemRewards(section.getStringList("item-rewards"));
 
         return builder.build();
     }
@@ -187,7 +240,7 @@ public final class VipTypeManager {
                     continue;
                 }
                 try {
-                    hooks.advancedEnchantments().applyEnchant(stack, parts[0], Integer.parseInt(parts[1].trim()));
+                    stack = hooks.advancedEnchantments().applyEnchant(stack, parts[0], Integer.parseInt(parts[1].trim()));
                 } catch (NumberFormatException ignored) {
                     plugin.getLogger().warning("Nivel de ae-enchants invalido: '" + raw + "'");
                 }

@@ -15,7 +15,7 @@ import java.util.UUID;
  * EconomyManager direto (mesmo padrao usado no AlkaEnderChest/AlkaGates), com o nome
  * da moeda resolvido por string (config do marketplace/upgrade usa nomes como
  * "coins", "escarion"). Tambem usado pelo CreditManager pra registrar/mover os
- * creditos VIP como uma moeda de verdade do AlkaEconomy (id "credits_vip").
+ * creditos VIP como uma moeda de verdade do AlkaEconomy (id "prisma").
  */
 public final class AlkaEconomyHook {
 
@@ -69,7 +69,7 @@ public final class AlkaEconomyHook {
 
     /**
      * Ids das moedas negociaveis, na ordem do config.yml do AlkaEconomy - usado pelo
-     * SellKeyMenu para ciclar entre elas. Exclui "credits_vip": e uma moeda de
+     * SellKeyMenu para ciclar entre elas. Exclui "prisma": e uma moeda de
      * recompensa interna do AlkaVips (ver CreditManager), nao faz sentido vender uma
      * key de VIP por ela.
      */

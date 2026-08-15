@@ -53,12 +53,21 @@ public final class MainVipMenu extends BaseGui {
                 "<#FFAA00>Clique para abrir"
         )).build(), e -> new PendingActivationsMenu(player, services).open());
 
-        setItem(13, new ItemBuilder(Material.CHEST).name("<#55FF55><bold>🎁 Kits VIP").lore(List.of(
-                "<gray>Resgate kits diarios, semanais e",
-                "<gray>mensais de TODOS os seus VIPs ativos.",
+        // Kits de ATIVACAO (bonus unico de 30+ dias por tier) sao uma GUI propria do
+        // AlkaVips - ver VipKitsMenu/ActivationService#claimActivationBonus. Os kits
+        // RECORRENTES (diario/semanal/mensal) moram no AlkaKits (/kits), gateados por
+        // %alkavips_has_vip_<tier>% - o botao aqui NAO abre o /kits do AlkaKits, so a
+        // GUI de ativacao.
+        setItem(13, new ItemBuilder(Material.CHEST).name("<#55FF55><bold>🎁 Kits de Ativacao").lore(List.of(
+                "<gray>Pegue os kits de ativacao",
+                "<gray>desbloqueados pelos seus VIPs",
+                "<gray>de 30+ dias.",
+                "",
+                "<gray>Kits diarios/semanais/mensais",
+                "<gray>recorrentes ficam em <yellow>/kits<gray>.",
                 "",
                 "<#55FF55>Clique para abrir"
-        )).build(), e -> new KitsMenu(player, services).open());
+        )).build(), e -> new VipKitsMenu(player, services).open());
 
         if (selected.isPresent()) {
             PlayerVip selectedVip = selected.get();
@@ -83,8 +92,22 @@ public final class MainVipMenu extends BaseGui {
                 "<#55AAFF>Clique para abrir"
         )).build(), e -> new KeysMenu(player, services).open());
 
-        setItem(21, new ItemBuilder(Material.EMERALD).name("<#00FFAA><bold>✦ Loja Alka").lore(List.of(
-                "<gray>Troque sua Essencia Alka por",
+        setItem(19, new ItemBuilder(Material.BOOK).name("<#FFD700><bold>💰 Carteira VIP").lore(List.of(
+                "<gray>Veja seu historico, gastos",
+                "<gray>e conquistas de VIP.",
+                "",
+                "<#FFD700>Clique para abrir"
+        )).build(), e -> new WalletMenu(player, services).open());
+
+        setItem(20, new ItemBuilder(Material.EMERALD_BLOCK).name("<#00AAFF><bold>🛒 Mercado de VIPs").lore(List.of(
+                "<gray>Compre e venda assinaturas",
+                "<gray>de VIP ativas com outros jogadores.",
+                "",
+                "<#00AAFF>Clique para abrir"
+        )).build(), e -> new P2PMarketMenu(player, services).open());
+
+        setItem(21, new ItemBuilder(Material.EMERALD).name("<#00FFAA><bold>✦ Loja Prisma").lore(List.of(
+                "<gray>Troque seu Prisma por",
                 "<gray>itens raros e valiosos!",
                 "",
                 "<#00FFAA>Clique para abrir"
@@ -115,6 +138,17 @@ public final class MainVipMenu extends BaseGui {
                 "",
                 "<#FFD700>Clique para visualizar"
         )).build(), e -> new TopMenu(player, services).open());
+
+        // Arvore de Beneficios (Ideia 3) - desativada por padrao, so aparece se
+        // perktree.yml#enabled=true (servidores com pegada de RPG/progression).
+        if (services.perkTreeManager.enabled()) {
+            setItem(25, new ItemBuilder(Material.ENCHANTED_BOOK).name("<#AA55FF><bold>🌳 Arvore de Beneficios").lore(List.of(
+                    "<gray>Gaste pontos de perk ganhos",
+                    "<gray>ativando VIP em beneficios extras.",
+                    "",
+                    "<#AA55FF>Clique para abrir"
+            )).build(), e -> new PerkTreeMenu(player, services).open());
+        }
 
         fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
     }
@@ -150,7 +184,7 @@ public final class MainVipMenu extends BaseGui {
             }
         }
         lore.add("<gray>─────────────────");
-        lore.add("<#55AAFF>✦ Essencia Alka: <white>" + services.creditManager.getCredits(player.getUniqueId()));
+        lore.add("<#55AAFF>✦ Prisma: <white>" + services.creditManager.getCredits(player.getUniqueId()));
         lore.add("<gray>─────────────────");
         return builder.lore(lore).build();
     }
@@ -179,11 +213,11 @@ public final class MainVipMenu extends BaseGui {
         return new ItemBuilder(Material.COMPASS)
                 .name("<#FFD700><bold>🎉 Party VIP")
                 .lore(List.of(
-                        "<gray>Contribua com Essencia Alka para",
+                        "<gray>Contribua com Prisma para",
                         "<gray>desbloquear recompensas em grupo!",
                         "",
                         "<#FFD700>Progresso: <white>" + (int) percentage + "%",
-                        "<gray>" + services.partyVipManager.getProgress() + "/" + services.partyVipManager.getGoal() + " Essencia Alka",
+                        "<gray>" + services.partyVipManager.getProgress() + "/" + services.partyVipManager.getGoal() + " Prisma",
                         "",
                         "<#FFD700>Clique para visualizar"
                 )).build();

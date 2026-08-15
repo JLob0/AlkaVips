@@ -33,8 +33,27 @@ public final class VipType {
     private final List<String> groupAddTempCmds;
     private final List<String> groupRemoveTempCmds;
 
+    // Nome do grupo do LuckPerms usado SO pra ler as permissoes dele (lore "permissoes
+    // deste vip", ver VipsServices#permissionLoreLines/PermissionLoreUtil) - independente
+    // dos comandos livres acima (groupAddCmds etc), que podem ter qualquer formato de
+    // comando. Vazio/nao configurado = lore de permissoes fica vazia pra esse tier.
+    private final String permissionGroup;
+
     private final List<String> activationCommands;
     private final List<VipItem> activationItems;
+
+    // Presente de ativacao (uma vez por conta, pra sempre - ver ActivationService e
+    // VipsRepository#hasClaimedActivationBonusSync) - deliberadamente separado do
+    // activationItems/activationCommands acima, que rodam TODA ativacao independente
+    // de duracao. Nasceu no AlkaKits (2026-08-13) mas voltou pra ca no mesmo dia:
+    // precisa funcionar mesmo num servidor que so tenha o AlkaVips instalado.
+    private final int activationBonusMinDurationDays;
+    private final List<VipItem> activationBonusItems;
+    private final String activationBonusSound;
+    private final String activationBonusEffect;
+    private final String activationBonusTitle;
+    private final String activationBonusActionBar;
+    private final String activationBonusChat;
 
     private final String upgradeTo;
     private final Map<String, Double> upgradePrices;
@@ -56,6 +75,23 @@ public final class VipType {
     private final String mythicDrop;
     private final int battlepassXp;
     private final List<String> pets;
+
+    // Acoes executaveis configuraveis por evento (ver util/EventActionExecutor) -
+    // formato "[tipo] conteudo" por linha, generico o suficiente pra substituir
+    // qualquer "title com fade" hardcoded por config.
+    private final List<String> eventsOnActivate;
+    private final List<String> eventsOnExpire;
+    private final List<String> eventsOnEnable;
+    private final List<String> eventsOnDisable;
+
+    // "VIP Legacy" (heranca com grace period) e "VIP Solidario" (boost de servidor) -
+    // null quando o tier nao tem essa feature configurada.
+    private final LegacyConfig legacy;
+    private final ServerBoostConfig serverBoost;
+
+    // Itens do AlkaItems entregues na primeira ativacao (nao-acumulada) do tier - ver
+    // hook/AlkaItemsHook. Vazio/AlkaItems ausente = VIP funciona normal, sem itens.
+    private final List<String> itemRewards;
 
     private VipType(Builder builder) {
         this.id = builder.id;
@@ -80,8 +116,16 @@ public final class VipType {
         this.groupRemoveCmds = builder.groupRemoveCmds;
         this.groupAddTempCmds = builder.groupAddTempCmds;
         this.groupRemoveTempCmds = builder.groupRemoveTempCmds;
+        this.permissionGroup = builder.permissionGroup;
         this.activationCommands = builder.activationCommands;
         this.activationItems = builder.activationItems;
+        this.activationBonusMinDurationDays = builder.activationBonusMinDurationDays;
+        this.activationBonusItems = builder.activationBonusItems;
+        this.activationBonusSound = builder.activationBonusSound;
+        this.activationBonusEffect = builder.activationBonusEffect;
+        this.activationBonusTitle = builder.activationBonusTitle;
+        this.activationBonusActionBar = builder.activationBonusActionBar;
+        this.activationBonusChat = builder.activationBonusChat;
         this.upgradeTo = builder.upgradeTo;
         this.upgradePrices = builder.upgradePrices;
         this.upgradeCommands = builder.upgradeCommands;
@@ -97,6 +141,13 @@ public final class VipType {
         this.mythicDrop = builder.mythicDrop;
         this.battlepassXp = builder.battlepassXp;
         this.pets = builder.pets;
+        this.eventsOnActivate = builder.eventsOnActivate;
+        this.eventsOnExpire = builder.eventsOnExpire;
+        this.eventsOnEnable = builder.eventsOnEnable;
+        this.eventsOnDisable = builder.eventsOnDisable;
+        this.legacy = builder.legacy;
+        this.serverBoost = builder.serverBoost;
+        this.itemRewards = builder.itemRewards;
     }
 
     public String id() { return id; }
@@ -121,8 +172,17 @@ public final class VipType {
     public List<String> groupRemoveCmds() { return groupRemoveCmds; }
     public List<String> groupAddTempCmds() { return groupAddTempCmds; }
     public List<String> groupRemoveTempCmds() { return groupRemoveTempCmds; }
+    public String permissionGroup() { return permissionGroup; }
     public List<String> activationCommands() { return activationCommands; }
     public List<VipItem> activationItems() { return activationItems; }
+    public boolean hasActivationBonus() { return !activationBonusItems.isEmpty(); }
+    public int activationBonusMinDurationDays() { return activationBonusMinDurationDays; }
+    public List<VipItem> activationBonusItems() { return activationBonusItems; }
+    public String activationBonusSound() { return activationBonusSound; }
+    public String activationBonusEffect() { return activationBonusEffect; }
+    public String activationBonusTitle() { return activationBonusTitle; }
+    public String activationBonusActionBar() { return activationBonusActionBar; }
+    public String activationBonusChat() { return activationBonusChat; }
     public boolean hasUpgrade() { return upgradeTo != null && !upgradeTo.isBlank(); }
     public String upgradeTo() { return upgradeTo; }
     public Map<String, Double> upgradePrices() { return upgradePrices; }
@@ -139,6 +199,13 @@ public final class VipType {
     public String mythicDrop() { return mythicDrop; }
     public int battlepassXp() { return battlepassXp; }
     public List<String> pets() { return pets; }
+    public List<String> eventsOnActivate() { return eventsOnActivate; }
+    public List<String> eventsOnExpire() { return eventsOnExpire; }
+    public List<String> eventsOnEnable() { return eventsOnEnable; }
+    public List<String> eventsOnDisable() { return eventsOnDisable; }
+    public LegacyConfig legacy() { return legacy; }
+    public ServerBoostConfig serverBoost() { return serverBoost; }
+    public List<String> itemRewards() { return itemRewards; }
 
     public static Builder builder(String id) {
         return new Builder(id);
@@ -167,8 +234,16 @@ public final class VipType {
         private List<String> groupRemoveCmds = List.of();
         private List<String> groupAddTempCmds = List.of();
         private List<String> groupRemoveTempCmds = List.of();
+        private String permissionGroup = "";
         private List<String> activationCommands = List.of();
         private List<VipItem> activationItems = List.of();
+        private int activationBonusMinDurationDays = 0;
+        private List<VipItem> activationBonusItems = List.of();
+        private String activationBonusSound = "";
+        private String activationBonusEffect = "";
+        private String activationBonusTitle = "";
+        private String activationBonusActionBar = "";
+        private String activationBonusChat = "";
         private String upgradeTo = "";
         private Map<String, Double> upgradePrices = Map.of();
         private List<String> upgradeCommands = List.of();
@@ -184,6 +259,13 @@ public final class VipType {
         private String mythicDrop = "";
         private int battlepassXp = 0;
         private List<String> pets = List.of();
+        private List<String> eventsOnActivate = List.of();
+        private List<String> eventsOnExpire = List.of();
+        private List<String> eventsOnEnable = List.of();
+        private List<String> eventsOnDisable = List.of();
+        private LegacyConfig legacy;
+        private ServerBoostConfig serverBoost;
+        private List<String> itemRewards = List.of();
 
         private Builder(String id) {
             this.id = id;
@@ -210,8 +292,16 @@ public final class VipType {
         public Builder groupRemoveCmds(List<String> groupRemoveCmds) { this.groupRemoveCmds = groupRemoveCmds; return this; }
         public Builder groupAddTempCmds(List<String> groupAddTempCmds) { this.groupAddTempCmds = groupAddTempCmds; return this; }
         public Builder groupRemoveTempCmds(List<String> groupRemoveTempCmds) { this.groupRemoveTempCmds = groupRemoveTempCmds; return this; }
+        public Builder permissionGroup(String permissionGroup) { this.permissionGroup = permissionGroup; return this; }
         public Builder activationCommands(List<String> activationCommands) { this.activationCommands = activationCommands; return this; }
         public Builder activationItems(List<VipItem> activationItems) { this.activationItems = activationItems; return this; }
+        public Builder activationBonusMinDurationDays(int activationBonusMinDurationDays) { this.activationBonusMinDurationDays = activationBonusMinDurationDays; return this; }
+        public Builder activationBonusItems(List<VipItem> activationBonusItems) { this.activationBonusItems = activationBonusItems; return this; }
+        public Builder activationBonusSound(String activationBonusSound) { this.activationBonusSound = activationBonusSound; return this; }
+        public Builder activationBonusEffect(String activationBonusEffect) { this.activationBonusEffect = activationBonusEffect; return this; }
+        public Builder activationBonusTitle(String activationBonusTitle) { this.activationBonusTitle = activationBonusTitle; return this; }
+        public Builder activationBonusActionBar(String activationBonusActionBar) { this.activationBonusActionBar = activationBonusActionBar; return this; }
+        public Builder activationBonusChat(String activationBonusChat) { this.activationBonusChat = activationBonusChat; return this; }
         public Builder upgradeTo(String upgradeTo) { this.upgradeTo = upgradeTo; return this; }
         public Builder upgradePrices(Map<String, Double> upgradePrices) { this.upgradePrices = upgradePrices; return this; }
         public Builder upgradeCommands(List<String> upgradeCommands) { this.upgradeCommands = upgradeCommands; return this; }
@@ -227,6 +317,13 @@ public final class VipType {
         public Builder mythicDrop(String mythicDrop) { this.mythicDrop = mythicDrop; return this; }
         public Builder battlepassXp(int battlepassXp) { this.battlepassXp = battlepassXp; return this; }
         public Builder pets(List<String> pets) { this.pets = pets; return this; }
+        public Builder eventsOnActivate(List<String> v) { this.eventsOnActivate = v; return this; }
+        public Builder eventsOnExpire(List<String> v) { this.eventsOnExpire = v; return this; }
+        public Builder eventsOnEnable(List<String> v) { this.eventsOnEnable = v; return this; }
+        public Builder eventsOnDisable(List<String> v) { this.eventsOnDisable = v; return this; }
+        public Builder legacy(LegacyConfig legacy) { this.legacy = legacy; return this; }
+        public Builder serverBoost(ServerBoostConfig serverBoost) { this.serverBoost = serverBoost; return this; }
+        public Builder itemRewards(List<String> v) { this.itemRewards = v; return this; }
 
         public VipType build() {
             return new VipType(this);

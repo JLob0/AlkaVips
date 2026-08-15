@@ -24,7 +24,7 @@ public final class AlkaVipsCommand implements CommandExecutor, TabCompleter {
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             services.configManager.reload();
             services.vipTypeManager.reload();
-            services.kitManager.reload();
+            services.permissionNames.reload();
             services.sendMessage(sender, "general.reloaded", Map.of());
             return true;
         }

@@ -18,7 +18,7 @@ history:
   size: 54
 
 shop:
-  title: "<#00FFAA>✦ Loja Alka"
+  title: "<#00FFAA>✦ Loja Prisma"
   size: 54
 
 marketplace:
@@ -41,9 +41,25 @@ party:
   title: "<dark_gray>Party VIP"
   size: 27
 
-kits:
-  title: "<dark_gray>Kits VIP"
+wallet:
+  title: "<dark_gray>Carteira <light_purple>VIP"
   size: 54
+
+p2p-market:
+  title: "<dark_gray>Mercado <light_purple>de VIPs"
+  size: 54
+
+sell-vip:
+  title: "<dark_gray>Vender meu VIP"
+  size: 27
+
+perk-tree:
+  title: "<dark_gray>Arvore de <light_purple>Beneficios"
+  size: 54
+
+vipkits:
+  title: "<dark_gray>Kits de <light_purple>Ativacao"
+  size: 27
 
 fill-empty:
   enabled: true

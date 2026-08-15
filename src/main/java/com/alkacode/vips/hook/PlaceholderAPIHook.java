@@ -47,6 +47,25 @@ public final class PlaceholderAPIHook extends PlaceholderExpansion {
         Optional<PlayerVip> selected = services.playerVipManager.getSelectedVip(player.getUniqueId());
         VipType type = selected.map(v -> services.vipTypeManager.get(v.vipTypeId())).orElse(null);
 
+        // has_vip_<tier>/vip_duration_days_<tier> checam TODOS os VIPs ativos do jogador
+        // (getActiveVipsOfType), nao so o "selecionado" (vip_id/vip acima) - um jogador
+        // pode ter mais de um tier ativo ao mesmo tempo (multi-VIP), e gatear kit por
+        // "selecionado" bloquearia injustamente o kit de um tier que ele tem mas nao
+        // esta com o prefixo/display escolhido no momento. Consumido pelo AlkaKits
+        // (kits.yml -> requisitos tipo PLACEHOLDER) pra portar os kits por tier de VIP.
+        if (params.startsWith("has_vip_")) {
+            String tier = params.substring("has_vip_".length());
+            boolean active = !services.playerVipManager.getActiveVipsOfType(player.getUniqueId(), tier).isEmpty();
+            return String.valueOf(active);
+        }
+        if (params.startsWith("vip_duration_days_")) {
+            String tier = params.substring("vip_duration_days_".length());
+            return services.playerVipManager.getActiveVipsOfType(player.getUniqueId(), tier).stream()
+                    .findFirst()
+                    .map(v -> v.isPermanent() ? "999999" : String.valueOf(v.totalDuration() / 86_400_000L))
+                    .orElse("0");
+        }
+
         return switch (params) {
             case "vip" -> type != null ? TextUtil.plain(type.display()) : "";
             case "vip_id" -> selected.map(PlayerVip::vipTypeId).orElse("");

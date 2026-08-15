@@ -1,6 +1,5 @@
 package com.alkacode.vips.listener;
 
-import com.alkacode.vips.manager.KitManager;
 import com.alkacode.vips.manager.PlayerVipManager;
 import com.alkacode.vips.manager.VipTypeManager;
 import com.alkacode.vips.model.PlayerVip;
@@ -23,15 +22,13 @@ public final class PlayerJoinListener implements Listener {
     private final PlayerVipManager playerVipManager;
     private final VipTypeManager vipTypeManager;
     private final ExpirationService expirationService;
-    private final KitManager kitManager;
 
     public PlayerJoinListener(JavaPlugin plugin, PlayerVipManager playerVipManager, VipTypeManager vipTypeManager,
-                               ExpirationService expirationService, KitManager kitManager) {
+                               ExpirationService expirationService) {
         this.plugin = plugin;
         this.playerVipManager = playerVipManager;
         this.vipTypeManager = vipTypeManager;
         this.expirationService = expirationService;
-        this.kitManager = kitManager;
     }
 
     @EventHandler
@@ -41,7 +38,6 @@ public final class PlayerJoinListener implements Listener {
 
     public void handle(Player player) {
         UUID uuid = player.getUniqueId();
-        kitManager.loadForJoin(uuid);
         playerVipManager.loadForJoin(uuid).thenRun(() -> Bukkit.getScheduler().runTask(plugin, () -> {
             applyOnlineCompensation(uuid);
             expirationService.checkPlayer(uuid);

@@ -1,0 +1,26 @@
+# Conquistas da Carteira VIP (/vip carteira) - cada uma so e concedida UMA vez por
+# conta, pra sempre (ver vip_achievements_claimed). reward-tag/reward-medal sao
+# opcionais - so tem efeito se o AlkaFlair estiver instalado (softdepend).
+achievements:
+  first-vip:
+    name: "<green>Primeiro VIP"
+    requirement:
+      type: FIRST_PURCHASE
+    reward-tag: ""
+    reward-medal: ""
+
+  loyal-100:
+    name: "<gold>Cliente Fiel"
+    requirement:
+      type: TOTAL_DAYS
+      value: 100
+    reward-tag: ""
+    reward-medal: ""
+
+  renew-5x:
+    name: "<aqua>Renovacao Master"
+    requirement:
+      type: RENEW_SAME_TIER
+      value: 5
+    reward-tag: ""
+    reward-medal: ""

@@ -32,16 +32,31 @@ public record IconTemplate(Material material, int amount, String name, List<Stri
     }
 
     public ItemStack build(Map<String, String> placeholders) {
+        return build(placeholders, List.of());
+    }
+
+    /** @param permissionLines linhas ja resolvidas (ver VipsServices#permissionLoreLines) que
+     *  substituem qualquer linha de lore igual a "%permissions%" - permite ter uma unica
+     *  linha marcadora no vips.yml que vira N linhas, uma por permissao do grupo. */
+    public ItemStack build(Map<String, String> placeholders, List<String> permissionLines) {
+        List<String> expandedLore = new java.util.ArrayList<>();
+        for (String line : lore) {
+            if (line.equals("%permissions%")) {
+                expandedLore.addAll(permissionLines);
+            } else {
+                expandedLore.add(line);
+            }
+        }
         return new ItemBuilder(material)
                 .amount(amount)
                 .name(name, placeholders)
-                .lore(lore, placeholders)
+                .lore(expandedLore, placeholders)
                 .glow(glow)
                 .build();
     }
 
     public ItemStack build() {
-        return build(Map.of());
+        return build(Map.of(), List.of());
     }
 
     public String plainName(Map<String, String> placeholders) {

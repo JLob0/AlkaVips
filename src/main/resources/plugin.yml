@@ -12,7 +12,7 @@ depend: [AlkaCore, AlkaEconomy]
 # servidor, o hook fica "indisponivel" pra sempre (nunca re-verifica depois),
 # mesmo com o plugin presente e habilitado - softdepend garante que Bukkit os
 # carrega antes de tentar habilitar o AlkaVips.
-softdepend: [PlaceholderAPI, LuckPerms, AdvancedEnchantments, BattlePass, Citizens, ItemsAdder, mcMMO, MCPets, MythicMobs, TAB]
+softdepend: [PlaceholderAPI, LuckPerms, AdvancedEnchantments, BattlePass, Citizens, ItemsAdder, mcMMO, MCPets, MythicMobs, TAB, AlkaItems]
 
 commands:
   vip:
@@ -45,8 +45,23 @@ commands:
   partyvip:
     description: Ve o progresso do Party VIP.
     usage: /<command>
+  transferirvip:
+    description: Transfere seu VIP ativo (selecionado) para outro jogador.
+    usage: /<command> <jogador>
+  carteiravip:
+    description: Abre a carteira VIP (historico, gastos e conquistas).
+    usage: /<command>
+  mercadovip:
+    description: Abre o mercado P2P de assinaturas VIP ativas.
+    usage: /<command>
+  indicarvip:
+    description: Indica um jogador para o sistema de afiliados.
+    usage: /<command> <jogador>
+  perksvip:
+    description: Abre a Arvore de Beneficios do VIP (se ativada no servidor).
+    usage: /<command>
   creditovip:
-    description: Ve sua Essencia Alka (ou gerencia, para admins).
+    description: Ve seu Prisma (ou gerencia, para admins).
     usage: /<command> [add|remove|set <jogador> <quantia>]
   congelarvip:
     description: Congela/descongela o tempo do seu VIP.
@@ -152,7 +167,7 @@ permissions:
   alkavips.admin.bonus:
     default: op
   alkavips.admin.credit:
-    description: Permite gerenciar Essencia Alka de outros jogadores.
+    description: Permite gerenciar Prisma de outros jogadores.
     default: op
   alkavips.admin.reload:
     default: op

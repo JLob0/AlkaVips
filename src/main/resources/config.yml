@@ -28,6 +28,10 @@ discord:
       title: 'VIP Upado'
       description: '{player} upou de {vip_from} para {vip_to}'
       color: '#FFAA00'
+    p2p-listing:
+      title: 'VIP a venda no mercado P2P'
+      description: '{player} colocou {vip_display} a venda por {price} {currency}'
+      color: '#00AAFF'
 
 # Banco de dados
 storage:
@@ -40,23 +44,36 @@ storage:
     password: ''
     pool-size: 10
 
-# Marketplace
+# Marketplace de chaves (item de chave VIP nao usada)
 marketplace:
   # taxa cobrada do vendedor no momento da venda (percentual, 0.0 a 1.0)
   sale-tax: 0.0
 
-# Loja de Essencia Alka (menu /vip > Loja de Essencia Alka)
+# Mercado P2P de assinatura VIP ativa (distinto do marketplace de chaves acima -
+# aqui o jogador vende o proprio VIP ativo/selecionado, nao uma chave nao usada)
+p2p-market:
+  # taxa cobrada do vendedor no momento da venda (percentual, 0 a 100)
+  sale-tax-percent: 10.0
+
+# Lore "permissoes deste vip" (linha marcadora "%permissions%" na lore de qualquer icone
+# do vips.yml - vira uma linha por permissao do grupo do LuckPerms configurado em
+# "permission-group" desse tier). Nomes amigaveis ficam em permission-names.yml (gerado/
+# editavel automaticamente - toda permissao nova aparece la com o nome cru ate voce editar).
+permission-lore:
+  line-format: ' <gray>- <white>%permission%'
+
+# Loja de Prisma (menu /vip > Loja Prisma)
 credit-shop:
-  title: "<#00FFAA>✦ Loja Alka"
+  title: "<#00FFAA>✦ Loja Prisma"
   items:
     crystal-common:
       material: EMERALD
       name: "<#55FF55>✦ Cristal Comum"
       lore:
         - "<gray>Um cristal basico imbuido"
-        - "<gray>com essencia de Alka."
+        - "<gray>com Prisma."
         - ""
-        - "<gray>Custo: <yellow>✦ 50 Essencia Alka"
+        - "<gray>Custo: <yellow>✦ 50 Prisma"
       cost: 50.0
       amount: 1
     crystal-rare:
@@ -66,7 +83,7 @@ credit-shop:
         - "<gray>Cristal de diamante puro"
         - "<gray>carregado com magia azul."
         - ""
-        - "<gray>Custo: <yellow>✦ 150 Essencia Alka"
+        - "<gray>Custo: <yellow>✦ 150 Prisma"
       cost: 150.0
       amount: 1
     crystal-legendary:
@@ -76,7 +93,7 @@ credit-shop:
         - "<gray>Metal forjado no nucleo de Alka."
         - "<gray>Apenas os dignos podem maneja-lo."
         - ""
-        - "<gray>Custo: <yellow>✦ 500 Essencia Alka"
+        - "<gray>Custo: <yellow>✦ 500 Prisma"
       cost: 500.0
       amount: 1
     key-vip-discount:
@@ -84,9 +101,9 @@ credit-shop:
       name: "<#55FF55>🔑 Chave VIP (50% OFF)"
       lore:
         - "<gray>Uma chave VIP com desconto"
-        - "<gray>para gastadores de Essencia."
+        - "<gray>para gastadores de Prisma."
         - ""
-        - "<gray>Custo: <yellow>✦ 200 Essencia Alka"
+        - "<gray>Custo: <yellow>✦ 200 Prisma"
       cost: 200.0
       amount: 1
 

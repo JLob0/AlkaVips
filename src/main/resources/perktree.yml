@@ -1,0 +1,40 @@
+# "Arvore de Beneficios do VIP" - so faz sentido em servidores com pegada de RPG/
+# progression. DESATIVADA POR PADRAO (enabled: false) - o resto do arquivo e um
+# exemplo de estrutura, nao precisa ser apagado, so nao tem efeito com enabled=false.
+#
+# IMPORTANTE: os "effect" abaixo sao so REGISTRADOS (pontos gastos, perk marcado
+# como desbloqueado) - a aplicacao real do efeito no jogo (ex: SELL_MULTIPLIER
+# afetando o AlkaShop de verdade) NAO esta implementada nesta versao, ver
+# AlkaVipsBoostAPI/memoria do projeto pra o mesmo tipo de limitacao no Boost de
+# Servidor.
+enabled: false
+
+points-per-tier:
+  vip: 30
+  vip+: 60
+  mvp: 100
+  mvp+: 150
+  alka: 250
+  drakkar: 400
+
+branches:
+  economico:
+    name: "<gold>Econômico"
+    perks:
+      sell-boost-5:
+        name: "+5% Venda"
+        cost: 20
+        effect: {type: SELL_MULTIPLIER, value: 1.05}
+      sell-boost-10:
+        name: "+10% Venda"
+        cost: 40
+        requires: sell-boost-5
+        effect: {type: SELL_MULTIPLIER, value: 1.10}
+
+  mineracao:
+    name: "<gray>Mineração"
+    perks:
+      extra-mine-slot:
+        name: "+1 Mina Particular"
+        cost: 30
+        effect: {type: EXTRA_MINE_SLOT, value: 1}

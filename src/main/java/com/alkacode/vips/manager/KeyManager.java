@@ -1,10 +1,13 @@
 package com.alkacode.vips.manager;
 
+import com.alkacode.core.util.PermissionNamesStore;
+import com.alkacode.vips.config.ConfigManager;
 import com.alkacode.vips.model.VipKey;
 import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.storage.VipsRepository;
 import com.alkacode.vips.util.KeyGenerator;
 import com.alkacode.vips.util.TimeUtil;
+import com.alkacode.vips.util.VipPermissionLore;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -20,10 +23,15 @@ public final class KeyManager {
 
     private final VipsRepository database;
     private final NamespacedKey keyIdKey;
+    private final ConfigManager configManager;
+    private final PermissionNamesStore permissionNames;
 
-    public KeyManager(JavaPlugin plugin, VipsRepository database) {
+    public KeyManager(JavaPlugin plugin, VipsRepository database, ConfigManager configManager,
+                       PermissionNamesStore permissionNames) {
         this.database = database;
         this.keyIdKey = new NamespacedKey(plugin, "vip_key_id");
+        this.configManager = configManager;
+        this.permissionNames = permissionNames;
     }
 
     public CompletableFuture<VipKey> generate(VipType vipType, long duration, boolean bonus) {
@@ -68,7 +76,7 @@ public final class KeyManager {
                 "id", key.id(),
                 "expire_remaining", key.duration() == 0 ? "Permanente" : TimeUtil.formatRemaining(expiresIn)
         );
-        ItemStack item = vipType.keyPreview().build(placeholders);
+        ItemStack item = vipType.keyPreview().build(placeholders, VipPermissionLore.forType(vipType, configManager, permissionNames));
         ItemMeta meta = item.getItemMeta();
         meta.getPersistentDataContainer().set(keyIdKey, PersistentDataType.STRING, key.id());
         item.setItemMeta(meta);

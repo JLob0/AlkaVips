@@ -9,8 +9,13 @@ general:
   unknown-player: "<#FF5555><bold>✖</bold> <red>Jogador <white><name></white> nao encontrado."
   unknown-vip: "<#FF5555><bold>✖</bold> <red>VIP invalido: <white><value></white>."
   invalid-amount: "<#FFAA00><bold>⚠</bold> <yellow>Quantidade invalida: <white><value></white>."
+  kits-unavailable: "<#FF5555><bold>✖</bold> <red>Os kits VIP estao temporariamente indisponiveis. Avise um administrador."
   invalid-time: "<#FFAA00><bold>⚠</bold> <yellow>Duracao invalida: <white><value></white>. Use algo como 1d12h30m."
   reloaded: "<#55FF55><bold>✔</bold> <green>Configuracao do AlkaVips recarregada."
+
+vipkits:
+  claimed: "<#55FF55><bold>✔</bold> <green>Voce pegou o kit de ativacao de <vip><green>!"
+  already-claimed: "<#FFAA00><bold>⚠</bold> <yellow>Esse kit ja foi pego ou ainda nao esta disponivel."
 
 key:
   not-found: "<#FF5555><bold>✖</bold> <red>Key <white><code></white> nao encontrada."
@@ -64,11 +69,11 @@ market:
   empty-list: "<#FFAA00><bold>⚠</bold> <yellow>Nenhuma key a venda no momento."
 
 credit:
-  balance: "<#00FFAA><bold>✦</bold> <gray>Saldo: <yellow>✦ <amount> Essencia Alka"
-  added: "<#55FF55><bold>✔</bold> <green>Adicionado(s) <white><amount></white> de <yellow>✦ Essencia Alka</yellow> para <white><name></white>."
-  removed: "<#FF5555><bold>✔</bold> <red>Removido(s) <white><amount></white> de <yellow>✦ Essencia Alka</yellow> de <white><name></white>."
-  set: "<#55FF55><bold>✔</bold> <green>Essencia Alka de <white><name></white> definida para <white><amount></white>."
-  insufficient: "<#FF5555><bold>✖</bold> <red>Voce nao tem <yellow>✦ Essencia Alka <red>suficiente!"
+  balance: "<#00FFAA><bold>✦</bold> <gray>Saldo: <yellow>✦ <amount> Prisma"
+  added: "<#55FF55><bold>✔</bold> <green>Adicionado(s) <white><amount></white> de <yellow>✦ Prisma</yellow> para <white><name></white>."
+  removed: "<#FF5555><bold>✔</bold> <red>Removido(s) <white><amount></white> de <yellow>✦ Prisma</yellow> de <white><name></white>."
+  set: "<#55FF55><bold>✔</bold> <green>Prisma de <white><name></white> definido para <white><amount></white>."
+  insufficient: "<#FF5555><bold>✖</bold> <red>Voce nao tem <yellow>✦ Prisma <red>suficiente!"
 
 party:
   progress: "<#FFD700><bold>✦</bold> <white>Progresso do Party VIP: <white><progress></white>/<white><goal></white> (<percentage>%)"
@@ -78,6 +83,35 @@ info:
   header: "<dark_gray><st>――――――――</st></dark_gray> <gray>Info de VIP: <white><name></white> <dark_gray><st>――――――――</st>"
   no-vips: "<#FF5555><bold>✖</bold> <white><name> <red>nao possui nenhum VIP."
   line: "  <#55AAFF>➤ <white><vip> <gray>(<status>) <gray>expira em <white><time>"
+
+transfer:
+  success: "<#55FF55><bold>✔</bold> <green>VIP transferido para <white><player></white> com sucesso."
+  self: "<#FF5555><bold>✖</bold> <red>Voce nao pode transferir um VIP para si mesmo."
+
+affiliate:
+  referred: "<#55FF55><bold>✔</bold> <green>Voce indicou <white><player></white>! Se ele comprar VIP, voce ganha recompensas."
+  disabled: "<#FF5555><bold>✖</bold> <red>O sistema de indicacao esta desativado."
+  self: "<#FF5555><bold>✖</bold> <red>Voce nao pode indicar a si mesmo."
+  already-referred: "<#FF5555><bold>✖</bold> <red>Esse jogador ja foi indicado por alguem."
+
+p2p:
+  listed: "<#55FF55><bold>✔</bold> <green>Seu VIP foi anunciado no mercado!"
+  buy-success: "<#55FF55><bold>✔</bold> <green>VIP comprado com sucesso!"
+  not-found: "<#FF5555><bold>✖</bold> <red>Anuncio nao encontrado."
+  seller-lost-vip: "<#FF5555><bold>✖</bold> <red>O vendedor nao possui mais esse VIP - anuncio removido."
+  cannot-buy-own: "<#FF5555><bold>✖</bold> <red>Voce nao pode comprar seu proprio anuncio."
+  no-vip-selected: "<#FF5555><bold>✖</bold> <red>Voce precisa ter um VIP ativo selecionado."
+  permanent-not-sellable: "<#FF5555><bold>✖</bold> <red>VIPs permanentes nao podem ser vendidos."
+  already-listed: "<#FFAA00><bold>⚠</bold> <yellow>Esse VIP ja esta anunciado no mercado."
+  not-sellable-tier: "<#FF5555><bold>✖</bold> <red>Esse tier de VIP nao pode ser vendido."
+
+perk-tree:
+  disabled: "<#FF5555><bold>✖</bold> <red>A Arvore de Beneficios esta desativada neste servidor."
+  unlocked: "<#55FF55><bold>✔</bold> <green>Perk <white><perk></white> desbloqueado!"
+  already-unlocked: "<#FFAA00><bold>⚠</bold> <yellow>Voce ja desbloqueou esse perk."
+  not-enough-points: "<#FF5555><bold>✖</bold> <red>Voce nao tem pontos suficientes para esse perk."
+  missing-prerequisite: "<#FF5555><bold>✖</bold> <red>Desbloqueie o perk anterior primeiro."
+  not-found: "<#FF5555><bold>✖</bold> <red>Perk nao encontrado."
 
 perks:
   no-access: "<#FF5555><bold>✖</bold> <red>Seu VIP nao possui esse perk."
@@ -89,7 +123,3 @@ perks:
   fed: "<#55FF55><bold>✔</bold> <green>Fome restaurada."
   no-item-to-repair: "<#FF5555><bold>✖</bold> <red>Segure um item danificavel para reparar."
   repaired: "<#55FF55><bold>✔</bold> <green>Item reparado."
-
-kit:
-  claimed: "<#55FF55><bold>✔</bold> <green>Voce resgatou o kit <white><kit></white>!"
-  activation-delivered: "<#55FF55><bold>✦</bold> <white><count> kit(s) do <vip> <white>foram entregues automaticamente! Resgate novamente em <#55FF55>/vip <white>> Kits."
