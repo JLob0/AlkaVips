@@ -1,11 +1,17 @@
+<div align="center">
+
 # AlkaVips
 
-> Sistema completo de VIPs: keys, upgrades, mercado P2P e benefícios pra rede Alka*.
+### Sistema completo de VIPs
+
+Keys, upgrades, mercado P2P e benefícios pra rede Alka*.
 
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.21.8-green)
 ![Version](https://img.shields.io/badge/Version-1.0.29-blue)
 ![License](https://img.shields.io/badge/License-Proprietary-red)
+
+</div>
 
 ---
 
