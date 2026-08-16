@@ -54,5 +54,9 @@ tasks.processResources {
     // sem isso, o Gradle nao percebe que so `version` mudou e reusa o plugin.yml
     // antigo do cache (processResources fica UP-TO-DATE incorretamente).
     inputs.property("version", project.version)
-    expand("version" to project.version)
+    filesMatching("plugin.yml") {
+
+        expand("version" to project.version)
+
+    }
 }
