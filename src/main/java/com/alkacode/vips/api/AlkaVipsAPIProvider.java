@@ -2,6 +2,7 @@ package com.alkacode.vips.api;
 
 import com.alkacode.vips.manager.CreditManager;
 import com.alkacode.vips.manager.KeyManager;
+import com.alkacode.vips.manager.PerkTreeManager;
 import com.alkacode.vips.manager.PlayerVipManager;
 import com.alkacode.vips.manager.VipTypeManager;
 import com.alkacode.vips.model.PlayerVip;
@@ -18,13 +19,15 @@ public final class AlkaVipsAPIProvider implements AlkaVipsAPI {
     private final CreditManager creditManager;
     private final KeyManager keyManager;
     private final VipTypeManager vipTypeManager;
+    private final PerkTreeManager perkTreeManager;
 
     public AlkaVipsAPIProvider(PlayerVipManager playerVipManager, CreditManager creditManager, KeyManager keyManager,
-                                VipTypeManager vipTypeManager) {
+                                VipTypeManager vipTypeManager, PerkTreeManager perkTreeManager) {
         this.playerVipManager = playerVipManager;
         this.creditManager = creditManager;
         this.keyManager = keyManager;
         this.vipTypeManager = vipTypeManager;
+        this.perkTreeManager = perkTreeManager;
     }
 
     @Override
@@ -78,6 +81,15 @@ public final class AlkaVipsAPIProvider implements AlkaVipsAPI {
     public CompletableFuture<List<VipTypeInfo>> getVipTypesOrdered() {
         return CompletableFuture.completedFuture(
                 vipTypeManager.getOrderedVips().stream().map(this::toInfo).toList());
+    }
+
+    @Override
+    public CompletableFuture<Boolean> hasPerk(UUID player, String perkId) {
+        // Mesmo padrao sincrono de hasVip() - consumidores (ex: AlkaFish) fazem .join() em
+        // contexto de main thread, entao nao pode ser um future genuinamente assincrono
+        // (supplyAsync) sem virar bloqueio de main thread do lado de quem chama.
+        if (!perkTreeManager.enabled()) return CompletableFuture.completedFuture(false);
+        return CompletableFuture.completedFuture(perkTreeManager.unlockedPerks(player).contains(perkId));
     }
 
     private VipTypeInfo toInfo(VipType type) {

@@ -1,13 +1,13 @@
 # "Arvore de Beneficios do VIP" - so faz sentido em servidores com pegada de RPG/
-# progression. DESATIVADA POR PADRAO (enabled: false) - o resto do arquivo e um
-# exemplo de estrutura, nao precisa ser apagado, so nao tem efeito com enabled=false.
+# progression. ATIVADA (enabled: true).
 #
 # IMPORTANTE: os "effect" abaixo sao so REGISTRADOS (pontos gastos, perk marcado
 # como desbloqueado) - a aplicacao real do efeito no jogo (ex: SELL_MULTIPLIER
 # afetando o AlkaShop de verdade) NAO esta implementada nesta versao, ver
 # AlkaVipsBoostAPI/memoria do projeto pra o mesmo tipo de limitacao no Boost de
-# Servidor.
-enabled: false
+# Servidor. AUTO_UPGRADE_ROD e AUTO_SELL_BAG_FULL SAO reais (AlkaFish consulta
+# hasPerk() direto, nao depende desse "effect" ser aplicado aqui).
+enabled: true
 
 points-per-tier:
   vip: 30
@@ -38,3 +38,15 @@ branches:
         name: "+1 Mina Particular"
         cost: 30
         effect: {type: EXTRA_MINE_SLOT, value: 1}
+
+  pesca:
+    name: "<aqua>Pesca"
+    perks:
+      auto-upgrade-rod:
+        name: "Auto-Upgrade de Vara"
+        cost: 40
+        effect: {type: AUTO_UPGRADE_ROD, value: 1}
+      auto-sell-bag-full:
+        name: "Auto-Venda ao Encher a Sacola"
+        cost: 40
+        effect: {type: AUTO_SELL_BAG_FULL, value: 1}

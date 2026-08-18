@@ -128,7 +128,7 @@ public final class AlkaVipsPlugin extends AlkaPlugin {
             getLogger().info("Expansao do PlaceholderAPI registrada.");
         }
 
-        AlkaVipsAPI vipsApi = new AlkaVipsAPIProvider(playerVipManager, creditManager, keyManager, vipTypeManager);
+        AlkaVipsAPI vipsApi = new AlkaVipsAPIProvider(playerVipManager, creditManager, keyManager, vipTypeManager, perkTreeManager);
         getServer().getServicesManager().register(AlkaVipsAPI.class, vipsApi, this, ServicePriority.Normal);
         getServer().getServicesManager().register(AlkaVipsBoostAPI.class, boostManager, this, ServicePriority.Normal);
 

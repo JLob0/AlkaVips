@@ -30,4 +30,8 @@ public interface AlkaVipsAPI {
 
     /** Todos os VipTypes conhecidos, ordenados por order crescente (o ultimo da lista e o de maior tier). */
     CompletableFuture<List<VipTypeInfo>> getVipTypesOrdered();
+
+    /** true se o jogador tem o perk desbloqueado na VIP Perk Tree (perktree.yml). Sempre
+     * false se a perk tree estiver desativada (enabled: false, padrão) ou o perkId não existir. */
+    CompletableFuture<Boolean> hasPerk(UUID player, String perkId);
 }
