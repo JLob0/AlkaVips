@@ -58,11 +58,11 @@ public final class AffiliateManager {
         for (int i = 1; i <= maxDepth; i++) {
             var section = yaml.getConfigurationSection("rewards.level-" + i);
             if (section == null) {
-                levels.add(new AffiliateConfig.Level("coins", 0, 0));
+                levels.add(new AffiliateConfig.Level("gold", 0, 0));
                 continue;
             }
             long bonusDays = section.getInt("bonus-days", 0);
-            levels.add(new AffiliateConfig.Level(section.getString("currency", "coins"),
+            levels.add(new AffiliateConfig.Level(section.getString("currency", "gold"),
                     section.getDouble("amount", 0), bonusDays * 86_400_000L));
         }
         var leaderboard = yaml.getConfigurationSection("leaderboard");

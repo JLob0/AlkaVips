@@ -113,7 +113,7 @@ vips:
         <green>Voce upou do <#55FF55>[VIP] <green>para o <#55FF55><b>VIP+</b>
       message-broadcast: ''
       prices:
-        coins: 5000.0
+        gold: 5000.0
     discord:
       webhook-enabled: true
       embed-id: 'activated'
@@ -246,7 +246,7 @@ vips:
         <green>Voce upou do <#55FF55>[VIP+] <green>para o <#55AAFF><b>MVP</b>
       message-broadcast: ''
       prices:
-        coins: 8000.0
+        gold: 8000.0
     discord:
       webhook-enabled: true
       embed-id: 'activated'
@@ -368,7 +368,7 @@ vips:
         <green>Voce upou do <#55AAFF>[MVP] <green>para o <#FF55FF><b>MVP+</b>
       message-broadcast: ''
       prices:
-        drakonio: 3000.0
+        alkarion: 3000.0
     discord:
       webhook-enabled: true
       embed-id: 'activated'
@@ -490,7 +490,7 @@ vips:
         <green>Voce upou do <#FF55FF>[MVP+] <green>para o <#FFD700><b>ALKA</b>
       message-broadcast: ''
       prices:
-        drakonio: 6000.0
+        alkarion: 6000.0
     discord:
       webhook-enabled: true
       embed-id: 'activated'
@@ -612,7 +612,7 @@ vips:
         <green>Voce upou do <#FFD700>[ALKA] <green>para o <#FF0000><b>DRAKKAR</b>
       message-broadcast: '<gray>{player}<green> upou para o <#FF0000><b>DRAKKAR</b><green>!'
       prices:
-        drakonio: 12000.0
+        alkarion: 12000.0
     discord:
       webhook-enabled: true
       embed-id: 'activated'

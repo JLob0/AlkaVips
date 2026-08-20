@@ -1,12 +1,14 @@
 # "Arvore de Beneficios do VIP" - so faz sentido em servidores com pegada de RPG/
 # progression. ATIVADA (enabled: true).
 #
-# IMPORTANTE: os "effect" abaixo sao so REGISTRADOS (pontos gastos, perk marcado
-# como desbloqueado) - a aplicacao real do efeito no jogo (ex: SELL_MULTIPLIER
-# afetando o AlkaShop de verdade) NAO esta implementada nesta versao, ver
-# AlkaVipsBoostAPI/memoria do projeto pra o mesmo tipo de limitacao no Boost de
-# Servidor. AUTO_UPGRADE_ROD e AUTO_SELL_BAG_FULL SAO reais (AlkaFish consulta
-# hasPerk() direto, nao depende desse "effect" ser aplicado aqui).
+# SELL_MULTIPLIER: real - AlkaShop consome via AlkaVipsAPI#getPerkSellMultiplier
+# (SellManager, combinado multiplicativamente com o boost de servidor e o multiplicador
+# do AlkaRankUp). AUTO_UPGRADE_ROD e AUTO_SELL_BAG_FULL: reais (AlkaFish consulta
+# hasPerk() direto). EXTRA_MINE_SLOT: so REGISTRADO ainda - AlkaVipsAPI#getExtraMineSlots
+# existe e devolve o valor certo, mas o AlkaMines nao tem hoje um conceito de "limite de
+# minas particulares por jogador" pra consumir isso (nao existe enforcement de contagem
+# de mina particular no codigo atual) - precisa desenhar essa feature no AlkaMines antes
+# de conseguir aplicar esse perk de verdade.
 enabled: true
 
 points-per-tier:

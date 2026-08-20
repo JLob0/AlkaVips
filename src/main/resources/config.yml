@@ -115,7 +115,7 @@ expiration-check-interval: 1200
 # por moeda em upgrade.prices, isso aqui e so um fallback/preferencia global)
 upgrade:
   allow-partial: true
-  currency: 'drakonio'
+  currency: 'alkarion'
 
 # Opcoes de renovacao (em dias) oferecidas nos menus/comandos de renovar VIP
 renewal:

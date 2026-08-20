@@ -68,7 +68,7 @@ public final class ConfigManager {
     }
 
     public String getUpgradeCurrency() {
-        return config.getString("upgrade.currency", "coins");
+        return config.getString("upgrade.currency", "gold");
     }
 
     public java.util.List<Integer> getRenewalOptions() {

@@ -92,6 +92,17 @@ public final class AlkaVipsAPIProvider implements AlkaVipsAPI {
         return CompletableFuture.completedFuture(perkTreeManager.unlockedPerks(player).contains(perkId));
     }
 
+    @Override
+    public CompletableFuture<Double> getPerkSellMultiplier(UUID player) {
+        double value = perkTreeManager.effectValueMax(player, "SELL_MULTIPLIER");
+        return CompletableFuture.completedFuture(value > 0 ? value : 1.0);
+    }
+
+    @Override
+    public CompletableFuture<Integer> getExtraMineSlots(UUID player) {
+        return CompletableFuture.completedFuture((int) perkTreeManager.effectValueSum(player, "EXTRA_MINE_SLOT"));
+    }
+
     private VipTypeInfo toInfo(VipType type) {
         return new VipTypeInfo(type.id(), type.display(), type.getOrder());
     }

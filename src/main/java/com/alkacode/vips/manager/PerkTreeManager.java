@@ -136,6 +136,36 @@ public final class PerkTreeManager {
         return database.loadUnlockedPerksSync(uuid);
     }
 
+    /** Maior effectValue entre os perks desbloqueados desse effectType (nao soma - perks
+     * da mesma branch sao progressivos/prerequisito em cadeia, ex: sell-boost-10 exige
+     * sell-boost-5, entao so o maior deve valer). 0 se nenhum perk desse tipo desbloqueado
+     * ou perk tree desativada. */
+    public double effectValueMax(UUID uuid, String effectType) {
+        if (!enabled) return 0;
+        Set<String> unlocked = unlockedPerks(uuid);
+        double max = 0;
+        for (PerkNode perk : perks.values()) {
+            if (perk.effectType().equalsIgnoreCase(effectType) && unlocked.contains(perk.id())) {
+                max = Math.max(max, perk.effectValue());
+            }
+        }
+        return max;
+    }
+
+    /** Soma do effectValue de todos os perks desbloqueados desse effectType (perks
+     * independentes que empilham, ex: cada "+1 Mina Particular"). 0 se nenhum/desativada. */
+    public double effectValueSum(UUID uuid, String effectType) {
+        if (!enabled) return 0;
+        Set<String> unlocked = unlockedPerks(uuid);
+        double sum = 0;
+        for (PerkNode perk : perks.values()) {
+            if (perk.effectType().equalsIgnoreCase(effectType) && unlocked.contains(perk.id())) {
+                sum += perk.effectValue();
+            }
+        }
+        return sum;
+    }
+
     public enum UnlockResult { SUCCESS, ALREADY_UNLOCKED, NOT_ENOUGH_POINTS, MISSING_PREREQUISITE, NOT_FOUND, DISABLED }
 
     public UnlockResult unlock(UUID uuid, String perkId) {

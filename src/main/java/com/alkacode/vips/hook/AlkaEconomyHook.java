@@ -14,7 +14,7 @@ import java.util.UUID;
  * Ponte para o AlkaEconomy - AlkaVips nao suporta Vault/outros provedores, so o
  * EconomyManager direto (mesmo padrao usado no AlkaEnderChest/AlkaGates), com o nome
  * da moeda resolvido por string (config do marketplace/upgrade usa nomes como
- * "coins", "escarion"). Tambem usado pelo CreditManager pra registrar/mover os
+ * "gold", "escarion"). Tambem usado pelo CreditManager pra registrar/mover os
  * creditos VIP como uma moeda de verdade do AlkaEconomy (id "prisma").
  */
 public final class AlkaEconomyHook {

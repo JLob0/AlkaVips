@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.alkacode"
-version = "1.0.31"
+version = "1.0.33"
 
 java {
     toolchain {
@@ -31,7 +31,7 @@ dependencies {
     compileOnly("com.alkacode:AlkaCore:1.0.3")
     // moedas do marketplace/upgrade vem do AlkaEconomy (publicado via
     // `./gradlew publishToMavenLocal` no projeto AlkaEconomy).
-    compileOnly("com.alkacode:AlkaEconomy:1.0.5")
+    compileOnly("com.alkacode:AlkaEconomy:1.0.8")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("net.luckperms:api:5.4")
 }

@@ -6,15 +6,15 @@ max-referral-depth: 3
 
 rewards:
   level-1:
-    currency: coins
+    currency: gold
     amount: 500
     bonus-days: 3
   level-2:
-    currency: coins
+    currency: gold
     amount: 250
     bonus-days: 1
   level-3:
-    currency: coins
+    currency: gold
     amount: 100
     bonus-days: 0
 
