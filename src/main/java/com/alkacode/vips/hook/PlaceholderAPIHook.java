@@ -6,6 +6,8 @@ import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.util.TextUtil;
 import com.alkacode.vips.util.TimeUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -70,6 +72,12 @@ public final class PlaceholderAPIHook extends PlaceholderExpansion {
             case "vip" -> type != null ? TextUtil.plain(type.display()) : "";
             case "vip_id" -> selected.map(PlayerVip::vipTypeId).orElse("");
             case "vip_prefix" -> type != null ? TextUtil.plain(type.prefix()) : "";
+            // _colored: mesmo dado, mas serializado pra § real (TAB/nChat/scoreboard so
+            // entendem codigo legado real, nunca MiniMessage cru) - vip/vip_prefix acima
+            // ficam plain de proposito (uso ja estabelecido em GUI/lore), esses sao novos,
+            // sem consumidor existente pra quebrar.
+            case "vip_colored" -> type != null ? toLegacy(type.display()) : "";
+            case "vip_prefix_colored" -> type != null ? toLegacy(type.prefix()) : "";
             case "vip_time_remaining" -> selected.map(v -> v.isPermanent() ? "Permanente" : TimeUtil.formatRemaining(v.remainingMillis())).orElse("");
             case "vip_time_remaining_short" -> selected.map(v -> v.isPermanent() ? "Permanente" : TimeUtil.formatRemainingShort(v.remainingMillis())).orElse("");
             case "vip_expires_at" -> selected.map(v -> v.isPermanent() ? "Nunca" : String.valueOf(v.expiresAt())).orElse("");
@@ -83,6 +91,22 @@ public final class PlaceholderAPIHook extends PlaceholderExpansion {
             case "party_percentage" -> String.valueOf((int) services.partyVipManager.getPercentage());
             default -> null;
         };
+    }
+
+    // character(SECTION_CHAR) (nao legacyAmpersand()) + useUnusualXRepeatedCharacterHexFormat():
+    // mesmo padrao fixado no ecossistema (AlkaFlair/AlkaMines) - TAB/nChat so entendem
+    // codigo real "§", nunca texto "&" cru.
+    private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.builder()
+            .character(LegacyComponentSerializer.SECTION_CHAR)
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build();
+
+    private String toLegacy(String miniMessage) {
+        if (miniMessage == null || miniMessage.isBlank()) {
+            return "";
+        }
+        return LEGACY.serialize(MiniMessage.miniMessage().deserialize("<!i>" + miniMessage)) + "§r";
     }
 
     private int countKeys(OfflinePlayer player) {
