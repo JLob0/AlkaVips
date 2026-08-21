@@ -1,13 +1,20 @@
 package com.alkacode.vips.config;
 
+import com.alkacode.vips.util.ItemBuilder;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class ConfigManager {
 
@@ -16,6 +23,8 @@ public final class ConfigManager {
     private FileConfiguration config;
     private FileConfiguration messages;
     private FileConfiguration menus;
+    private FileConfiguration guiLayoutsRaw;
+    private final Map<String, GuiLayout> guiLayouts = new HashMap<>();
 
     public ConfigManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -25,6 +34,49 @@ public final class ConfigManager {
         config = loadResource("config.yml");
         messages = loadResource("messages.yml");
         menus = loadResource("menus.yml");
+        guiLayoutsRaw = loadResource("gui-layouts.yml");
+        loadGuiLayouts();
+    }
+
+    private void loadGuiLayouts() {
+        guiLayouts.clear();
+        for (String key : guiLayoutsRaw.getKeys(false)) {
+            int rows = guiLayoutsRaw.getInt(key + ".rows", 3);
+            List<String> lines = guiLayoutsRaw.getStringList(key + ".layout");
+            guiLayouts.put(key, new GuiLayout(rows, lines.toArray(new String[0])));
+        }
+    }
+
+    /** Posicoes (grade ASCII) de uma GUI - ver gui-layouts.yml e {@link GuiLayout}. */
+    public GuiLayout layout(String key) {
+        GuiLayout found = guiLayouts.get(key);
+        if (found == null) {
+            throw new IllegalStateException("Layout '" + key + "' nao encontrado em gui-layouts.yml");
+        }
+        return found;
+    }
+
+    /** Icone (material/nome/lore) de menus.yml.&lt;path&gt;, sem placeholders. */
+    public ItemStack menuItem(String path) {
+        return menuItem(path, Map.of());
+    }
+
+    /** Icone (material/nome/lore) de menus.yml.&lt;path&gt; com placeholders {chave}
+     * substituidos no nome/lore. Fallback BARRIER visivel se o path nao existir, em vez
+     * de quebrar silenciosamente - sinaliza uma menus.yml desatualizada/mal editada. */
+    public ItemStack menuItem(String path, Map<String, String> placeholders) {
+        ConfigurationSection section = menus.getConfigurationSection(path);
+        if (section == null) {
+            return new ItemBuilder(Material.BARRIER).name("<red>menus.yml: '" + path + "' ausente").build();
+        }
+        ItemBuilder builder = ItemBuilder.fromSection(section);
+        if (section.contains("name")) {
+            builder.name(section.getString("name", ""), placeholders);
+        }
+        if (section.contains("lore")) {
+            builder.lore(section.getStringList("lore"), placeholders);
+        }
+        return builder.build();
     }
 
     public void reload() {

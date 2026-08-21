@@ -2,6 +2,7 @@ package com.alkacode.vips.gui;
 
 import com.alkacode.core.gui.BaseGui;
 import com.alkacode.vips.VipsServices;
+import com.alkacode.vips.config.GuiLayout;
 import com.alkacode.vips.manager.PerkTreeManager;
 import com.alkacode.vips.model.PerkNode;
 import com.alkacode.vips.storage.VipsRepository;
@@ -23,37 +24,33 @@ import java.util.Set;
  */
 public final class PerkTreeMenu extends BaseGui {
 
-    private static final int[] SLOTS = {10, 11, 12, 13, 14, 15, 16,
-            19, 20, 21, 22, 23, 24, 25,
-            28, 29, 30, 31, 32, 33, 34};
-
     private final VipsServices services;
+    private final GuiLayout layout;
+    private final int[] slots;
 
     public PerkTreeMenu(Player viewer, VipsServices services) {
         super(services.plugin, viewer, services.configManager.menus().getString("perk-tree.title", "&8Arvore de Beneficios"),
                 services.configManager.menus().getInt("perk-tree.size", 54) / 9, "vip_perk_tree");
         this.services = services;
+        this.layout = services.configManager.layout("perk-tree");
+        this.slots = layout.findSlots('0').stream().mapToInt(Integer::intValue).toArray();
     }
 
     @Override
     public void render() {
-        fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
+        fill(services.configManager.menuItem("fill-empty"));
 
         PerkTreeManager perkTree = services.perkTreeManager;
         VipsRepository.PerkPoints points = perkTree.pointsOf(player.getUniqueId());
         Set<String> unlocked = perkTree.unlockedPerks(player.getUniqueId());
 
-        setItem(4, new ItemBuilder(Material.EXPERIENCE_BOTTLE).name("<#FFD700><bold>✦ Pontos de Perk")
-                .lore(List.of(
-                        "<gray>Disponiveis: <white>" + points.available(),
-                        "<gray>Total ganho: <white>" + points.earned(),
-                        "",
-                        "<gray>Ganhe pontos ativando VIPs",
-                        "<gray>(ver points-per-tier em perktree.yml)"
-                )).build());
+        setItem(layout.firstSlot('H'), services.configManager.menuItem("perk-tree.pontos", Map.of(
+                "disponiveis", String.valueOf(points.available()),
+                "total", String.valueOf(points.earned())
+        )));
 
         List<PerkNode> all = perkTree.all();
-        for (int i = 0; i < SLOTS.length && i < all.size(); i++) {
+        for (int i = 0; i < slots.length && i < all.size(); i++) {
             PerkNode perk = all.get(i);
             boolean isUnlocked = unlocked.contains(perk.id());
             boolean hasPrereq = perk.requiresPerkId().isBlank() || unlocked.contains(perk.requiresPerkId());
@@ -79,10 +76,10 @@ public final class PerkTreeMenu extends BaseGui {
                     .name((isUnlocked ? "<#55FF55>" : "<white>") + perk.name())
                     .glow(isUnlocked)
                     .lore(lore).build();
-            setItem(SLOTS[i], item, e -> unlock(perk));
+            setItem(slots[i], item, e -> unlock(perk));
         }
 
-        setItem(49, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(), e -> new MainVipMenu(player, services).open());
+        setItem(layout.firstSlot('V'), services.configManager.menuItem("common.voltar"), e -> new MainVipMenu(player, services).open());
     }
 
     private void unlock(PerkNode perk) {

@@ -2,10 +2,10 @@ package com.alkacode.vips.gui;
 
 import com.alkacode.core.gui.BaseGui;
 import com.alkacode.vips.VipsServices;
+import com.alkacode.vips.config.GuiLayout;
 import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.util.ItemBuilder;
 import com.alkacode.vips.util.TextUtil;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -21,11 +21,15 @@ import java.util.List;
 public final class VipKitsMenu extends BaseGui {
 
     private final VipsServices services;
+    private final GuiLayout layout;
+    private final int[] slots;
 
     public VipKitsMenu(Player viewer, VipsServices services) {
         super(services.plugin, viewer, services.configManager.menus().getString("vipkits.title", "<dark_gray>Kits de Ativacao"),
                 services.configManager.menus().getInt("vipkits.size", 27) / 9, "vip_kits");
         this.services = services;
+        this.layout = services.configManager.layout("vipkits");
+        this.slots = layout.findSlots('0').stream().mapToInt(Integer::intValue).toArray();
     }
 
     @Override
@@ -40,18 +44,11 @@ public final class VipKitsMenu extends BaseGui {
         }
 
         if (availableTypes.isEmpty()) {
-            setItem(13, new ItemBuilder(Material.CHEST).name("<yellow>Nenhum kit de ativacao")
-                    .lore(List.of(
-                            "<gray>Kits de ativacao sao desbloqueados",
-                            "<gray>ao ativar um VIP por 30+ dias.",
-                            "",
-                            "<gray>Os kits diarios/semanais/mensais",
-                            "<gray>recorrentes ficam em <yellow>/kits<gray>."
-                    )).build());
+            setItem(slots[13], services.configManager.menuItem("vipkits.empty"));
         } else {
             int slot = 0;
             for (VipType type : availableTypes) {
-                if (slot >= 18) {
+                if (slot >= slots.length) {
                     break;
                 }
                 List<String> lore = new ArrayList<>();
@@ -62,11 +59,11 @@ public final class VipKitsMenu extends BaseGui {
                 lore.add("<gray>" + type.activationBonusMinDurationDays() + "+ dias de <white>" + TextUtil.plain(type.display()));
                 lore.add("");
                 lore.add("<#55FF55>Clique para pegar o kit!");
-                var item = new ItemBuilder(Material.ENDER_CHEST)
+                var item = new ItemBuilder(services.configManager.menuItem("vipkits.item"))
                         .name("<#FFD700><bold>Kit <white>" + TextUtil.plain(type.display()))
                         .lore(lore)
                         .build();
-                setItem(slot, item, e -> {
+                setItem(slots[slot], item, e -> {
                     boolean claimed = services.activationService.claimActivationBonus(player, type);
                     if (claimed) {
                         services.sendMessage(player, "vipkits.claimed", java.util.Map.of("vip", type.display()));
@@ -79,8 +76,8 @@ public final class VipKitsMenu extends BaseGui {
             }
         }
 
-        setItem(22, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(),
+        setItem(layout.firstSlot('V'), services.configManager.menuItem("common.voltar"),
                 e -> new MainVipMenu(player, services).open());
-        fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
+        fill(services.configManager.menuItem("fill-empty"));
     }
 }

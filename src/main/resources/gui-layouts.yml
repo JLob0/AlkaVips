@@ -1,0 +1,165 @@
+# AlkaVips - Layouts de GUI (posicoes configuraveis)
+# Regras (mesmo mecanismo do AlkaFish):
+#   _ = vazio (nunca preenchido por um role - o fill() de fundo do menu cobre o resto)
+#   Letras = slots com papel fixo (icone/texto vem de menus.yml.<menu>.<papel>)
+#   0 = slot de lista dinamica (conteudo real: keys, listagens, conquistas, perks, etc.)
+# O significado de cada letra e local a cada menu (nao e global no arquivo).
+
+main:
+  rows: 4
+  layout:
+    - "_________"
+    - "_PHDKUAY_"
+    - "_WMSTLOE_"
+    - "_________"
+  # P=perfil(dinamico), H=historico, D=pendentes, K=kits, U=upar vip, A=party,
+  # Y=keys, W=carteira, M=mercado p2p, S=loja prisma, T=trocar vip(condicional),
+  # L=loja de chaves, O=top, E=arvore de beneficios(condicional)
+
+keys:
+  rows: 6
+  layout:
+    - "_________"
+    - "__00000__"
+    - "P_00000_N"
+    - "_________"
+    - "_________"
+    - "____V____"
+  # 0=key do jogador (pagina de 10), P=anterior, N=proximo, V=voltar
+
+pending:
+  rows: 3
+  layout:
+    - "000000000"
+    - "000000000"
+    - "____V____"
+  # 0=vip pendente de ativacao (ate 18, o slot de indice 13 vira o icone de
+  # "nenhuma ativacao pendente" quando a lista esta vazia), V=voltar
+
+history:
+  rows: 6
+  layout:
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "____V____"
+  # 0=entrada do historico (ate 45), V=voltar
+
+marketplace:
+  rows: 6
+  layout:
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "P__SV___N"
+  # Atencao: neste menu o S no rodape NAO existe (reservado só pra p2p-market,
+  # ver comentario la) - aqui o rodape real e P=anterior, V=voltar, N=proximo;
+  # 0=key a venda (ate 45, indice 22 vira o icone de "nenhuma key a venda" se vazio)
+
+confirm-buy:
+  rows: 3
+  layout:
+    - "_________"
+    - "__C_K_X__"
+    - "____V____"
+  # C=confirmar, K=preview da key(dinamico), X=cancelar, V=voltar
+
+shop:
+  rows: 6
+  layout:
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "____V____"
+  # 0=item da loja de prisma (credit-shop.items, ja vem de config.yml), V=voltar
+
+sell:
+  rows: 3
+  layout:
+    - "_________"
+    - "___C_P_F_"
+    - "_________"
+  # C=moeda, P=preco, F=confirmar venda (sem botao de voltar - igual ao original)
+
+sell-vip:
+  rows: 3
+  layout:
+    - "_________"
+    - "_H_CEP_F_"
+    - "____V____"
+  # H=vip selecionado(dinamico), C=moeda, E=sem-vip-selecionado(alternativo a H/C/P/F),
+  # P=preco, F=confirmar anuncio, V=voltar
+
+wallet:
+  rows: 6
+  layout:
+    - "_________"
+    - "_D_I_H___"
+    - "_0000000_"
+    - "_0000000_"
+    - "_________"
+    - "____V____"
+  # D=tempo total, I=total investido, H=historico(contagem), 0=conquista, V=voltar
+
+perk-tree:
+  rows: 6
+  layout:
+    - "____H____"
+    - "_0000000_"
+    - "_0000000_"
+    - "_0000000_"
+    - "_________"
+    - "____V____"
+  # H=pontos de perk, 0=perk (dinamico, icone/lore inteiramente gerado pelo perk real), V=voltar
+
+vipkits:
+  rows: 3
+  layout:
+    - "000000000"
+    - "000000000"
+    - "____V____"
+  # 0=kit de ativacao disponivel (ate 18, indice 13 vira "nenhum kit" se vazio), V=voltar
+
+top:
+  rows: 3
+  layout:
+    - "_________"
+    - "__0000000"
+    - "____V____"
+  # 0=jogador do top 7 (indice 2 = slot 13, vira "nenhum dado disponivel" se vazio), V=voltar
+
+p2p-market:
+  rows: 6
+  layout:
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "000000000"
+    - "P__SV___N"
+  # 0=assinatura anunciada (ate 45, indice 22 vira "nenhum vip a venda" se vazio),
+  # P=anterior, S=vender meu vip ativo, V=voltar, N=proximo
+
+party:
+  rows: 3
+  layout:
+    - "_________"
+    - "_0000000_"
+    - "____S____"
+  # 0=celula da barra de progresso (cor dinamica cheio/vazio), S=status/progresso
+  # (sem botao de voltar - igual ao original)
+
+upgrade:
+  rows: 3
+  layout:
+    - "_________"
+    - "_0000000_"
+    - "____V____"
+  # 0=opcao de moeda pra upar/extender (dinamico - preco e texto variam por moeda),
+  # V=voltar

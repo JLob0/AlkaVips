@@ -2,6 +2,7 @@ package com.alkacode.vips.gui;
 
 import com.alkacode.core.gui.BaseGui;
 import com.alkacode.vips.VipsServices;
+import com.alkacode.vips.config.GuiLayout;
 import com.alkacode.vips.model.PlayerVip;
 import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.model.enums.VipStatus;
@@ -20,11 +21,15 @@ public final class HistoryMenu extends BaseGui {
             .withZone(ZoneId.systemDefault());
 
     private final VipsServices services;
+    private final GuiLayout layout;
+    private final int[] slots;
 
     public HistoryMenu(Player viewer, VipsServices services) {
         super(services.plugin, viewer, services.configManager.menus().getString("history.title", "&8Historico de VIPs"),
                 services.configManager.menus().getInt("history.size", 54) / 9, "vip_history");
         this.services = services;
+        this.layout = services.configManager.layout("history");
+        this.slots = layout.findSlots('0').stream().mapToInt(Integer::intValue).toArray();
     }
 
     @Override
@@ -32,7 +37,7 @@ public final class HistoryMenu extends BaseGui {
         List<PlayerVip> vips = services.playerVipManager.getVips(player.getUniqueId());
         int slot = 0;
         for (PlayerVip vip : vips) {
-            if (slot >= getInventory().getSize() - 9) {
+            if (slot >= slots.length) {
                 break;
             }
             VipType type = services.vipTypeManager.get(vip.vipTypeId());
@@ -50,12 +55,12 @@ public final class HistoryMenu extends BaseGui {
                             "<gray>─────────────────"
                     ))
                     .build();
-            setItem(slot, item);
+            setItem(slots[slot], item);
             slot++;
         }
-        setItem(getInventory().getSize() - 5, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(),
+        setItem(layout.firstSlot('V'), services.configManager.menuItem("common.voltar"),
                 e -> new MainVipMenu(player, services).open());
-        fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
+        fill(services.configManager.menuItem("fill-empty"));
     }
 
     private String statusLine(PlayerVip vip) {

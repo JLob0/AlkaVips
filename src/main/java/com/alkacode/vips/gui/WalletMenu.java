@@ -2,9 +2,9 @@ package com.alkacode.vips.gui;
 
 import com.alkacode.core.gui.BaseGui;
 import com.alkacode.vips.VipsServices;
+import com.alkacode.vips.config.GuiLayout;
 import com.alkacode.vips.model.Achievement;
 import com.alkacode.vips.util.ItemBuilder;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -21,19 +21,21 @@ import java.util.Set;
  */
 public final class WalletMenu extends BaseGui {
 
-    private static final int[] ACHIEVEMENT_SLOTS = {19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
-
     private final VipsServices services;
+    private final GuiLayout layout;
+    private final int[] achievementSlots;
 
     public WalletMenu(Player viewer, VipsServices services) {
         super(services.plugin, viewer, services.configManager.menus().getString("wallet.title", "&8Carteira VIP"),
                 services.configManager.menus().getInt("wallet.size", 54) / 9, "vip_wallet");
         this.services = services;
+        this.layout = services.configManager.layout("wallet");
+        this.achievementSlots = layout.findSlots('0').stream().mapToInt(Integer::intValue).toArray();
     }
 
     @Override
     public void render() {
-        fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
+        fill(services.configManager.menuItem("fill-empty"));
 
         int totalDays = services.walletManager.totalDays(player.getUniqueId());
         Map<String, Double> spent = services.walletManager.totalSpent(player.getUniqueId());
@@ -44,24 +46,22 @@ public final class WalletMenu extends BaseGui {
             spent.forEach((currency, amount) -> spentLore.add("<gray>" + currency + ": <white>" + amount));
         }
 
-        setItem(10, new ItemBuilder(Material.CLOCK).name("<gold>Tempo Total de VIP")
+        setItem(layout.firstSlot('D'), new ItemBuilder(services.configManager.menuItem("wallet.tempo-total"))
                 .lore(List.of("<white>" + totalDays + " dia(s) acumulados")).build());
-        setItem(12, new ItemBuilder(Material.GOLD_INGOT).name("<gold>Total Investido").lore(spentLore).build());
-        setItem(14, new ItemBuilder(Material.BOOK).name("<gold>Historico de Ativacoes")
+        setItem(layout.firstSlot('I'), new ItemBuilder(services.configManager.menuItem("wallet.total-investido")).lore(spentLore).build());
+        setItem(layout.firstSlot('H'), new ItemBuilder(services.configManager.menuItem("wallet.historico"))
                 .lore(List.of("<white>" + services.walletManager.history(player.getUniqueId()).size() + " registro(s)")).build());
 
         Set<String> claimed = services.walletManager.claimedAchievements(player.getUniqueId());
         List<Achievement> achievements = services.walletManager.all();
-        for (int i = 0; i < ACHIEVEMENT_SLOTS.length && i < achievements.size(); i++) {
+        for (int i = 0; i < achievementSlots.length && i < achievements.size(); i++) {
             Achievement achievement = achievements.get(i);
             boolean unlocked = claimed.contains(achievement.id());
-            setItem(ACHIEVEMENT_SLOTS[i], unlocked
-                    ? new ItemBuilder(Material.NETHER_STAR).name(achievement.name())
-                        .lore(List.of("<green>Conquistada")).build()
-                    : new ItemBuilder(Material.GRAY_DYE).name("<gray>???")
-                        .lore(List.of("<gray>Conquista bloqueada")).build());
+            setItem(achievementSlots[i], unlocked
+                    ? new ItemBuilder(services.configManager.menuItem("wallet.conquista-desbloqueada")).name(achievement.name()).build()
+                    : services.configManager.menuItem("wallet.conquista-bloqueada"));
         }
 
-        setItem(49, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(), e -> new MainVipMenu(player, services).open());
+        setItem(layout.firstSlot('V'), services.configManager.menuItem("common.voltar"), e -> new MainVipMenu(player, services).open());
     }
 }

@@ -3,9 +3,8 @@ package com.alkacode.vips.gui;
 import com.alkacode.core.gui.BaseGui;
 import com.alkacode.economy.storage.EconomyRepository;
 import com.alkacode.vips.VipsServices;
-import com.alkacode.vips.util.ItemBuilder;
+import com.alkacode.vips.config.GuiLayout;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -13,11 +12,15 @@ import java.util.List;
 public final class TopMenu extends BaseGui {
 
     private final VipsServices services;
+    private final GuiLayout layout;
+    private final int[] slots;
 
     public TopMenu(Player viewer, VipsServices services) {
         super(services.plugin, viewer, services.configManager.menus().getString("top.title", "&8TOP VIP"),
                 services.configManager.menus().getInt("top.size", 27) / 9, "vip_top");
         this.services = services;
+        this.layout = services.configManager.layout("top");
+        this.slots = layout.findSlots('0').stream().mapToInt(Integer::intValue).toArray();
     }
 
     @Override
@@ -25,18 +28,18 @@ public final class TopMenu extends BaseGui {
         List<EconomyRepository.TopBalanceEntry> top = services.creditManager.getTop(7);
 
         if (top.isEmpty()) {
-            setItem(13, new ItemBuilder(Material.BARRIER).name("<red>Nenhum dado disponivel").build());
+            setItem(slots[2], services.configManager.menuItem("top.empty"));
         } else {
             int slot = 0;
             for (EconomyRepository.TopBalanceEntry entry : top) {
-                if (slot >= 7) break;
-                setItem(11 + slot, medal(slot + 1, entry));
+                if (slot >= slots.length) break;
+                setItem(slots[slot], medal(slot + 1, entry));
                 slot++;
             }
         }
-        setItem(22, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(),
+        setItem(layout.firstSlot('V'), services.configManager.menuItem("common.voltar"),
                 e -> new MainVipMenu(player, services).open());
-        fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
+        fill(services.configManager.menuItem("fill-empty"));
     }
 
     private org.bukkit.inventory.ItemStack medal(int position, EconomyRepository.TopBalanceEntry entry) {

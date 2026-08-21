@@ -3,9 +3,8 @@ package com.alkacode.vips.gui;
 import com.alkacode.core.gui.BaseGui;
 import com.alkacode.economy.CurrencyType;
 import com.alkacode.vips.VipsServices;
+import com.alkacode.vips.config.GuiLayout;
 import com.alkacode.vips.service.MarketplaceService;
-import com.alkacode.vips.util.ItemBuilder;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,6 +14,7 @@ import java.util.Map;
 public final class SellKeyMenu extends BaseGui {
 
     private final VipsServices services;
+    private final GuiLayout layout;
     private final String code;
     private final ItemStack physicalItem;
     private String currency = CurrencyType.COINS;
@@ -24,20 +24,19 @@ public final class SellKeyMenu extends BaseGui {
         super(services.plugin, viewer, services.configManager.menus().getString("sell.title", "&8Vender Key"),
                 services.configManager.menus().getInt("sell.size", 27) / 9, "vip_sell");
         this.services = services;
+        this.layout = services.configManager.layout("sell");
         this.code = code;
         this.physicalItem = physicalItem;
     }
 
     @Override
     public void render() {
-        setItem(12, new ItemBuilder(Material.GOLD_NUGGET)
-                .name("<yellow>Moeda: <white>" + currency.toUpperCase())
-                .lore(List.of("<gray>Clique para trocar")).build(), e -> cycleCurrency());
-        setItem(14, new ItemBuilder(Material.PAPER)
-                .name("<yellow>Preco: <white>" + (price < 0 ? "Nao definido" : price))
-                .lore(List.of("<gray>Clique para digitar o preco no chat")).build(), e -> promptPrice());
-        setItem(16, new ItemBuilder(Material.LIME_WOOL).name("<green>Confirmar venda").build(), e -> confirm());
-        fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
+        setItem(layout.firstSlot('C'), services.configManager.menuItem("sell.moeda",
+                Map.of("moeda", currency.toUpperCase())), e -> cycleCurrency());
+        setItem(layout.firstSlot('P'), services.configManager.menuItem("sell.preco",
+                Map.of("preco", price < 0 ? "Nao definido" : String.valueOf(price))), e -> promptPrice());
+        setItem(layout.firstSlot('F'), services.configManager.menuItem("sell.confirmar"), e -> confirm());
+        fill(services.configManager.menuItem("fill-empty"));
     }
 
     private void cycleCurrency() {

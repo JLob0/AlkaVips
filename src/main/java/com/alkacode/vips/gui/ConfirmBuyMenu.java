@@ -2,11 +2,10 @@ package com.alkacode.vips.gui;
 
 import com.alkacode.core.gui.BaseGui;
 import com.alkacode.vips.VipsServices;
+import com.alkacode.vips.config.GuiLayout;
 import com.alkacode.vips.model.VipKey;
 import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.service.MarketplaceService;
-import com.alkacode.vips.util.ItemBuilder;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -14,26 +13,28 @@ import java.util.Map;
 public final class ConfirmBuyMenu extends BaseGui {
 
     private final VipsServices services;
+    private final GuiLayout layout;
     private final VipKey key;
 
     public ConfirmBuyMenu(Player viewer, VipsServices services, VipKey key) {
         super(services.plugin, viewer, services.configManager.menus().getString("confirm-buy.title", "&8Confirmar Compra"),
                 services.configManager.menus().getInt("confirm-buy.size", 27) / 9, "vip_confirm_buy");
         this.services = services;
+        this.layout = services.configManager.layout("confirm-buy");
         this.key = key;
     }
 
     @Override
     public void render() {
         VipType type = services.vipTypeManager.get(key.vipTypeId());
-        setItem(11, new ItemBuilder(Material.LIME_WOOL).name("<green>Confirmar").build(), e -> confirm());
+        setItem(layout.firstSlot('C'), services.configManager.menuItem("confirm-buy.confirmar"), e -> confirm());
         if (type != null) {
-            setItem(13, services.keyManager.buildItem(key, type));
+            setItem(layout.firstSlot('K'), services.keyManager.buildItem(key, type));
         }
-        setItem(15, new ItemBuilder(Material.RED_WOOL).name("<red>Cancelar").build(), e -> player.closeInventory());
-        setItem(22, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(),
+        setItem(layout.firstSlot('X'), services.configManager.menuItem("confirm-buy.cancelar"), e -> player.closeInventory());
+        setItem(layout.firstSlot('V'), services.configManager.menuItem("common.voltar"),
                 e -> new MarketplaceMenu(player, services).open());
-        fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
+        fill(services.configManager.menuItem("fill-empty"));
     }
 
     private void confirm() {

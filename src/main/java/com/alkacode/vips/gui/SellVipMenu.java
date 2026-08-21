@@ -3,6 +3,7 @@ package com.alkacode.vips.gui;
 import com.alkacode.core.gui.BaseGui;
 import com.alkacode.economy.CurrencyType;
 import com.alkacode.vips.VipsServices;
+import com.alkacode.vips.config.GuiLayout;
 import com.alkacode.vips.model.PlayerVip;
 import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.service.P2PMarketService;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public final class SellVipMenu extends BaseGui {
 
     private final VipsServices services;
+    private final GuiLayout layout;
     private String currency = CurrencyType.COINS;
     private double price = -1;
 
@@ -26,15 +28,16 @@ public final class SellVipMenu extends BaseGui {
         super(services.plugin, viewer, services.configManager.menus().getString("sell-vip.title", "&8Vender meu VIP"),
                 services.configManager.menus().getInt("sell-vip.size", 27) / 9, "vip_sell_vip");
         this.services = services;
+        this.layout = services.configManager.layout("sell-vip");
     }
 
     @Override
     public void render() {
         Optional<PlayerVip> selected = services.playerVipManager.getSelectedVip(player.getUniqueId());
         if (selected.isEmpty()) {
-            setItem(13, new ItemBuilder(Material.BARRIER).name("<red>Voce nao tem um VIP ativo selecionado").build());
-            setItem(22, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(), e -> new P2PMarketMenu(player, services).open());
-            fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
+            setItem(layout.firstSlot('E'), services.configManager.menuItem("sell-vip.sem-selecionado"));
+            setItem(layout.firstSlot('V'), services.configManager.menuItem("common.voltar"), e -> new P2PMarketMenu(player, services).open());
+            fill(services.configManager.menuItem("fill-empty"));
             return;
         }
         PlayerVip vip = selected.get();
@@ -42,17 +45,15 @@ public final class SellVipMenu extends BaseGui {
         String display = type != null ? type.display() : vip.vipTypeId();
         String remaining = vip.isPermanent() ? "Permanente (nao pode ser vendido)" : TimeUtil.formatRemaining(vip.remainingMillis());
 
-        setItem(10, new ItemBuilder(Material.PLAYER_HEAD).name("<white>" + display)
+        setItem(layout.firstSlot('H'), new ItemBuilder(Material.PLAYER_HEAD).name("<white>" + display)
                 .lore(List.of("<gray>Tempo restante: <white>" + remaining)).build());
-        setItem(12, new ItemBuilder(Material.GOLD_NUGGET)
-                .name("<yellow>Moeda: <white>" + currency.toUpperCase())
-                .lore(List.of("<gray>Clique para trocar")).build(), e -> cycleCurrency());
-        setItem(14, new ItemBuilder(Material.PAPER)
-                .name("<yellow>Preco: <white>" + (price < 0 ? "Nao definido" : price))
-                .lore(List.of("<gray>Clique para digitar o preco no chat")).build(), e -> promptPrice(vip));
-        setItem(16, new ItemBuilder(Material.LIME_WOOL).name("<green>Confirmar anuncio").build(), e -> confirm(vip));
-        setItem(22, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(), e -> new P2PMarketMenu(player, services).open());
-        fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
+        setItem(layout.firstSlot('C'), services.configManager.menuItem("sell-vip.moeda",
+                Map.of("moeda", currency.toUpperCase())), e -> cycleCurrency());
+        setItem(layout.firstSlot('P'), services.configManager.menuItem("sell-vip.preco",
+                Map.of("preco", price < 0 ? "Nao definido" : String.valueOf(price))), e -> promptPrice(vip));
+        setItem(layout.firstSlot('F'), services.configManager.menuItem("sell-vip.confirmar"), e -> confirm(vip));
+        setItem(layout.firstSlot('V'), services.configManager.menuItem("common.voltar"), e -> new P2PMarketMenu(player, services).open());
+        fill(services.configManager.menuItem("fill-empty"));
     }
 
     private void cycleCurrency() {

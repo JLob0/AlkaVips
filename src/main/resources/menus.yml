@@ -1,9 +1,147 @@
-# Titulos e tamanhos das GUIs do AlkaVips. Slots de itens fixos sao definidos no codigo
-# (ver especificacao), aqui so titulo/tamanho/itens de navegacao sao configuraveis.
+# Titulos, tamanhos, icones e lores das GUIs do AlkaVips. Posicao dos slots fica em
+# gui-layouts.yml (mesma letra usada la referencia a chave <menu>.<papel> aqui).
+# Placeholders entre {} sao trocados na hora (ver ConfigManager#menuItem).
+
+# Icones repetidos em quase toda GUI - referenciados via "common.<nome>" direto no
+# Java, em vez de duplicar o mesmo material/nome em cada um dos 15 menus.
+common:
+  voltar:
+    material: ARROW
+    name: "<red>Voltar"
+  anterior:
+    material: ARROW
+    name: "<white>Anterior"
+  proximo:
+    material: ARROW
+    name: "<white>Proximo"
 
 main:
   title: "<dark_gray>VIPs <dark_gray>» <light_purple>Principal"
   size: 36
+  history:
+    material: WRITTEN_BOOK
+    name: "<#AA55FF><bold>📜 Historico de VIPs"
+    lore:
+      - "<gray>Visualize todo o historico de"
+      - "<gray>ativacoes, upgrades e expiracoes."
+      - ""
+      - "<#AA55FF>Clique para abrir"
+  pending:
+    material: REDSTONE_TORCH
+    name: "<#FFAA00><bold>🔥 Ativacoes Pendentes"
+    lore:
+      - "<gray>VIPs comprados aguardando"
+      - "<gray>ativacao manual. Colete-os aqui!"
+      - ""
+      - "<#FFAA00>Clique para abrir"
+  kits:
+    material: CHEST
+    name: "<#55FF55><bold>🎁 Kits de Ativacao"
+    lore:
+      - "<gray>Pegue os kits de ativacao"
+      - "<gray>desbloqueados pelos seus VIPs"
+      - "<gray>de 30+ dias."
+      - ""
+      - "<gray>Kits diarios/semanais/mensais"
+      - "<gray>recorrentes ficam em <yellow>/kits<gray>."
+      - ""
+      - "<#55FF55>Clique para abrir"
+  upgrade:
+    material: ENDER_CHEST
+    name: "<#FF55FF><bold>⬆ Upar VIP"
+    lore-has-upgrade:
+      - "<gray>Evolua seu VIP atual para o"
+      - "<gray>proximo tier com preco proporcional!"
+      - ""
+      - "<#FF55FF>Proximo tier: <white>{proximo}"
+      - ""
+      - "<#FF55FF>Clique para upar"
+    lore-maxed:
+      - "<gray>Evolua seu VIP atual para o"
+      - "<gray>proximo tier com preco proporcional!"
+      - ""
+      - "<gray>Seu VIP ja esta no tier maximo."
+    lore-none:
+      - "<gray>Evolua seu VIP atual para o"
+      - "<gray>proximo tier com preco proporcional!"
+      - ""
+      - "<gray>Voce precisa de um VIP ativo"
+      - "<gray>selecionado para upar."
+  party:
+    material: COMPASS
+    name: "<#FFD700><bold>🎉 Party VIP"
+    lore:
+      - "<gray>Contribua com Prisma para"
+      - "<gray>desbloquear recompensas em grupo!"
+      - ""
+      - "<#FFD700>Progresso: <white>{percentual}%"
+      - "<gray>{progresso}/{meta} Prisma"
+      - ""
+      - "<#FFD700>Clique para visualizar"
+  keys:
+    material: TRIPWIRE_HOOK
+    name: "<#55AAFF><bold>🔑 Minhas Keys"
+    lore:
+      - "<gray>Suas chaves de VIP guardadas."
+      - "<gray>Ative ou venda conforme desejar."
+      - ""
+      - "<#55AAFF>Clique para abrir"
+  wallet:
+    material: BOOK
+    name: "<#FFD700><bold>💰 Carteira VIP"
+    lore:
+      - "<gray>Veja seu historico, gastos"
+      - "<gray>e conquistas de VIP."
+      - ""
+      - "<#FFD700>Clique para abrir"
+  p2p-market:
+    material: EMERALD_BLOCK
+    name: "<#00AAFF><bold>🛒 Mercado de VIPs"
+    lore:
+      - "<gray>Compre e venda assinaturas"
+      - "<gray>de VIP ativas com outros jogadores."
+      - ""
+      - "<#00AAFF>Clique para abrir"
+  shop:
+    material: EMERALD
+    name: "<#00FFAA><bold>✦ Loja Prisma"
+    lore:
+      - "<gray>Troque seu Prisma por"
+      - "<gray>itens raros e valiosos!"
+      - ""
+      - "<#00FFAA>Clique para abrir"
+  switch-vip:
+    material: COMPASS
+    name: "<#FFAA00><bold>🔄 Trocar VIP"
+    lore:
+      - "<gray>Alterne entre seus VIPs ativos"
+      - "<gray>para mudar prefixo e perks ativos."
+      - ""
+      - "<#FFAA00>Clique para trocar"
+  marketplace:
+    material: CHEST
+    name: "<#FF5555><bold>🏪 Loja de Chaves"
+    lore:
+      - "<gray>Compre chaves de VIP de outros"
+      - "<gray>jogadores no marketplace!"
+      - ""
+      - "<#FF5555>Clique para abrir"
+  top:
+    material: GOLD_BLOCK
+    name: "<#FFD700><bold>🏆 TOP VIP"
+    lore:
+      - "<gray>Os jogadores mais dedicados da"
+      - "<gray>rede Alka. Suba no ranking!"
+      - ""
+      - "<#FFD700>Clique para visualizar"
+  perk-tree:
+    material: ENCHANTED_BOOK
+    name: "<#AA55FF><bold>🌳 Arvore de Beneficios"
+    lore:
+      - "<gray>Gaste pontos de perk ganhos"
+      - "<gray>ativando VIP em beneficios extras."
+      - ""
+      - "<#AA55FF>Clique para abrir"
 
 keys:
   title: "<dark_gray>Minhas Keys"
@@ -12,6 +150,15 @@ keys:
 pending:
   title: "<dark_gray>Ativacoes Pendentes"
   size: 27
+  empty:
+    material: BARRIER
+    name: "<yellow>Nenhuma ativacao pendente"
+    lore:
+      - "<gray>Compre um VIP na loja para aparecer aqui."
+  item:
+    material: CHEST_MINECART
+    lore:
+      - "<gray>Clique para coletar!"
 
 history:
   title: "<dark_gray>Historico de VIPs"
@@ -24,42 +171,151 @@ shop:
 marketplace:
   title: "<dark_gray>Loja de Chaves"
   size: 54
+  empty:
+    material: BARRIER
+    name: "<yellow>Nenhuma key a venda"
 
 sell:
   title: "<dark_gray>Vender Key"
   size: 27
+  moeda:
+    material: GOLD_NUGGET
+    name: "<yellow>Moeda: <white>{moeda}"
+    lore:
+      - "<gray>Clique para trocar"
+  preco:
+    material: PAPER
+    name: "<yellow>Preco: <white>{preco}"
+    lore:
+      - "<gray>Clique para digitar o preco no chat"
+  confirmar:
+    material: LIME_WOOL
+    name: "<green>Confirmar venda"
 
 confirm-buy:
   title: "<dark_gray>Confirmar Compra"
   size: 27
+  confirmar:
+    material: LIME_WOOL
+    name: "<green>Confirmar"
+  cancelar:
+    material: RED_WOOL
+    name: "<red>Cancelar"
 
 top:
   title: "<dark_gray>TOP VIP"
   size: 27
+  empty:
+    material: BARRIER
+    name: "<red>Nenhum dado disponivel"
 
 party:
   title: "<dark_gray>Party VIP"
   size: 27
+  cheio:
+    material: LIME_STAINED_GLASS_PANE
+    name: " "
+  vazio:
+    material: RED_STAINED_GLASS_PANE
+    name: " "
+  status:
+    material: NETHER_STAR
+    name: "<light_purple>Progresso: <white>{percentual}%"
+    lore:
+      - "<gray>{progresso} / {meta}"
 
 wallet:
   title: "<dark_gray>Carteira <light_purple>VIP"
   size: 54
+  tempo-total:
+    material: CLOCK
+    name: "<gold>Tempo Total de VIP"
+  total-investido:
+    material: GOLD_INGOT
+    name: "<gold>Total Investido"
+  historico:
+    material: BOOK
+    name: "<gold>Historico de Ativacoes"
+  conquista-desbloqueada:
+    material: NETHER_STAR
+    lore:
+      - "<green>Conquistada"
+  conquista-bloqueada:
+    material: GRAY_DYE
+    name: "<gray>???"
+    lore:
+      - "<gray>Conquista bloqueada"
 
 p2p-market:
   title: "<dark_gray>Mercado <light_purple>de VIPs"
   size: 54
+  empty:
+    material: BARRIER
+    name: "<yellow>Nenhum VIP a venda no momento"
+  vender-meu-vip:
+    material: EMERALD
+    name: "<green>Vender meu VIP ativo"
+    lore:
+      - "<gray>Anuncia o VIP selecionado no mercado"
 
 sell-vip:
   title: "<dark_gray>Vender meu VIP"
   size: 27
+  sem-selecionado:
+    material: BARRIER
+    name: "<red>Voce nao tem um VIP ativo selecionado"
+  moeda:
+    material: GOLD_NUGGET
+    name: "<yellow>Moeda: <white>{moeda}"
+    lore:
+      - "<gray>Clique para trocar"
+  preco:
+    material: PAPER
+    name: "<yellow>Preco: <white>{preco}"
+    lore:
+      - "<gray>Clique para digitar o preco no chat"
+  confirmar:
+    material: LIME_WOOL
+    name: "<green>Confirmar anuncio"
 
 perk-tree:
   title: "<dark_gray>Arvore de <light_purple>Beneficios"
   size: 54
+  pontos:
+    material: EXPERIENCE_BOTTLE
+    name: "<#FFD700><bold>✦ Pontos de Perk"
+    lore:
+      - "<gray>Disponiveis: <white>{disponiveis}"
+      - "<gray>Total ganho: <white>{total}"
+      - ""
+      - "<gray>Ganhe pontos ativando VIPs"
+      - "<gray>(ver points-per-tier em perktree.yml)"
 
 vipkits:
   title: "<dark_gray>Kits de <light_purple>Ativacao"
   size: 27
+  empty:
+    material: CHEST
+    name: "<yellow>Nenhum kit de ativacao"
+    lore:
+      - "<gray>Kits de ativacao sao desbloqueados"
+      - "<gray>ao ativar um VIP por 30+ dias."
+      - ""
+      - "<gray>Os kits diarios/semanais/mensais"
+      - "<gray>recorrentes ficam em <yellow>/kits<gray>."
+  item:
+    material: ENDER_CHEST
+
+upgrade:
+  title-upgrade: "<yellow>Upar para {vip}"
+  title-extend: "<yellow>Extender {vip}"
+  size: 27
+  disponivel:
+    material: LIME_STAINED_GLASS_PANE
+    name: "<green>Disponivel"
+  bloqueado:
+    material: RED_STAINED_GLASS_PANE
+    name: "<red>Bloqueado"
 
 fill-empty:
   enabled: true

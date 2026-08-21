@@ -2,13 +2,13 @@ package com.alkacode.vips.gui;
 
 import com.alkacode.core.gui.BaseGui;
 import com.alkacode.vips.VipsServices;
+import com.alkacode.vips.config.GuiLayout;
 import com.alkacode.vips.model.VipType;
 import com.alkacode.vips.service.P2PMarketService;
 import com.alkacode.vips.storage.VipsRepository;
 import com.alkacode.vips.util.ItemBuilder;
 import com.alkacode.vips.util.TimeUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -17,9 +17,9 @@ import java.util.Map;
 /** Mercado P2P de assinaturas ATIVAS (nao confundir com {@link MarketplaceMenu}, que vende keys nao usadas). */
 public final class P2PMarketMenu extends BaseGui {
 
-    private static final int[] SLOTS = buildSlots();
-
     private final VipsServices services;
+    private final GuiLayout layout;
+    private final int[] slots;
     private final int page;
 
     public P2PMarketMenu(Player viewer, VipsServices services) {
@@ -30,23 +30,19 @@ public final class P2PMarketMenu extends BaseGui {
         super(services.plugin, viewer, services.configManager.menus().getString("p2p-market.title", "&8Mercado de VIPs"),
                 services.configManager.menus().getInt("p2p-market.size", 54) / 9, "vip_p2p_market");
         this.services = services;
+        this.layout = services.configManager.layout("p2p-market");
+        this.slots = layout.findSlots('0').stream().mapToInt(Integer::intValue).toArray();
         this.page = page;
-    }
-
-    private static int[] buildSlots() {
-        int[] slots = new int[45];
-        for (int i = 0; i < 45; i++) slots[i] = i;
-        return slots;
     }
 
     @Override
     public void render() {
         List<VipsRepository.P2PListing> listings = services.p2pMarketService.allListings();
         if (listings.isEmpty()) {
-            setItem(22, new ItemBuilder(Material.BARRIER).name("<yellow>Nenhum VIP a venda no momento").build());
+            setItem(slots[22], services.configManager.menuItem("p2p-market.empty"));
         }
-        int from = page * SLOTS.length;
-        for (int i = 0; i < SLOTS.length; i++) {
+        int from = page * slots.length;
+        for (int i = 0; i < slots.length; i++) {
             int index = from + i;
             if (index >= listings.size()) break;
             VipsRepository.P2PListing listing = listings.get(index);
@@ -69,22 +65,21 @@ public final class P2PMarketMenu extends BaseGui {
             var item = new ItemBuilder(type.icon().build())
                     .name(type.display())
                     .lore(lore).build();
-            setItem(SLOTS[i], item, e -> buy(listing));
+            setItem(slots[i], item, e -> buy(listing));
         }
 
-        setItem(49, new ItemBuilder(Material.ARROW).name("<red>Voltar").build(), e -> new MainVipMenu(player, services).open());
-        setItem(48, new ItemBuilder(Material.EMERALD).name("<green>Vender meu VIP ativo")
-                .lore(List.of("<gray>Anuncia o VIP selecionado no mercado")).build(),
+        setItem(layout.firstSlot('V'), services.configManager.menuItem("common.voltar"), e -> new MainVipMenu(player, services).open());
+        setItem(layout.firstSlot('S'), services.configManager.menuItem("p2p-market.vender-meu-vip"),
                 e -> new SellVipMenu(player, services).open());
         if (page > 0) {
-            setItem(45, new ItemBuilder(Material.ARROW).name("<white>Anterior").build(),
+            setItem(layout.firstSlot('P'), services.configManager.menuItem("common.anterior"),
                     e -> new P2PMarketMenu(player, services, page - 1).open());
         }
-        if (from + SLOTS.length < listings.size()) {
-            setItem(53, new ItemBuilder(Material.ARROW).name("<white>Proximo").build(),
+        if (from + slots.length < listings.size()) {
+            setItem(layout.firstSlot('N'), services.configManager.menuItem("common.proximo"),
                     e -> new P2PMarketMenu(player, services, page + 1).open());
         }
-        fill(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).name(" ").build());
+        fill(services.configManager.menuItem("fill-empty"));
     }
 
     private void buy(VipsRepository.P2PListing listing) {
